@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using GarageVersion3.Data;
 namespace GarageVersion3
 {
     public class Program
@@ -5,6 +8,8 @@ namespace GarageVersion3
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddDbContext<GarageVersion3Context>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("GarageVersion3Context") ?? throw new InvalidOperationException("Connection string 'GarageVersion3Context' not found.")));
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();

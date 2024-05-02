@@ -15,7 +15,7 @@ namespace GarageVersion3.Models
 
         [Range(2, 32, ErrorMessage = "Last Name must be between 2 - 32")]
         public string LastName { get; set; }
-        
-        List<Receipt> Receipts { get; set; }
+        public List<Vehicle> Vehicles { get; set; }
+        public List<Receipt> Receipts { get; set; }
     }
 }
