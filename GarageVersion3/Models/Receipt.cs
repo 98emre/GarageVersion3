@@ -12,7 +12,7 @@ namespace GarageVersion3.Models
         public User User { get; set; }
 
         [Range(1,int.MaxValue,ErrorMessage = "No negative value")]
-        public int ParkingSpot { get; set; }
+        public int ParkingNumber { get; set; }
         public DateTime CheckIn { get; set; }
         public DateTime CheckOut { get; set; }
 

@@ -5,6 +5,7 @@ namespace GarageVersion3.Models
 {
     public class ParkingLot
     {
+        [Key]
         public int Id { get; set; }
         [ForeignKey("Vehicle")]
         public int VehicleId { get; set; }
