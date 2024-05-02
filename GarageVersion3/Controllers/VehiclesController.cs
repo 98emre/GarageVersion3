@@ -49,8 +49,15 @@ namespace GarageVersion3.Controllers
         // GET: Vehicles/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Set<User>(), "Id", "Id");
-            ViewData["VehicleTypeId"] = new SelectList(_context.Set<VehicleType>(), "Id", "Id");
+            var users = _context.User.Select(u => new SelectListItem
+            {
+                Text = $"{u.FirstName} {u.LastName} ({u.BirthDate})",
+                Value = u.Id.ToString()
+            });
+
+
+            ViewData["UserId"] = users;
+            ViewData["VehicleTypeId"] = new SelectList(_context.Set<VehicleType>(), "Id", "Type");
             return View();
         }
 

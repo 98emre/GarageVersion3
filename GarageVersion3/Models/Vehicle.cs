@@ -10,11 +10,11 @@ namespace GarageVersion3.Models
         
         [ForeignKey("VehicleType")]
         public int VehicleTypeId { get; set; }
-        public VehicleType VehicleType { get; set; }
+        public VehicleType? VehicleType { get; set; }
         
         [ForeignKey("User")]
         public int UserId { get; set; }
-        public User User { get; set; }
+        public User? User { get; set; }
 
         [Required(ErrorMessage = "Write down the vehicle registration number")]
         [StringLength(10, MinimumLength = 6)]
