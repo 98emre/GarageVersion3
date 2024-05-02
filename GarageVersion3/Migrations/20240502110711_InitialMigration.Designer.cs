@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GarageVersion3.Migrations
 {
     [DbContext(typeof(GarageVersion3Context))]
-    [Migration("20240502094518_InitialMigration")]
+    [Migration("20240502110711_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -92,15 +92,18 @@ namespace GarageVersion3.Migrations
 
                     b.Property<string>("BirthDate")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(12)
+                        .HasColumnType("nvarchar(12)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
                     b.HasKey("Id");
 
