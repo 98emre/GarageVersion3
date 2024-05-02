@@ -4,6 +4,7 @@ namespace GarageVersion3.Models
 {
     public class User
     {
+        [Key]
         public int Id { get; set; }
 
         [Range(10,12,ErrorMessage = "Birth Date must be between 10 - 12")]
