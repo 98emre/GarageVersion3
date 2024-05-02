@@ -2,7 +2,7 @@
 
 namespace GarageVersion3.Models
 {
-    public class Reciept
+    public class Receipt
     {
         [Key]
         public int Id { get; set; }
