@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GarageVersion3.Migrations
 {
     [DbContext(typeof(GarageVersion3Context))]
-    [Migration("20240502110711_InitialMigration")]
+    [Migration("20240502121602_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -118,8 +118,10 @@ namespace GarageVersion3.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("RegistrationNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("RegistrationNumber")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");

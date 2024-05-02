@@ -71,7 +71,7 @@ namespace GarageVersion3.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     VehicleTypeId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    RegistrationNumber = table.Column<int>(type: "int", nullable: false)
+                    RegistrationNumber = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false)
                 },
                 constraints: table =>
                 {
