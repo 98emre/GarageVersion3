@@ -6,7 +6,7 @@ namespace GarageVersion3.Models.ViewModels
     {
         public int Id { get; set; }
         public User User { get; set; }
-
+        
         [Display(Name = "Vehicle Type")]
         public VehicleType VehicleType { get; set; }
 
