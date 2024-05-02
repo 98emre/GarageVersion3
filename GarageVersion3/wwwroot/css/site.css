@@ -18,11 +18,28 @@ html {
 }
 
 body {
+    background-color: var(--color-alice-blue);
     margin-bottom: 60px;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+.navbar {
+    background-color: var(--color-powder-blue);
+    padding-top: 0rem;
+    padding-bottom: 0rem;
+}
+
+#logo {
+    max-height: 60px;
+    max-width: auto;
+    padding-right: 1rem;
+}
+
+.footer {
+    background-color: var(--color-columbia-blue);
 }
 
 @media (min-width: 768px) {
