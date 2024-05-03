@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GarageVersion3.Data;
 using GarageVersion3.Models;
+using GarageVersion3.Models.ViewModels;
 
 namespace GarageVersion3.Controllers
 {
@@ -22,9 +23,18 @@ namespace GarageVersion3.Controllers
         // GET: Vehicles
         public async Task<IActionResult> Index()
         {
-            var garageVersion3Context = _context.Vehicle.Include(v => v.User).Include(v => v.VehicleType);
+            var viewModel = await _context.Vehicle
+                .Include(v => v.User)
+                .Include(v => v.VehicleType)
+                .Select(v => new VehicleViewModel
+                {
+                    Id = v.Id,
+                    RegistrationNumber = v.RegistrationNumber,
+                    User = $"{v.User.FirstName} {v.User.LastName} ({v.User.BirthDate})",
+                    VehicleType = v.VehicleType.Type
+                }).ToListAsync();
 
-            return View(await garageVersion3Context.ToListAsync());
+            return View(viewModel);
         }
 
         // GET: Vehicles/Details/5
@@ -35,16 +45,26 @@ namespace GarageVersion3.Controllers
                 return NotFound();
             }
 
-            var vehicle = await _context.Vehicle
+            var viewModel = await _context.Vehicle
+                .Where(v => v.Id == id)
                 .Include(v => v.User)
                 .Include(v => v.VehicleType)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (vehicle == null)
+                .Select(v => new VehicleViewModel
+                {
+                    Id = v.Id,
+                    RegistrationNumber = v.RegistrationNumber,
+                    User = $"{v.User.FirstName} {v.User.LastName} ({v.User.BirthDate})",
+                    VehicleType = v.VehicleType.Type
+                }).FirstOrDefaultAsync();
+
+
+
+            if (viewModel == null)
             {
                 return NotFound();
             }
 
-            return View(vehicle);
+            return View(viewModel);
         }
 
         // GET: Vehicles/Create
@@ -60,17 +80,24 @@ namespace GarageVersion3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,VehicleTypeId,UserId,RegistrationNumber")] Vehicle vehicle)
+        public async Task<IActionResult> Create([Bind("UserId,VehicleTypeId,RegistrationNumber")] VehicleViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
+                var vehicle = new Vehicle
+                {
+                    VehicleTypeId = viewModel.VehicleTypeId,
+                    UserId = viewModel.UserId,
+                    RegistrationNumber = viewModel.RegistrationNumber
+                };
+
                 _context.Add(vehicle);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
             DropdownDataLists();
-            return View(vehicle);
+            return View(viewModel);
         }
 
         // GET: Vehicles/Edit/5
@@ -82,13 +109,22 @@ namespace GarageVersion3.Controllers
             }
 
             var vehicle = await _context.Vehicle.FindAsync(id);
+
             if (vehicle == null)
             {
                 return NotFound();
             }
 
+            var viewModel = new VehicleViewModel
+            {
+                Id = vehicle.Id,
+                VehicleTypeId = vehicle.VehicleTypeId,
+                UserId = vehicle.UserId, 
+                RegistrationNumber = vehicle.RegistrationNumber
+            };
+
             DropdownDataLists();
-            return View(vehicle);
+            return View(viewModel);
         }
 
         // POST: Vehicles/Edit/5
@@ -96,23 +132,31 @@ namespace GarageVersion3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,VehicleTypeId,UserId,RegistrationNumber")] Vehicle vehicle)
+        public async Task<IActionResult> Edit(int id, [Bind("UserId,VehicleTypeId,RegistrationNumber")] VehicleViewModel viewModel)
         {
-            if (id != vehicle.Id)
-            {
-                return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
+
                 try
                 {
+                    var vehicle = await _context.Vehicle.FindAsync(id);
+
+                    if (vehicle == null)
+                    {
+                        return NotFound();
+                    }
+
+                    vehicle.VehicleTypeId = viewModel.VehicleTypeId;
+                    vehicle.UserId = viewModel.UserId;
+                    vehicle.RegistrationNumber = viewModel.RegistrationNumber;
+
                     _context.Update(vehicle);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!VehicleExists(vehicle.Id))
+                    if (!VehicleExists(id))
                     {
                         return NotFound();
                     }
@@ -125,7 +169,7 @@ namespace GarageVersion3.Controllers
             }
 
             DropdownDataLists();
-            return View(vehicle);
+            return View(viewModel);
         }
 
         // GET: Vehicles/Delete/5
@@ -178,8 +222,15 @@ namespace GarageVersion3.Controllers
             });
 
 
-            ViewData["UserId"] = users;
-            ViewData["VehicleTypeId"] = new SelectList(_context.Set<VehicleType>(), "Id", "Type");
+            ViewData["Users"] = users;
+
+            var vehicleTypes = _context.VehicleType.Select(vt => new SelectListItem
+            {
+                Text = vt.Type,
+                Value = vt.Id.ToString()
+            }).ToList();
+
+            ViewData["VehicleTypes"] = vehicleTypes;
         }
     }
 }
