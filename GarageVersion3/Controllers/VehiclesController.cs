@@ -80,17 +80,24 @@ namespace GarageVersion3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,VehicleTypeId,UserId,RegistrationNumber")] Vehicle vehicle)
+        public async Task<IActionResult> Create([Bind("UserId,VehicleTypeId,RegistrationNumber")] VehicleViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
+                var vehicle = new Vehicle
+                {
+                    VehicleTypeId = viewModel.VehicleTypeId,
+                    UserId = viewModel.UserId,
+                    RegistrationNumber = viewModel.RegistrationNumber
+                };
+
                 _context.Add(vehicle);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
             DropdownDataLists();
-            return View(vehicle);
+            return View(viewModel);
         }
 
         // GET: Vehicles/Edit/5
@@ -198,8 +205,15 @@ namespace GarageVersion3.Controllers
             });
 
 
-            ViewData["UserId"] = users;
-            ViewData["VehicleTypeId"] = new SelectList(_context.Set<VehicleType>(), "Id", "Type");
+            ViewData["Users"] = users;
+
+            var vehicleTypes = _context.VehicleType.Select(vt => new SelectListItem
+            {
+                Text = vt.Type,
+                Value = vt.Id.ToString()
+            }).ToList();
+
+            ViewData["VehicleTypes"] = vehicleTypes;
         }
     }
 }
