@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using GarageVersion3.Data;
 using GarageVersion3.Models;
 using GarageVersion3.Models.ViewModels;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GarageVersion3.Controllers
 {
@@ -20,6 +19,8 @@ namespace GarageVersion3.Controllers
         {
             _context = context;
         }
+
+
 
         // GET: Vehicles
         public async Task<IActionResult> Index()
@@ -120,7 +121,7 @@ namespace GarageVersion3.Controllers
             {
                 Id = vehicle.Id,
                 VehicleTypeId = vehicle.VehicleTypeId,
-                UserId = vehicle.UserId, 
+                UserId = vehicle.UserId,
                 RegistrationNumber = vehicle.RegistrationNumber
             };
 
@@ -133,7 +134,7 @@ namespace GarageVersion3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id,  VehicleViewModel viewModel)
+        public async Task<IActionResult> Edit(int id, VehicleViewModel viewModel)
         {
 
             if (ModelState.IsValid)
@@ -230,6 +231,55 @@ namespace GarageVersion3.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Sort(string sortOrder)
+        {
+            var vehicles = await _context.Vehicle
+                .Include(v => v.VehicleType)
+                .Include(v => v.User)
+                .ToListAsync();
+
+            if (vehicles.Count() == 0)
+            {
+                TempData["SortOnEmptyList"] = "The list is empty";
+                return RedirectToAction(nameof(Index));
+            }
+
+            switch (sortOrder)
+            {
+                case "VehicleType":
+                    vehicles = vehicles.OrderBy(v => v.VehicleType.Type).ToList();
+                    TempData["Sort"] = "Vehicle type sort was done";
+                    break;
+                case "RegistrationNumber":
+                    vehicles = vehicles.OrderBy(v => v.RegistrationNumber).ToList();
+                    TempData["Sort"] = "Registration number sort was done";
+                    break;
+                case "User":
+                    vehicles = vehicles.OrderBy(v => v.User.FirstName).ToList();
+                    TempData["Sort"] = "User first name sort was done";
+                    break;
+    
+                default:
+                    vehicles = vehicles.OrderBy(v => v.Id).ToList();
+                    break;
+            }
+
+            var sortedVehicles = vehicles
+                        .Select(v => new VehicleViewModel
+                        {
+                            Id = v.Id,
+                            VehicleType = v.VehicleType.Type,
+                            RegistrationNumber = v.RegistrationNumber,
+                            User = $"{v.User.FirstName} {v.User.LastName} ({v.User.BirthDate})",
+                            UserId = v.UserId,
+                            VehicleTypeId = v.VehicleTypeId
+                        }).ToList();
+
+            return View("Index", sortedVehicles);
+        }
+
+
         private bool VehicleExists(int id)
         {
             return _context.Vehicle.Any(e => e.Id == id);
@@ -255,5 +305,8 @@ namespace GarageVersion3.Controllers
 
             ViewData["VehicleTypes"] = vehicleTypes;
         }
+    
+    
+    
     }
 }
