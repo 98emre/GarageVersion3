@@ -301,21 +301,22 @@ namespace GarageVersion3.Controllers
             return View("Index", sortedVehicles);
         }
 
-        /*
+        
         [HttpGet]
-        public async Task<IActionResult> Filter(string regNumber, string color, string brand)
+        public async Task<IActionResult> Filter(string registrationNumber, string color, string brand)
         {
-            if (string.IsNullOrEmpty(regNumber) && string.IsNullOrEmpty(color) && string.IsNullOrEmpty(brand))
+            if (string.IsNullOrEmpty(registrationNumber) && string.IsNullOrEmpty(color) && string.IsNullOrEmpty(brand))
             {
-                TempData["SearchFail"] = "Please provide input for at least one search criteria.";
-                return RedirectToAction("Index");
+                TempData["SearchFail"] = "Please provide input for at least one search criteria";
+                var empyList = new List<VehicleViewModel>();
+                return View("Index", empyList);
             }
 
             var query = _context.Vehicle.AsQueryable();
 
-            if (!string.IsNullOrEmpty(regNumber))
+            if (!string.IsNullOrEmpty(registrationNumber))
             {
-                query = query.Where(v => v.RegNumber.Equals(regNumber.ToUpper().Trim()));
+                query = query.Where(v => v.RegistrationNumber.Equals(registrationNumber.ToUpper().Trim()));
             }
 
             if (!string.IsNullOrEmpty(color))
@@ -332,10 +333,9 @@ namespace GarageVersion3.Controllers
                         .Select(v => new VehicleViewModel
                         {
                             Id = v.Id,
-                            VehicleType = v.VehicleType,
-                            RegNumber = v.RegNumber,
-                            ArrivalDate = v.ArrivalDate,
-                            ParkingSpot = v.ParkingSpot
+                            VehicleType = v.VehicleType.Type,
+                            RegistrationNumber = v.RegistrationNumber,
+                            User = $"{v.User.FirstName} {v.User.LastName} ({v.User.BirthDate})",
                         }).ToListAsync();
 
             if (search.Count == 0)
@@ -350,7 +350,33 @@ namespace GarageVersion3.Controllers
 
             return View("Index", search);
         }
-        */
+
+        [HttpGet]
+        public async Task<IActionResult> ShowAll()
+        {
+            var query = _context.Vehicle.AsQueryable();
+            var search = await query
+                      .Select(v => new VehicleViewModel
+                      {
+                          Id = v.Id,
+                          VehicleType = v.VehicleType.Type,
+                          RegistrationNumber = v.RegistrationNumber,
+                          User = $"{v.User.FirstName} {v.User.LastName} ({v.User.BirthDate})",
+                      }).ToListAsync();
+
+            if (search.Count == 0)
+            {
+                TempData["SearchFail"] = "There is no vehicles in the system";
+            }
+
+            else
+            {
+                TempData["SearchSuccess"] = "Showing all vehicles was successful";
+            }
+
+            return View("Index", search);
+        }
+
 
         private bool VehicleExists(int id)
         {
