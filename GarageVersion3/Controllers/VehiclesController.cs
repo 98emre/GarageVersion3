@@ -109,13 +109,22 @@ namespace GarageVersion3.Controllers
             }
 
             var vehicle = await _context.Vehicle.FindAsync(id);
+
             if (vehicle == null)
             {
                 return NotFound();
             }
 
+            var viewModel = new VehicleViewModel
+            {
+                Id = vehicle.Id,
+                VehicleTypeId = vehicle.VehicleTypeId,
+                UserId = vehicle.UserId, 
+                RegistrationNumber = vehicle.RegistrationNumber
+            };
+
             DropdownDataLists();
-            return View(vehicle);
+            return View(viewModel);
         }
 
         // POST: Vehicles/Edit/5
