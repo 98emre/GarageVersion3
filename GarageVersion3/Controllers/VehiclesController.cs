@@ -80,7 +80,7 @@ namespace GarageVersion3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,VehicleTypeId,RegistrationNumber")] VehicleViewModel viewModel)
+        public async Task<IActionResult> Create(VehicleViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
@@ -132,7 +132,7 @@ namespace GarageVersion3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,VehicleTypeId,RegistrationNumber")] VehicleViewModel viewModel)
+        public async Task<IActionResult> Edit(int id,  VehicleViewModel viewModel)
         {
 
             if (ModelState.IsValid)
@@ -180,16 +180,28 @@ namespace GarageVersion3.Controllers
                 return NotFound();
             }
 
-            var vehicle = await _context.Vehicle
-                .Include(v => v.User)
-                .Include(v => v.VehicleType)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (vehicle == null)
+            var vehicle = await _context.Vehicle.FirstOrDefaultAsync(v => v.Id == id);
+            var vehicleType = await _context.VehicleType.FirstOrDefaultAsync(vt => vt.Id == vehicle.VehicleTypeId);
+            var user = await _context.User.FirstOrDefaultAsync(u => u.Id == vehicle.UserId);
+
+
+            if (vehicle == null || vehicleType == null || user == null)
             {
                 return NotFound();
             }
 
-            return View(vehicle);
+
+            var viewModel = new VehicleViewModel
+            {
+                Id = vehicle.Id,
+                VehicleTypeId = vehicleType.Id,
+                VehicleType = vehicleType.Type,
+                UserId = vehicle.UserId,
+                User = $"{user.FirstName} {user.LastName} ({user.BirthDate})",
+                RegistrationNumber = vehicle.RegistrationNumber
+            };
+
+            return View(viewModel);
         }
 
         // POST: Vehicles/Delete/5
