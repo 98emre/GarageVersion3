@@ -132,23 +132,31 @@ namespace GarageVersion3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,VehicleTypeId,UserId,RegistrationNumber")] Vehicle vehicle)
+        public async Task<IActionResult> Edit(int id, [Bind("UserId,VehicleTypeId,RegistrationNumber")] VehicleViewModel viewModel)
         {
-            if (id != vehicle.Id)
-            {
-                return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
+
                 try
                 {
+                    var vehicle = await _context.Vehicle.FindAsync(id);
+
+                    if (vehicle == null)
+                    {
+                        return NotFound();
+                    }
+
+                    vehicle.VehicleTypeId = viewModel.VehicleTypeId;
+                    vehicle.UserId = viewModel.UserId;
+                    vehicle.RegistrationNumber = viewModel.RegistrationNumber;
+
                     _context.Update(vehicle);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!VehicleExists(vehicle.Id))
+                    if (!VehicleExists(id))
                     {
                         return NotFound();
                     }
@@ -161,7 +169,7 @@ namespace GarageVersion3.Controllers
             }
 
             DropdownDataLists();
-            return View(vehicle);
+            return View(viewModel);
         }
 
         // GET: Vehicles/Delete/5
