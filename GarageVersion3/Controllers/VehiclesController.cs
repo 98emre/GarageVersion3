@@ -23,6 +23,7 @@ namespace GarageVersion3.Controllers
         public async Task<IActionResult> Index()
         {
             var garageVersion3Context = _context.Vehicle.Include(v => v.User).Include(v => v.VehicleType);
+
             return View(await garageVersion3Context.ToListAsync());
         }
 
@@ -49,8 +50,8 @@ namespace GarageVersion3.Controllers
         // GET: Vehicles/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Set<User>(), "Id", "Id");
-            ViewData["VehicleTypeId"] = new SelectList(_context.Set<VehicleType>(), "Id", "Id");
+            DropdownDataLists();
+
             return View();
         }
 
@@ -67,8 +68,8 @@ namespace GarageVersion3.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Set<User>(), "Id", "Id", vehicle.UserId);
-            ViewData["VehicleTypeId"] = new SelectList(_context.Set<VehicleType>(), "Id", "Id", vehicle.VehicleTypeId);
+
+            DropdownDataLists();
             return View(vehicle);
         }
 
@@ -85,8 +86,8 @@ namespace GarageVersion3.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Set<User>(), "Id", "Id", vehicle.UserId);
-            ViewData["VehicleTypeId"] = new SelectList(_context.Set<VehicleType>(), "Id", "Id", vehicle.VehicleTypeId);
+
+            DropdownDataLists();
             return View(vehicle);
         }
 
@@ -122,8 +123,8 @@ namespace GarageVersion3.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Set<User>(), "Id", "Id", vehicle.UserId);
-            ViewData["VehicleTypeId"] = new SelectList(_context.Set<VehicleType>(), "Id", "Id", vehicle.VehicleTypeId);
+
+            DropdownDataLists();
             return View(vehicle);
         }
 
@@ -165,6 +166,20 @@ namespace GarageVersion3.Controllers
         private bool VehicleExists(int id)
         {
             return _context.Vehicle.Any(e => e.Id == id);
+        }
+
+
+        private void DropdownDataLists()
+        {
+            var users = _context.User.Select(u => new SelectListItem
+            {
+                Text = $"{u.FirstName} {u.LastName} ({u.BirthDate})",
+                Value = u.Id.ToString()
+            });
+
+
+            ViewData["UserId"] = users;
+            ViewData["VehicleTypeId"] = new SelectList(_context.Set<VehicleType>(), "Id", "Type");
         }
     }
 }

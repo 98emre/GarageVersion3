@@ -9,7 +9,7 @@ namespace GarageVersion3.Models
         public int Id { get; set; }
         [ForeignKey("User")]
         public int UserId { get; set; }
-        public User User { get; set; }
+        public User? User { get; set; }
 
         [Range(1,int.MaxValue,ErrorMessage = "No negative value")]
         public int ParkingNumber { get; set; }
