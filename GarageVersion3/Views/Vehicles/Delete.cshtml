@@ -1,4 +1,4 @@
-﻿@model GarageVersion3.Models.Vehicle
+﻿@model VehicleViewModel
 
 @{
     ViewData["Title"] = "Delete";
@@ -12,19 +12,19 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            Vehicle Type
+            @Html.DisplayNameFor(model => model.VehicleType)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.VehicleType.Type)
+            @Html.DisplayFor(model => model.VehicleType)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.User)
         </dt>
         <dd class = "col-sm-10">
-            @($"{Model.User.FirstName} {Model.User.LastName} ({Model.User.BirthDate})")
+            @Html.DisplayFor(model => model.User)
         </dd>
         <dt class = "col-sm-2">
-            Registration Number
+            @Html.DisplayNameFor(model => model.RegistrationNumber)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.RegistrationNumber)
