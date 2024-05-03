@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using GarageVersion3.Data;
 using GarageVersion3.Models;
 using GarageVersion3.Models.ViewModels;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GarageVersion3.Controllers
 {
@@ -209,14 +210,24 @@ namespace GarageVersion3.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var vehicle = await _context.Vehicle.FindAsync(id);
-            if (vehicle != null)
+            try
             {
+                var vehicle = await _context.Vehicle.FindAsync(id);
+                if (vehicle == null)
+                {
+                    return NotFound();
+                }
+
                 _context.Vehicle.Remove(vehicle);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "Error occured while trying to remove a vehicle");
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         private bool VehicleExists(int id)
