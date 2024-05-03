@@ -18,7 +18,5 @@ namespace GarageVersion3.Models
 
         [Range(0.0, double.MaxValue, ErrorMessage = "Price can't be less than 0")]
         public double Price { get; set; }
-
-
     }
 }

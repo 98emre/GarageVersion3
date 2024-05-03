@@ -22,17 +22,5 @@ namespace GarageVersion3.Models.ViewModels
         [Display(Name = "Total Hours of Parking")]
         public int TotalParkingHours { get; set; }
         public double Price { get; set; }
-
-        public void CalculateTotalParkingHours()
-        {
-            TimeSpan parkingDuration = CheckoutDate - Checkin;
-            TotalParkingHours = (int)parkingDuration.TotalHours;
-        }
-
-        public void CalculatePrice()
-        {
-            const double HourlyRate = 50;
-            Price = TotalParkingHours * HourlyRate;
-        }
     }
 }
