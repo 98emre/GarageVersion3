@@ -1,4 +1,4 @@
-﻿@model IEnumerable<GarageVersion3.Models.Vehicle>
+﻿@model IEnumerable<VehicleViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -28,12 +28,12 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.VehicleType.Type)
+                @Html.DisplayFor(modelItem => item.VehicleType)
             </td>
 
             <td>
-                @($"{item.User.FirstName} {item.User.LastName} ({item.User.BirthDate})")
-             </td>
+                 @Html.DisplayFor(modelItem => item.User)
+            </td>
 
             <td>
                 @Html.DisplayFor(modelItem => item.RegistrationNumber)

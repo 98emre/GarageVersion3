@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GarageVersion3.Data;
 using GarageVersion3.Models;
+using GarageVersion3.Models.ViewModels;
 
 namespace GarageVersion3.Controllers
 {
@@ -22,9 +23,18 @@ namespace GarageVersion3.Controllers
         // GET: Vehicles
         public async Task<IActionResult> Index()
         {
-            var garageVersion3Context = _context.Vehicle.Include(v => v.User).Include(v => v.VehicleType);
+            var viewModel = await _context.Vehicle
+                .Include(v => v.User)
+                .Include(v => v.VehicleType)
+                .Select(v => new VehicleViewModel
+                {
+                    Id = v.Id,
+                    RegistrationNumber = v.RegistrationNumber,
+                    User = $"{v.User.FirstName} {v.User.LastName} ({v.User.BirthDate})",
+                    VehicleType = v.VehicleType.Type
+                }).ToListAsync();
 
-            return View(await garageVersion3Context.ToListAsync());
+            return View(viewModel);
         }
 
         // GET: Vehicles/Details/5
@@ -35,16 +45,26 @@ namespace GarageVersion3.Controllers
                 return NotFound();
             }
 
-            var vehicle = await _context.Vehicle
+            var viewModel = await _context.Vehicle
+                .Where(v => v.Id == id)
                 .Include(v => v.User)
                 .Include(v => v.VehicleType)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (vehicle == null)
+                .Select(v => new VehicleViewModel
+                {
+                    Id = v.Id,
+                    RegistrationNumber = v.RegistrationNumber,
+                    User = $"{v.User.FirstName} {v.User.LastName} ({v.User.BirthDate})",
+                    VehicleType = v.VehicleType.Type
+                }).FirstOrDefaultAsync();
+
+
+
+            if (viewModel == null)
             {
                 return NotFound();
             }
 
-            return View(vehicle);
+            return View(viewModel);
         }
 
         // GET: Vehicles/Create
