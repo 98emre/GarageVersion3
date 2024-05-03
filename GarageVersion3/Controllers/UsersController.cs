@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GarageVersion3.Data;
 using GarageVersion3.Models;
+using GarageVersion3.Models.ViewModels;
 
 namespace GarageVersion3.Controllers
 {
@@ -54,11 +55,17 @@ namespace GarageVersion3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,BirthDate,FirstName,LastName")] User user)
+        public async Task<IActionResult> Create([Bind("BirthDate,FirstName,LastName")] CreateUserViewModel user)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(user);
+                User createUser = new User();
+
+                createUser.BirthDate = user.BirthDate;
+                createUser.FirstName = user.FirstName;
+                createUser.LastName = user.LastName;
+
+                _context.Add(createUser);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
