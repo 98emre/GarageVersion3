@@ -9,8 +9,6 @@ namespace GarageVersion3.Validation
         private readonly GarageVersion3Context dbContext;
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            const string errorMessage = "Personal Number already exists.";
-
             if (value is string input)
             {
                 if (validationContext.ObjectInstance is CreateUserViewModel viewModel)
@@ -19,12 +17,22 @@ namespace GarageVersion3.Validation
                     
                     if (dbContext.User.Any(u => u.BirthDate == viewModel.BirthDate))
                     {
-                        return new ValidationResult(errorMessage);
+                        return new ValidationResult("Personal Number already exists.");
                     }
                     else
                     {
                         return ValidationResult.Success;
                     }
+                }
+                
+                try
+                {
+                    Personnummer.Personnummer personNr = new Personnummer.Personnummer(value.ToString());
+                } 
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    return new ValidationResult("Could not validate Personal Number.");
                 }
             }
             return new ValidationResult("value is not a string!");
