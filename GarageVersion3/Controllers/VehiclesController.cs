@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using GarageVersion3.Data;
 using GarageVersion3.Models;
 using GarageVersion3.Models.ViewModels;
+using System.Drawing.Drawing2D;
+using System.Drawing;
 
 namespace GarageVersion3.Controllers
 {
@@ -19,6 +21,8 @@ namespace GarageVersion3.Controllers
         {
             _context = context;
         }
+
+
 
         // GET: Vehicles
         public async Task<IActionResult> Index()
@@ -52,11 +56,14 @@ namespace GarageVersion3.Controllers
                 .Select(v => new VehicleViewModel
                 {
                     Id = v.Id,
-                    RegistrationNumber = v.RegistrationNumber,
                     User = $"{v.User.FirstName} {v.User.LastName} ({v.User.BirthDate})",
-                    VehicleType = v.VehicleType.Type
+                    VehicleType = v.VehicleType.Type,
+                    RegistrationNumber = v.RegistrationNumber,
+                    Brand = v.Brand,
+                    Color = v.Color,
+                    VehicleModel = v.VehicleModel,
+                    NrOfWheels = v.NrOfWheels,
                 }).FirstOrDefaultAsync();
-
 
 
             if (viewModel == null)
@@ -88,7 +95,11 @@ namespace GarageVersion3.Controllers
                 {
                     VehicleTypeId = viewModel.VehicleTypeId,
                     UserId = viewModel.UserId,
-                    RegistrationNumber = viewModel.RegistrationNumber
+                    RegistrationNumber = viewModel.RegistrationNumber,
+                    Brand = viewModel.Brand,
+                    Color = viewModel.Color,
+                    VehicleModel = viewModel.VehicleModel,
+                    NrOfWheels = viewModel.NrOfWheels,
                 };
 
                 _context.Add(vehicle);
@@ -119,9 +130,14 @@ namespace GarageVersion3.Controllers
             {
                 Id = vehicle.Id,
                 VehicleTypeId = vehicle.VehicleTypeId,
-                UserId = vehicle.UserId, 
-                RegistrationNumber = vehicle.RegistrationNumber
+                UserId = vehicle.UserId,
+                RegistrationNumber = vehicle.RegistrationNumber,
+                Brand = vehicle.Brand,
+                Color = vehicle.Color,
+                VehicleModel = vehicle.VehicleModel,
+                NrOfWheels = vehicle.NrOfWheels
             };
+
 
             DropdownDataLists();
             return View(viewModel);
@@ -132,7 +148,7 @@ namespace GarageVersion3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id,  VehicleViewModel viewModel)
+        public async Task<IActionResult> Edit(int id, VehicleViewModel viewModel)
         {
 
             if (ModelState.IsValid)
@@ -150,6 +166,10 @@ namespace GarageVersion3.Controllers
                     vehicle.VehicleTypeId = viewModel.VehicleTypeId;
                     vehicle.UserId = viewModel.UserId;
                     vehicle.RegistrationNumber = viewModel.RegistrationNumber;
+                    vehicle.Brand = viewModel.Brand;
+                    vehicle.Color = viewModel.Color;
+                    vehicle.VehicleModel = viewModel.VehicleModel;
+                    vehicle.NrOfWheels = viewModel.NrOfWheels;
 
                     _context.Update(vehicle);
                     await _context.SaveChangesAsync();
@@ -198,7 +218,11 @@ namespace GarageVersion3.Controllers
                 VehicleType = vehicleType.Type,
                 UserId = vehicle.UserId,
                 User = $"{user.FirstName} {user.LastName} ({user.BirthDate})",
-                RegistrationNumber = vehicle.RegistrationNumber
+                RegistrationNumber = vehicle.RegistrationNumber,
+                Brand = vehicle.Brand,
+                Color = vehicle.Color,
+                VehicleModel = vehicle.VehicleModel,
+                NrOfWheels = vehicle.NrOfWheels
             };
 
             return View(viewModel);
@@ -209,15 +233,150 @@ namespace GarageVersion3.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var vehicle = await _context.Vehicle.FindAsync(id);
-            if (vehicle != null)
+            try
             {
+                var vehicle = await _context.Vehicle.FindAsync(id);
+                if (vehicle == null)
+                {
+                    return NotFound();
+                }
+
                 _context.Vehicle.Remove(vehicle);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "Error occured while trying to remove a vehicle");
+                return RedirectToAction(nameof(Index));
+            }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Sort(string sortOrder)
+        {
+            var vehicles = await _context.Vehicle
+                .Include(v => v.VehicleType)
+                .Include(v => v.User)
+                .ToListAsync();
+
+            if (vehicles.Count() == 0)
+            {
+                TempData["SortOnEmptyList"] = "The list is empty";
+                return RedirectToAction(nameof(Index));
+            }
+
+            switch (sortOrder)
+            {
+                case "VehicleType":
+                    vehicles = vehicles.OrderBy(v => v.VehicleType.Type).ToList();
+                    TempData["Sort"] = "Vehicle type sort was done";
+                    break;
+                case "RegistrationNumber":
+                    vehicles = vehicles.OrderBy(v => v.RegistrationNumber).ToList();
+                    TempData["Sort"] = "Registration number sort was done";
+                    break;
+                case "User":
+                    vehicles = vehicles.OrderBy(v => v.User.FirstName).ToList();
+                    TempData["Sort"] = "User first name sort was done";
+                    break;
+    
+                default:
+                    vehicles = vehicles.OrderBy(v => v.Id).ToList();
+                    break;
+            }
+
+            var sortedVehicles = vehicles
+                        .Select(v => new VehicleViewModel
+                        {
+                            Id = v.Id,
+                            VehicleType = v.VehicleType.Type,
+                            RegistrationNumber = v.RegistrationNumber,
+                            User = $"{v.User.FirstName} {v.User.LastName} ({v.User.BirthDate})",
+                            UserId = v.UserId,
+                            VehicleTypeId = v.VehicleTypeId
+                        }).ToList();
+
+            return View("Index", sortedVehicles);
+        }
+
+        
+        [HttpGet]
+        public async Task<IActionResult> Filter(string registrationNumber, string color, string brand)
+        {
+            if (string.IsNullOrEmpty(registrationNumber) && string.IsNullOrEmpty(color) && string.IsNullOrEmpty(brand))
+            {
+                TempData["SearchFail"] = "Please provide input for at least one search criteria";
+                var empyList = new List<VehicleViewModel>();
+                return View("Index", empyList);
+            }
+
+            var query = _context.Vehicle.AsQueryable();
+
+            if (!string.IsNullOrEmpty(registrationNumber))
+            {
+                query = query.Where(v => v.RegistrationNumber.Equals(registrationNumber.ToUpper().Trim()));
+            }
+
+            if (!string.IsNullOrEmpty(color))
+            {
+                query = query.Where(v => v.Color.Equals(color.Trim()));
+            }
+
+            if (!string.IsNullOrEmpty(brand))
+            {
+                query = query.Where(v => v.Brand.Equals(brand.Trim()));
+            }
+
+            var search = await query
+                        .Select(v => new VehicleViewModel
+                        {
+                            Id = v.Id,
+                            VehicleType = v.VehicleType.Type,
+                            RegistrationNumber = v.RegistrationNumber,
+                            User = $"{v.User.FirstName} {v.User.LastName} ({v.User.BirthDate})",
+                        }).ToListAsync();
+
+            if (search.Count == 0)
+            {
+                TempData["SearchFail"] = "No vehicles found";
+            }
+
+            else
+            {
+                TempData["SearchSuccess"] = "Search was successful";
+            }
+
+            return View("Index", search);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ShowAll()
+        {
+            var query = _context.Vehicle.AsQueryable();
+            var search = await query
+                      .Select(v => new VehicleViewModel
+                      {
+                          Id = v.Id,
+                          VehicleType = v.VehicleType.Type,
+                          RegistrationNumber = v.RegistrationNumber,
+                          User = $"{v.User.FirstName} {v.User.LastName} ({v.User.BirthDate})",
+                      }).ToListAsync();
+
+            if (search.Count == 0)
+            {
+                TempData["SearchFail"] = "There is no vehicles in the system";
+            }
+
+            else
+            {
+                TempData["SearchSuccess"] = "Showing all vehicles was successful";
+            }
+
+            return View("Index", search);
+        }
+
 
         private bool VehicleExists(int id)
         {
@@ -244,5 +403,8 @@ namespace GarageVersion3.Controllers
 
             ViewData["VehicleTypes"] = vehicleTypes;
         }
+    
+    
+    
     }
 }
