@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GarageVersion3.Migrations
 {
     [DbContext(typeof(GarageVersion3Context))]
-    [Migration("20240503143924_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20240505231929_SeedDataForVehicleTypes")]
+    partial class SeedDataForVehicleTypes
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -90,11 +90,6 @@ namespace GarageVersion3.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("BirthDate")
-                        .IsRequired()
-                        .HasMaxLength(12)
-                        .HasColumnType("nvarchar(12)");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(32)
@@ -104,6 +99,11 @@ namespace GarageVersion3.Migrations
                         .IsRequired()
                         .HasMaxLength(32)
                         .HasColumnType("nvarchar(32)");
+
+                    b.Property<string>("PersonalIdentifyNumber")
+                        .IsRequired()
+                        .HasMaxLength(12)
+                        .HasColumnType("nvarchar(12)");
 
                     b.HasKey("Id");
 
@@ -171,6 +171,38 @@ namespace GarageVersion3.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("VehicleType");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ParkingSize = 1.0,
+                            Type = "Car"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ParkingSize = 1.0,
+                            Type = "Bus"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ParkingSize = 2.0,
+                            Type = "Truck"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ParkingSize = 3.0,
+                            Type = "Boat"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ParkingSize = 3.0,
+                            Type = "Airplane"
+                        });
                 });
 
             modelBuilder.Entity("GarageVersion3.Models.ParkingLot", b =>

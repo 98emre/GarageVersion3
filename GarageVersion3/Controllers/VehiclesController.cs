@@ -34,7 +34,7 @@ namespace GarageVersion3.Controllers
                 {
                     Id = v.Id,
                     RegistrationNumber = v.RegistrationNumber,
-                    User = $"{v.User.FirstName} {v.User.LastName} ({v.User.BirthDate})",
+                    User = $"{v.User.FirstName} {v.User.LastName} ({v.User.PersonalIdentifyNumber})",
                     VehicleType = v.VehicleType.Type
                 }).ToListAsync();
 
@@ -56,7 +56,7 @@ namespace GarageVersion3.Controllers
                 .Select(v => new VehicleViewModel
                 {
                     Id = v.Id,
-                    User = $"{v.User.FirstName} {v.User.LastName} ({v.User.BirthDate})",
+                    User = $"{v.User.FirstName} {v.User.LastName} ({v.User.PersonalIdentifyNumber})",
                     VehicleType = v.VehicleType.Type,
                     RegistrationNumber = v.RegistrationNumber,
                     Brand = v.Brand,
@@ -217,7 +217,7 @@ namespace GarageVersion3.Controllers
                 VehicleTypeId = vehicleType.Id,
                 VehicleType = vehicleType.Type,
                 UserId = vehicle.UserId,
-                User = $"{user.FirstName} {user.LastName} ({user.BirthDate})",
+                User = $"{user.FirstName} {user.LastName} ({user.PersonalIdentifyNumber})",
                 RegistrationNumber = vehicle.RegistrationNumber,
                 Brand = vehicle.Brand,
                 Color = vehicle.Color,
@@ -293,7 +293,7 @@ namespace GarageVersion3.Controllers
                             Id = v.Id,
                             VehicleType = v.VehicleType.Type,
                             RegistrationNumber = v.RegistrationNumber,
-                            User = $"{v.User.FirstName} {v.User.LastName} ({v.User.BirthDate})",
+                            User = $"{v.User.FirstName} {v.User.LastName} ({v.User.PersonalIdentifyNumber})",
                             UserId = v.UserId,
                             VehicleTypeId = v.VehicleTypeId
                         }).ToList();
@@ -335,7 +335,7 @@ namespace GarageVersion3.Controllers
                             Id = v.Id,
                             VehicleType = v.VehicleType.Type,
                             RegistrationNumber = v.RegistrationNumber,
-                            User = $"{v.User.FirstName} {v.User.LastName} ({v.User.BirthDate})",
+                            User = $"{v.User.FirstName} {v.User.LastName} ({v.User.PersonalIdentifyNumber})",
                         }).ToListAsync();
 
             if (search.Count == 0)
@@ -361,7 +361,7 @@ namespace GarageVersion3.Controllers
                           Id = v.Id,
                           VehicleType = v.VehicleType.Type,
                           RegistrationNumber = v.RegistrationNumber,
-                          User = $"{v.User.FirstName} {v.User.LastName} ({v.User.BirthDate})",
+                          User = $"{v.User.FirstName} {v.User.LastName} ({v.User.PersonalIdentifyNumber})",
                       }).ToListAsync();
 
             if (search.Count == 0)
@@ -388,7 +388,7 @@ namespace GarageVersion3.Controllers
         {
             var users = _context.User.Select(u => new SelectListItem
             {
-                Text = $"{u.FirstName} {u.LastName} ({u.BirthDate})",
+                Text = $"{u.FirstName} {u.LastName} ({u.PersonalIdentifyNumber})",
                 Value = u.Id.ToString()
             });
 

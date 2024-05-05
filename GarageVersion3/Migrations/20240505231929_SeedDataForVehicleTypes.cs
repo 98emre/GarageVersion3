@@ -7,7 +7,7 @@
 namespace GarageVersion3.Migrations
 {
     /// <inheritdoc />
-    public partial class AddSeedDataForVehicleTypes : Migration
+    public partial class SeedDataForVehicleTypes : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

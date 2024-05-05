@@ -55,13 +55,13 @@ namespace GarageVersion3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BirthDate,FirstName,LastName")] CreateUserViewModel user)
+        public async Task<IActionResult> Create([Bind("PersonalIdentifyNumber,FirstName,LastName")] CreateUserViewModel user)
         {
             if (ModelState.IsValid)
             {
                 User createUser = new User();
 
-                createUser.BirthDate = user.BirthDate;
+                createUser.PersonalIdentifyNumber = user.PersonalIdentifyNumber;
                 createUser.FirstName = user.FirstName;
                 createUser.LastName = user.LastName;
 
@@ -93,7 +93,7 @@ namespace GarageVersion3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,BirthDate,FirstName,LastName")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,PersonalIdentifyNumber,FirstName,LastName")] User user)
         {
             if (id != user.Id)
             {

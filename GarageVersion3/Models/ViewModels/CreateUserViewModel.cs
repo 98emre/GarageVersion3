@@ -8,7 +8,7 @@ namespace GarageVersion3.Models.ViewModels
         public int Id { get; set; }
         [UniquePersonalNr]
         [StringLength(12, MinimumLength = 10, ErrorMessage = "Birth Date must be between 10 - 12")]
-        public string BirthDate { get; set; }
+        public string PersonalIdentifyNumber { get; set; }
 
         [StringLength(32, MinimumLength = 2, ErrorMessage = "First Name must be between 2 - 32")]
         [FirstNameIsNotLastName]

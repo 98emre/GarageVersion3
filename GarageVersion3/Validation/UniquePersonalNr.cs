@@ -17,7 +17,7 @@ namespace GarageVersion3.Validation
                 {
                     var dbContext = validationContext.GetRequiredService<GarageVersion3Context>();
                     
-                    if (dbContext.User.Any(u => u.BirthDate == viewModel.BirthDate))
+                    if (dbContext.User.Any(u => u.PersonalIdentifyNumber == viewModel.PersonalIdentifyNumber))
                     {
                         return new ValidationResult(errorMessage);
                     }
