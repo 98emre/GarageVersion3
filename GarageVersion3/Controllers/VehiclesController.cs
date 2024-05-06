@@ -428,7 +428,7 @@ namespace GarageVersion3.Controllers
 
             if (search.Count == 0)
             {
-                TempData["SearchFail"] = "There is no vehicles in the system";
+                TempData["SearchFail"] = "There are no vehicles in the system";
             }
 
             else
