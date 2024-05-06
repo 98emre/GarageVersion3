@@ -213,7 +213,15 @@ namespace GarageVersion3.Controllers
         [HttpGet]
         public async Task<IActionResult> Sort(string sortOrder)
         {
-            var users = await _context.User.ToListAsync();
+            var users = await _context.User
+              .Select(u => new UserViewModel
+              {
+                  Id = u.Id,
+                  FirstName = u.FirstName,
+                  LastName = u.LastName,
+                  PersonalIdentifyNumber = u.PersonalIdentifyNumber,
+                  NrOfVehicles = u.Vehicles.Count()
+              }).ToListAsync();
 
             if (users.Count() == 0)
             {
@@ -247,22 +255,18 @@ namespace GarageVersion3.Controllers
                     TempData["Sort"] = "Personal identify number with oldest sort was done";
                     break;
 
+                case "NumberOfVehicles":
+                    users = users.OrderBy(u => u.NrOfVehicles).ToList();
+                    TempData["Sort"] = "Number of vehicles sort was done from lowest to highest ";
+                    break;
+
 
                 default:
                     users = users.OrderBy(v => v.Id).ToList();
                     break;
             }
 
-            var sortedUsers = users
-                        .Select(u => new UserViewModel
-                        {
-                            Id = u.Id,
-                            FirstName = u.FirstName,
-                            LastName = u.LastName,
-                            PersonalIdentifyNumber = u.PersonalIdentifyNumber,
-                        }).ToList();
-
-            return View("Index", sortedUsers);
+            return View("Index", users);
         }
     }
 }
