@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GarageVersion3.Data;
 using GarageVersion3.Models;
+using GarageVersion3.Models.ViewModels;
 
 namespace GarageVersion3.Controllers
 {
@@ -27,21 +28,8 @@ namespace GarageVersion3.Controllers
         }
 
         // GET: Receipts/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(ReceiptViewModel receipt)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var receipt = await _context.Receipt
-                .Include(r => r.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (receipt == null)
-            {
-                return NotFound();
-            }
-
             return View(receipt);
         }
 

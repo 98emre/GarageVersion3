@@ -1,38 +1,37 @@
-﻿@model GarageVersion3.Models.Receipt
+﻿@model GarageVersion3.Models.ViewModels.ReceiptViewModel
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Receipt Details</h1>
 
 <div>
-    <h4>Receipt</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User)
+            @Html.DisplayNameFor(model => model.RegistrationNumber)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.Id)
+            @Html.DisplayFor(model => model.RegistrationNumber)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ParkingNumber)
+            @Html.DisplayNameFor(model => model.Checkin)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ParkingNumber)
+            @Html.DisplayFor(model => model.Checkin)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CheckIn)
+            @Html.DisplayNameFor(model => model.CheckoutDate)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CheckIn)
+            @Html.DisplayFor(model => model.CheckoutDate)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CheckOut)
+            @Html.DisplayNameFor(model => model.TotalParkingHours)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CheckOut)
+            @Html.DisplayFor(model => model.TotalParkingHours)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Price)
@@ -43,6 +42,5 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back to Vehicles List</a>
 </div>
