@@ -12,8 +12,12 @@
       public VehicleType VehicleType { get; set; }
       //RegistrationNumber
       public Vehicle RegistrationNumber { get; set; }
-
-      //ParkingHours
-     // public ReceiptViewModel TotalParkingHours { get; set; }
+        
+      public DateTime Checkin { get; set; }
+      public int ParkingSpot { get; set; }
+      public bool AvailableParkingSpot { get; set; }
+    
+        //ParkingHours
+        // public ReceiptViewModel TotalParkingHours { get; set; }
     }
 }

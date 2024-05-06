@@ -44,7 +44,8 @@ namespace GarageVersion3.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("VehicleId");
+                    b.HasIndex("VehicleId")
+                        .IsUnique();
 
                     b.ToTable("ParkingLot");
                 });
@@ -205,8 +206,8 @@ namespace GarageVersion3.Migrations
             modelBuilder.Entity("GarageVersion3.Models.ParkingLot", b =>
                 {
                     b.HasOne("GarageVersion3.Models.Vehicle", "Vehicle")
-                        .WithMany()
-                        .HasForeignKey("VehicleId")
+                        .WithOne("ParkingLot")
+                        .HasForeignKey("GarageVersion3.Models.ParkingLot", "VehicleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -248,6 +249,11 @@ namespace GarageVersion3.Migrations
                     b.Navigation("Receipts");
 
                     b.Navigation("Vehicles");
+                });
+
+            modelBuilder.Entity("GarageVersion3.Models.Vehicle", b =>
+                {
+                    b.Navigation("ParkingLot");
                 });
 #pragma warning restore 612, 618
         }

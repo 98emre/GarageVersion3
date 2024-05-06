@@ -23,19 +23,21 @@ namespace GarageVersion3.Controllers
         }
 
 
-
         // GET: Vehicles
         public async Task<IActionResult> Index()
         {
             var viewModel = await _context.Vehicle
                 .Include(v => v.User)
                 .Include(v => v.VehicleType)
+                .Include(v => v.ParkingLot)
                 .Select(v => new VehicleViewModel
                 {
                     Id = v.Id,
                     RegistrationNumber = v.RegistrationNumber,
                     User = $"{v.User.FirstName} {v.User.LastName} ({v.User.PersonalIdentifyNumber})",
-                    VehicleType = v.VehicleType.Type
+                    VehicleType = v.VehicleType.Type,
+                    ParkingSpot = v.ParkingLot.ParkingSpot,
+                    CheckInTime = v.ParkingLot.Checkin
                 }).ToListAsync();
 
             return View(viewModel);
@@ -63,8 +65,9 @@ namespace GarageVersion3.Controllers
                     Color = v.Color,
                     VehicleModel = v.VehicleModel,
                     NrOfWheels = v.NrOfWheels,
+                    ParkingSpot = v.ParkingLot.ParkingSpot,
+                    CheckInTime = v.ParkingLot.Checkin
                 }).FirstOrDefaultAsync();
-
 
             if (viewModel == null)
             {
@@ -91,6 +94,15 @@ namespace GarageVersion3.Controllers
         {
             if (ModelState.IsValid)
             {
+                var availableSpot = await GetAvailableParkingSpot();
+
+                if (availableSpot == -1)
+                {
+                    ModelState.AddModelError(string.Empty, "No available parking spots.");
+                    DropdownDataLists();
+                    return View(viewModel);
+                }
+
                 var vehicle = new Vehicle
                 {
                     VehicleTypeId = viewModel.VehicleTypeId,
@@ -104,11 +116,44 @@ namespace GarageVersion3.Controllers
 
                 _context.Add(vehicle);
                 await _context.SaveChangesAsync();
+
+                var parkingLot = new ParkingLot
+                {
+                    VehicleId = vehicle.Id,
+                    ParkingSpot = availableSpot,
+                    Checkin = DateTime.Now,
+                    AvailableParkingSpot = true
+                };
+
+                _context.Add(parkingLot);
+
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
             DropdownDataLists();
             return View(viewModel);
+        }
+
+
+
+        private async Task<int> GetAvailableParkingSpot()
+        {
+            var parkingLot = await _context.ParkingLot.OrderBy(pl => pl.ParkingSpot).ToListAsync();
+
+            int nextSpot = 1;
+
+            foreach (var spot in parkingLot)
+            {
+                if (spot.ParkingSpot != nextSpot)
+                {
+                    return nextSpot;
+                }
+
+                nextSpot++; 
+            }
+
+            return nextSpot;
         }
 
         // GET: Vehicles/Edit/5
@@ -236,64 +281,14 @@ namespace GarageVersion3.Controllers
             try
             {
                 var vehicle = await _context.Vehicle.FindAsync(id);
-
                 if (vehicle == null)
                 {
                     return NotFound();
                 }
 
-                // Create Receipt.
-                Receipt receipt = new Receipt();
-
-                receipt.CheckOut = DateTime.Now;
-                receipt.ParkingNumber = 1; // Get ParkingSpot
-                receipt.Price = 1; // Calculate ParkingSpot with receiptVM
-                receipt.UserId = vehicle.UserId;
-
-                try
-                {
-                    //int vehicleId = vehicle.Id;
-                    var parkingLot = _context.ParkingLot.Where(p => p.VehicleId == vehicle.Id).FirstOrDefault();
-
-                    var entireParkingLot = _context.ParkingLot;
-                    foreach (var thing in entireParkingLot)
-                    {
-                        Console.WriteLine(thing);
-                    }
-
-                    try
-                    {
-                        receipt.CheckIn = parkingLot.Checkin;
-                        receipt.ParkingNumber = parkingLot.ParkingSpot;
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                        ErrorViewModel errorViewModel = new ErrorViewModel();
-                        errorViewModel.ErrorMessage = "Couldn't get CheckIn time or ParkingSpot...";
-                        return View("Error", errorViewModel);
-                    }
-
-                    // Remember to make the parking spot available on checkout!
-                    parkingLot.AvailableParkingSpot = true;
-
-                    Console.WriteLine(parkingLot.ToString());
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    return View(e.Message);
-                }
-
-                _context.Add(receipt);
-                await _context.SaveChangesAsync();
-
-                /*
                 _context.Vehicle.Remove(vehicle);
                 await _context.SaveChangesAsync();
-                */
                 return RedirectToAction(nameof(Index));
-
             }
 
             catch (Exception ex)
@@ -309,6 +304,7 @@ namespace GarageVersion3.Controllers
             var vehicles = await _context.Vehicle
                 .Include(v => v.VehicleType)
                 .Include(v => v.User)
+                .Include(v => v.ParkingLot)
                 .ToListAsync();
 
             if (vehicles.Count() == 0)
@@ -332,9 +328,19 @@ namespace GarageVersion3.Controllers
                     TempData["Sort"] = "User first name sort was done";
                     break;
 
+                case "ParkingSpot":
+                    vehicles = vehicles.OrderBy(v => v.ParkingLot.ParkingSpot).ToList();
+                    TempData["Sort"] = "Parking Spot sort was done";
+                    break;
+
+                case "CheckInTime":
+                    vehicles = vehicles.OrderBy(v => v.ParkingLot.Checkin).ToList();
+                    TempData["Sort"] = "Check in sort was done";
+                    break;
+
                 default:
                     vehicles = vehicles.OrderBy(v => v.Id).ToList();
-                    break;
+                 break;
             }
 
             var sortedVehicles = vehicles
@@ -345,13 +351,15 @@ namespace GarageVersion3.Controllers
                             RegistrationNumber = v.RegistrationNumber,
                             User = $"{v.User.FirstName} {v.User.LastName} ({v.User.PersonalIdentifyNumber})",
                             UserId = v.UserId,
+                            ParkingSpot = v.ParkingLot.ParkingSpot,
+                            CheckInTime = v.ParkingLot.Checkin,
                             VehicleTypeId = v.VehicleTypeId
                         }).ToList();
 
             return View("Index", sortedVehicles);
         }
 
-
+        
         [HttpGet]
         public async Task<IActionResult> Filter(string registrationNumber, string color, string brand)
         {
@@ -386,6 +394,8 @@ namespace GarageVersion3.Controllers
                             VehicleType = v.VehicleType.Type,
                             RegistrationNumber = v.RegistrationNumber,
                             User = $"{v.User.FirstName} {v.User.LastName} ({v.User.PersonalIdentifyNumber})",
+                            ParkingSpot = v.ParkingLot.ParkingSpot,
+                            CheckInTime = v.ParkingLot.Checkin
                         }).ToListAsync();
 
             if (search.Count == 0)
@@ -412,6 +422,8 @@ namespace GarageVersion3.Controllers
                           VehicleType = v.VehicleType.Type,
                           RegistrationNumber = v.RegistrationNumber,
                           User = $"{v.User.FirstName} {v.User.LastName} ({v.User.PersonalIdentifyNumber})",
+                          ParkingSpot = v.ParkingLot.ParkingSpot,
+                          CheckInTime = v.ParkingLot.Checkin
                       }).ToListAsync();
 
             if (search.Count == 0)
@@ -455,6 +467,32 @@ namespace GarageVersion3.Controllers
         }
 
 
+        [HttpGet]
+        public IActionResult Statistics()
+        {
+            var parkedVehicles = _context.Vehicle.Include(v => v.VehicleType).ToList();
 
+            var vehicleTypeCount = new Dictionary<string, int>();
+
+            foreach (var vehicle in parkedVehicles)
+            {
+                if (vehicle.VehicleType != null)
+                {
+                    if (!vehicleTypeCount.ContainsKey(vehicle.VehicleType.Type))
+                    {
+                        vehicleTypeCount[vehicle.VehicleType.Type] = 0;
+                    }
+
+                    vehicleTypeCount[vehicle.VehicleType.Type]++;
+                };
+            }
+
+            var totalWheels = parkedVehicles.Sum(v => v.NrOfWheels);
+
+            ViewBag.VehicleType = vehicleTypeCount;
+            ViewBag.TotalWheels = totalWheels;
+
+            return View();
+        }
     }
 }

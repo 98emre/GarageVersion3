@@ -33,5 +33,11 @@ namespace GarageVersion3.Models.ViewModels
         [Range(0, 100)]
         [Required(ErrorMessage = "Add number of wheels for your vehicle")]
         public int NrOfWheels { get; set; }
+
+        [Display(Name = "Parking Spot")]
+        public int ParkingSpot { get; set; }
+
+        [Display(Name = "Check In Time")]
+        public DateTime CheckInTime { get; set; }
     }
 }
