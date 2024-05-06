@@ -236,14 +236,43 @@ namespace GarageVersion3.Controllers
             try
             {
                 var vehicle = await _context.Vehicle.FindAsync(id);
+                
                 if (vehicle == null)
                 {
                     return NotFound();
                 }
 
+                // Create Receipt.
+                Receipt receipt = new Receipt();
+                
+                receipt.CheckOut = DateTime.Now;
+                receipt.ParkingNumber = 1; // Get ParkingSpot
+                receipt.Price = 1; // Calculate ParkingSpot with receiptVM
+                receipt.UserId = vehicle.UserId;
+
+                try
+                {
+                    var parkingLot = _context.ParkingLot.FirstOrDefault(p => p.VehicleId == vehicle.Id);
+                    receipt.CheckIn = parkingLot.Checkin;
+                    receipt.ParkingNumber = parkingLot.ParkingSpot;
+
+                    // Remember to make the parking spot available on checkout!
+                    parkingLot.AvailableParkingSpot = true;
+
+                    Console.WriteLine(parkingLot.ToString());
+                } 
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    return View(e.Message);
+                }
+
+                /*
                 _context.Vehicle.Remove(vehicle);
                 await _context.SaveChangesAsync();
+                */
                 return RedirectToAction(nameof(Index));
+                
             }
 
             catch (Exception ex)

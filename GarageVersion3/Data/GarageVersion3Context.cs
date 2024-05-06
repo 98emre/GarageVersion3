@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using GarageVersion3.Models;
+using GarageVersion3.Models.ViewModels;
 
 namespace GarageVersion3.Data
 {
@@ -32,5 +33,6 @@ namespace GarageVersion3.Data
                 new VehicleType { Id = 5, Type = "Airplane", ParkingSize = 3 }
             );
         }
+        public DbSet<GarageVersion3.Models.ViewModels.ReceiptViewModel> ReceiptViewModel { get; set; } = default!;
     }
 }
