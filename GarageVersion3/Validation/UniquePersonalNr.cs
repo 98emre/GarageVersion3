@@ -6,22 +6,24 @@ namespace GarageVersion3.Validation
 {
     public class UniquePersonalNr : ValidationAttribute
     {
-        private readonly GarageVersion3Context dbContext;
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             if (value is string input)
             {
                 if (validationContext.ObjectInstance is CreateUserViewModel viewModel)
                 {
+                    /*
                     try
                     {
                         Personnummer.Personnummer personNr = new Personnummer.Personnummer(value.ToString());
                     }
+
                     catch (Exception e)
                     {
                         Console.WriteLine(e);
                         return new ValidationResult("Could not validate Personal Number.");
                     }
+                    */
 
                     var dbContext = validationContext.GetRequiredService<GarageVersion3Context>();
                     
