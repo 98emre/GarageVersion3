@@ -23,7 +23,16 @@ namespace GarageVersion3.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            return View(await _context.User.ToListAsync());
+            var users = await _context.User
+                .Select(u => new CreateUserViewModel
+                {
+                    Id = u.Id,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    PersonalIdentifyNumber = u.PersonalIdentifyNumber,
+                }).ToListAsync();
+
+            return View(users);
         }
 
         // GET: Users/Details/5
@@ -159,6 +168,61 @@ namespace GarageVersion3.Controllers
         private bool UserExists(int id)
         {
             return _context.User.Any(e => e.Id == id);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Sort(string sortOrder)
+        {
+            var users = await _context.User.ToListAsync();
+
+            if (users.Count() == 0)
+            {
+                TempData["SortOnEmptyList"] = "The user list is empty";
+                return RedirectToAction(nameof(Index));
+            }
+
+            switch (sortOrder)
+            {
+                case "FirstName":
+                    users = users
+                        .OrderBy(u => u.FirstName.Substring(0, 2))
+                        .ThenBy(u => u.FirstName)
+                        .ToList();
+                    TempData["Sort"] = "User first name sort was done";
+                    break;
+
+                case "LastName":
+                    users = users
+                        .OrderBy(u => u.LastName.Substring(0, 2))
+                        .ThenBy(u => u.LastName)
+                        .ToList();
+                    TempData["Sort"] = "User last name sort was done";
+                    break;
+
+                case "PersonalIdentifyNumber":
+                    users = users
+                        .OrderBy(u => u.PersonalIdentifyNumber.Substring(0, 5))
+                        .ThenBy(u => u.PersonalIdentifyNumber)
+                        .ToList();
+                    TempData["Sort"] = "Personal identify number with oldest sort was done";
+                    break;
+
+
+                default:
+                    users = users.OrderBy(v => v.Id).ToList();
+                    break;
+            }
+
+            var sortedUsers = users
+                        .Select(u => new CreateUserViewModel
+                        {
+                            Id = u.Id,
+                            FirstName = u.FirstName,
+                            LastName = u.LastName,
+                            PersonalIdentifyNumber = u.PersonalIdentifyNumber,
+                        }).ToList();
+
+            return View("Index", sortedUsers);
         }
     }
 }

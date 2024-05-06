@@ -1,4 +1,4 @@
-﻿@model IEnumerable<GarageVersion3.Models.User>
+﻿@model IEnumerable<CreateUserViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -6,20 +6,38 @@
 
 <h1>Index</h1>
 
+
+@if (TempData.ContainsKey("Sort"))
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["Sort"]
+    </div>
+}
+
+
+@if (TempData.ContainsKey("SortOnEmptyList"))
+{
+    <div class="alert alert-warning" role="alert">
+        @TempData["SortOnEmptyList"]
+    </div>
+}
+
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.PersonalIdentifyNumber)
+            <th class="px-6 py-4 text-left font-weight-bold">
+                <a asp-action="Sort" asp-route-sortOrder="PersonalIdentifyNumber" class="text-black">Personal Identify Number</a>
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstName)
+            <th class="px-6 py-4 text-left font-weight-bold">
+                <a asp-action="Sort" asp-route-sortOrder="FirstName" class="text-black">First Name</a>
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastName)
+            <th class="px-6 py-4 text-left font-weight-bold">
+                <a asp-action="Sort" asp-route-sortOrder="LastName" class="text-black">Last Name</a>
             </th>
             <th></th>
         </tr>

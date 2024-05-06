@@ -22,7 +22,6 @@ namespace GarageVersion3.Controllers
             _context = context;
         }
 
-
         // GET: Vehicles
         public async Task<IActionResult> Index()
         {
@@ -134,8 +133,6 @@ namespace GarageVersion3.Controllers
             DropdownDataLists();
             return View(viewModel);
         }
-
-
 
         private async Task<int> GetAvailableParkingSpot()
         {
@@ -324,8 +321,11 @@ namespace GarageVersion3.Controllers
                     TempData["Sort"] = "Registration number sort was done";
                     break;
                 case "User":
-                    vehicles = vehicles.OrderBy(v => v.User.FirstName).ToList();
-                    TempData["Sort"] = "User first name sort was done";
+                    vehicles = vehicles
+                        .OrderBy(v => v.User.FirstName.Substring(0, 2))
+                        .ThenBy(v => v.User.FirstName)
+                        .ToList();
+                    TempData["Sort"] = "Users sort was done";
                     break;
 
                 case "ParkingSpot":
@@ -359,7 +359,6 @@ namespace GarageVersion3.Controllers
             return View("Index", sortedVehicles);
         }
 
-        
         [HttpGet]
         public async Task<IActionResult> Filter(string registrationNumber, string color, string brand)
         {
@@ -439,12 +438,10 @@ namespace GarageVersion3.Controllers
             return View("Index", search);
         }
 
-
         private bool VehicleExists(int id)
         {
             return _context.Vehicle.Any(e => e.Id == id);
         }
-
 
         private void DropdownDataLists()
         {
@@ -465,7 +462,6 @@ namespace GarageVersion3.Controllers
 
             ViewData["VehicleTypes"] = vehicleTypes;
         }
-
 
         [HttpGet]
         public IActionResult Statistics()
