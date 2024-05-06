@@ -286,8 +286,26 @@ namespace GarageVersion3.Controllers
                     return NotFound();
                 }
 
+                var parkingSpot = _context.ParkingLot.Where(p => p.VehicleId == vehicle.Id).FirstOrDefault();
+
+                // Create Receipt.
+                Receipt receipt = new Receipt();
+                receipt.ParkingNumber = parkingSpot.ParkingSpot;
+                receipt.CheckIn = parkingSpot.Checkin;
+                receipt.CheckOut = DateTime.Now;
+                receipt.Price = 
+                receipt.UserId = vehicle.UserId;
+                // Make the parking spot available again.
+                parkingSpot.AvailableParkingSpot = true;
+
+                //ReceiptViewModel receptVM = new ReceiptViewModel();
+
+
+                _context.Add(receipt);
+                _context.Update(parkingSpot);
                 _context.Vehicle.Remove(vehicle);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
 
