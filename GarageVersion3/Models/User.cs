@@ -7,7 +7,7 @@ namespace GarageVersion3.Models
         [Key]
         public int Id { get; set; }
 
-        [StringLength(10, MinimumLength = 10, ErrorMessage = "Birth Date must be 10 numbers")]
+        [StringLength(12, MinimumLength = 10, ErrorMessage = "Birth Date must be between 10 - 12")]
         public string PersonalIdentifyNumber { get; set; }
 
         [StringLength(32, MinimumLength = 2, ErrorMessage = "First Name must be between 2 - 32")]
