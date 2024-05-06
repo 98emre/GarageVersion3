@@ -91,6 +91,14 @@ namespace GarageVersion3.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(VehicleViewModel viewModel)
         {
+            if (_context.Vehicle.Any(v => v.RegistrationNumber == viewModel.RegistrationNumber))
+            {
+                ModelState.AddModelError("RegistrationNumber", "A vehicle with this registration number already exists");
+                DropdownDataLists();
+                return View();
+            }
+
+
             if (ModelState.IsValid)
             {
                 var availableSpot = await GetAvailableParkingSpot();
