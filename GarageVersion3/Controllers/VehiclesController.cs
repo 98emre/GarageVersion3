@@ -478,6 +478,7 @@ namespace GarageVersion3.Controllers
             var parkedVehicles = _context.Vehicle.Include(v => v.VehicleType).ToList();
 
             var vehicleTypeCount = new Dictionary<string, int>();
+            double totalRevenue = 0;
 
             foreach (var vehicle in parkedVehicles)
             {
@@ -489,6 +490,9 @@ namespace GarageVersion3.Controllers
                     }
 
                     vehicleTypeCount[vehicle.VehicleType.Type]++;
+
+                    ReceiptViewModel receipt = new ReceiptViewModel();
+                    totalRevenue = totalRevenue + receipt.Price;
                 };
             }
 
@@ -496,6 +500,7 @@ namespace GarageVersion3.Controllers
 
             ViewBag.VehicleType = vehicleTypeCount;
             ViewBag.TotalWheels = totalWheels;
+            ViewBag.TotalRevenue = totalRevenue.ToString("#,##0.00");
 
             return View();
         }
