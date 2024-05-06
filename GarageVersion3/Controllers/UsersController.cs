@@ -44,7 +44,10 @@ namespace GarageVersion3.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User.FirstOrDefaultAsync(m => m.Id == id);
+            var user = await _context.User
+                .Include(u => u.Vehicles)
+                .ThenInclude(v => v.VehicleType)
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (user == null)
             {
@@ -56,7 +59,9 @@ namespace GarageVersion3.Controllers
                 Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                PersonalIdentifyNumber = user.PersonalIdentifyNumber
+                PersonalIdentifyNumber = user.PersonalIdentifyNumber,
+                NrOfVehicles = user.Vehicles?.Count() ?? 0,
+                Vehicles = user.Vehicles
             };
 
             return View(viewModel);

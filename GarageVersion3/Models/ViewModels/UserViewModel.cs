@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using GarageVersion3.Validation;
 
 namespace GarageVersion3.Models.ViewModels
@@ -19,6 +20,7 @@ namespace GarageVersion3.Models.ViewModels
 
         public List<Vehicle>? Vehicles { get; set; }
 
+        [DisplayName("Number Of Vehicles")]
         public int NrOfVehicles { get; set; }
 
     }

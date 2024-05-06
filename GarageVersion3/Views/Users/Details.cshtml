@@ -28,8 +28,41 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.LastName)
         </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NrOfVehicles)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NrOfVehicles)
+        </dd>
     </dl>
 </div>
+
+@if (Model.Vehicles != null && Model.Vehicles.Any())
+{
+    <div>
+        <h4>Vehicles</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                  <th>Registration Number</th>
+                  <th>Vehicle Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var vehicle in Model.Vehicles)
+                {
+                    <tr>
+                        <td>@vehicle.RegistrationNumber</td>
+                        <td>@vehicle.VehicleType.Type</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
