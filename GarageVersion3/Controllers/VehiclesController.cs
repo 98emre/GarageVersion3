@@ -114,7 +114,7 @@ namespace GarageVersion3.Controllers
                 {
                     VehicleTypeId = viewModel.VehicleTypeId,
                     UserId = viewModel.UserId,
-                    RegistrationNumber = viewModel.RegistrationNumber,
+                    RegistrationNumber = viewModel.RegistrationNumber.ToUpper().Trim(),
                     Brand = viewModel.Brand,
                     Color = viewModel.Color,
                     VehicleModel = viewModel.VehicleModel,
@@ -215,7 +215,7 @@ namespace GarageVersion3.Controllers
 
                     vehicle.VehicleTypeId = viewModel.VehicleTypeId;
                     vehicle.UserId = viewModel.UserId;
-                    vehicle.RegistrationNumber = viewModel.RegistrationNumber;
+                    vehicle.RegistrationNumber = viewModel.RegistrationNumber.ToUpper().Trim();
                     vehicle.Brand = viewModel.Brand;
                     vehicle.Color = viewModel.Color;
                     vehicle.VehicleModel = viewModel.VehicleModel;
