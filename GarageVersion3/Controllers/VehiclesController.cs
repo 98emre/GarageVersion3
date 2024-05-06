@@ -23,7 +23,6 @@ namespace GarageVersion3.Controllers
             _context = context;
         }
 
-
         // GET: Vehicles
         public async Task<IActionResult> Index()
         {
@@ -93,6 +92,14 @@ namespace GarageVersion3.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(VehicleViewModel viewModel)
         {
+            if (_context.Vehicle.Any(v => v.RegistrationNumber == viewModel.RegistrationNumber))
+            {
+                ModelState.AddModelError("RegistrationNumber", "A vehicle with this registration number already exists");
+                DropdownDataLists();
+                return View();
+            }
+
+
             if (ModelState.IsValid)
             {
                 var availableSpot = await GetAvailableParkingSpot();
@@ -108,7 +115,7 @@ namespace GarageVersion3.Controllers
                 {
                     VehicleTypeId = viewModel.VehicleTypeId,
                     UserId = viewModel.UserId,
-                    RegistrationNumber = viewModel.RegistrationNumber,
+                    RegistrationNumber = viewModel.RegistrationNumber.ToUpper().Trim(),
                     Brand = viewModel.Brand,
                     Color = viewModel.Color,
                     VehicleModel = viewModel.VehicleModel,
@@ -135,8 +142,6 @@ namespace GarageVersion3.Controllers
             DropdownDataLists();
             return View(viewModel);
         }
-
-
 
         private async Task<int> GetAvailableParkingSpot()
         {
@@ -211,7 +216,7 @@ namespace GarageVersion3.Controllers
 
                     vehicle.VehicleTypeId = viewModel.VehicleTypeId;
                     vehicle.UserId = viewModel.UserId;
-                    vehicle.RegistrationNumber = viewModel.RegistrationNumber;
+                    vehicle.RegistrationNumber = viewModel.RegistrationNumber.ToUpper().Trim();
                     vehicle.Brand = viewModel.Brand;
                     vehicle.Color = viewModel.Color;
                     vehicle.VehicleModel = viewModel.VehicleModel;
@@ -325,8 +330,11 @@ namespace GarageVersion3.Controllers
                     TempData["Sort"] = "Registration number sort was done";
                     break;
                 case "User":
-                    vehicles = vehicles.OrderBy(v => v.User.FirstName).ToList();
-                    TempData["Sort"] = "User first name sort was done";
+                    vehicles = vehicles
+                        .OrderBy(v => v.User.FirstName.Substring(0, 2))
+                        .ThenBy(v => v.User.FirstName)
+                        .ToList();
+                    TempData["Sort"] = "Users sort was done";
                     break;
 
                 case "ParkingSpot":
@@ -360,7 +368,6 @@ namespace GarageVersion3.Controllers
             return View("Index", sortedVehicles);
         }
 
-        
         [HttpGet]
         public async Task<IActionResult> Filter(string registrationNumber, string color, string brand)
         {
@@ -429,7 +436,7 @@ namespace GarageVersion3.Controllers
 
             if (search.Count == 0)
             {
-                TempData["SearchFail"] = "There is no vehicles in the system";
+                TempData["SearchFail"] = "There are no vehicles in the system";
             }
 
             else
@@ -440,12 +447,10 @@ namespace GarageVersion3.Controllers
             return View("Index", search);
         }
 
-
         private bool VehicleExists(int id)
         {
             return _context.Vehicle.Any(e => e.Id == id);
         }
-
 
         private void DropdownDataLists()
         {
@@ -466,7 +471,6 @@ namespace GarageVersion3.Controllers
 
             ViewData["VehicleTypes"] = vehicleTypes;
         }
-
 
         [HttpGet]
         public IActionResult Statistics()

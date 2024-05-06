@@ -19,6 +19,10 @@
             </div>
 
             <div class="form-group">
+                <a asp-action="Create" asp-controller="VehicleType">Add New Vehicle Type</a>
+            </div>
+
+            <div class="form-group">
                 <label asp-for="UserId" class="control-label">Select User</label>
                 <select asp-for="UserId" class="form-control" asp-items="ViewBag.Users"></select>
                 <span asp-validation-for="UserId" class="text-danger"></span>
