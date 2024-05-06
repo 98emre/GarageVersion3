@@ -268,5 +268,85 @@ namespace GarageVersion3.Controllers
 
             return View("Index", users);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Filter(string firstName, string lastName, string personalIdentifyNumber)
+        {
+            if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName) && string.IsNullOrEmpty(personalIdentifyNumber))
+            {
+                TempData["SearchFail"] = "Please provide input for at least one search criteria";
+                var empyList = new List<UserViewModel>();
+                return View("Index", empyList);
+            }
+
+            var query = _context.User.AsQueryable();
+
+            if (!string.IsNullOrEmpty(firstName))
+            {
+                query = query.Where(v => v.FirstName.ToUpper().Equals(firstName.ToUpper().Trim()));
+            }
+
+            if (!string.IsNullOrEmpty(lastName))
+            {
+                query = query.Where(v => v.LastName.ToUpper().Equals(lastName.ToUpper().Trim()));
+            }
+
+            if (!string.IsNullOrEmpty(personalIdentifyNumber))
+            {
+                query = query.Where(v => v.PersonalIdentifyNumber.Equals(personalIdentifyNumber.Trim()));
+            }
+
+            var search = await query
+                        .Include(u => u.Vehicles)
+                        .Select(u => new UserViewModel
+                        {
+                            Id = u.Id,
+                            FirstName = u.FirstName,
+                            LastName = u.LastName,
+                            PersonalIdentifyNumber = u.PersonalIdentifyNumber,
+                            NrOfVehicles = u.Vehicles.Count()
+                        }).ToListAsync();
+
+            if (search.Count == 0)
+            {
+                TempData["SearchFail"] = "No User found";
+            }
+
+            else
+            {
+                TempData["SearchSuccess"] = "Search was successful";
+            }
+
+            return View("Index", search);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ShowAll()
+        {
+            var query = _context.User.AsQueryable();
+            var search = await query
+                      .Select(u => new UserViewModel
+                      {
+                          Id = u.Id,
+                          FirstName = u.FirstName,
+                          LastName = u.LastName,
+                          PersonalIdentifyNumber = u.PersonalIdentifyNumber,
+                          NrOfVehicles = u.Vehicles.Count()
+                          
+                      }).ToListAsync();
+
+            if (search.Count == 0)
+            {
+                TempData["SearchFail"] = "There are no users in the system";
+            }
+
+            else
+            {
+                TempData["SearchSuccess"] = "Showing all users was successful";
+            }
+
+            return View("Index", search);
+        }
     }
 }
