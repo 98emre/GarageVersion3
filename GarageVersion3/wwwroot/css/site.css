@@ -48,6 +48,10 @@ body {
     width: 2rem;
 }
 
+.form-group {
+    padding: 0.25rem 0;
+}
+
 .list-group-item {
     background-color: var(--color-columbia-blue) !important;
 }
