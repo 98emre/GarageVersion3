@@ -27,6 +27,10 @@ body {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
+.btn {
+    min-width: 7rem;
+}
+
 .btn-air-blue {
     background-color: var(--color-air-blue);
 }
