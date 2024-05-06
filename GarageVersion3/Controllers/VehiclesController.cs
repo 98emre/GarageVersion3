@@ -403,8 +403,32 @@ namespace GarageVersion3.Controllers
 
             ViewData["VehicleTypes"] = vehicleTypes;
         }
-    
-    
-    
+
+
+        [HttpGet]
+        public IActionResult Statistics()
+        {
+            var parkedVehicles = _context.Vehicle.ToList();
+
+            var vehicleTypeCount = new Dictionary<VehicleType, int>();
+
+            foreach (var vehicle in parkedVehicles)
+            {
+                if (!vehicleTypeCount.ContainsKey(vehicle.VehicleType))
+                {
+                    vehicleTypeCount[vehicle.VehicleType] = 0;
+                }
+
+                vehicleTypeCount[vehicle.VehicleType]++;
+            }
+
+            var totalWheels = parkedVehicles.Sum(v => v.NrOfWheels);
+
+   
+            ViewBag.VehicleType = vehicleTypeCount;
+            ViewBag.TotalWheels = totalWheels;
+
+            return View();
+        }
     }
 }

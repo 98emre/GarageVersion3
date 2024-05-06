@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewData["Title"] = "Statistics";
+}
+
+<div class="container d-flex flex-column justify-content-center align-items-center">
+    <h1 class="pt-4">Statistics</h1>
+
+    <div class="table-responsive">
+        <table class="table table-bordered border-3 border-dark  table-sm">
+            <thead>
+                <tr>
+                    <th>Vehicle Type</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var kvp in ViewBag.VehicleType)
+                {
+                    <tr>
+                        <td>@kvp.Key</td>
+                        <td>@kvp.Value</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="d-flex align-items-center mt-2 mb-2">
+        <img src="/images/record-vinyl-solid.svg" width="40" alt="Alternate Text" />
+        <h4 class="m-0 px-2">Total Number of Wheels: @ViewBag.TotalWheels</h4>
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary">Return Back</a>
+</div>
+
