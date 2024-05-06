@@ -14,6 +14,14 @@ namespace GarageVersion3.Models
         [Required(ErrorMessage = "Add type for your vehicle")]
         public VehicleType? VehicleType { get; set; }
 
+        [ForeignKey("User")]
+        public int UserId { get; set; }
+
+        [Required(ErrorMessage = "Add owner for the vehicle")]
+        public User? User { get; set; }
+
+        public ParkingLot? ParkingLot { get; set;}
+        
         [Required(ErrorMessage = "Add color for your vehicle")]
         public string Color { get; set; }
 
@@ -28,12 +36,6 @@ namespace GarageVersion3.Models
         [Range(0, 100)]
         [Required(ErrorMessage = "Add nr of wheels for your vehicle")]
         public int NrOfWheels { get; set; }
-
-        [ForeignKey("User")]
-        public int UserId { get; set; }
-
-        [Required(ErrorMessage = "Add owner for the vehicle")]
-        public User? User { get; set; }
 
         [Required(ErrorMessage = "Write down the vehicle registration number")]
         [StringLength(10, MinimumLength = 6)]

@@ -23,19 +23,21 @@ namespace GarageVersion3.Controllers
         }
 
 
-
         // GET: Vehicles
         public async Task<IActionResult> Index()
         {
             var viewModel = await _context.Vehicle
                 .Include(v => v.User)
                 .Include(v => v.VehicleType)
+                .Include(v => v.ParkingLot)
                 .Select(v => new VehicleViewModel
                 {
                     Id = v.Id,
                     RegistrationNumber = v.RegistrationNumber,
                     User = $"{v.User.FirstName} {v.User.LastName} ({v.User.PersonalIdentifyNumber})",
-                    VehicleType = v.VehicleType.Type
+                    VehicleType = v.VehicleType.Type,
+                    ParkingSpot = v.ParkingLot.ParkingSpot,
+                    CheckInTime = v.ParkingLot.Checkin
                 }).ToListAsync();
 
             return View(viewModel);

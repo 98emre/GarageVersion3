@@ -78,6 +78,14 @@
                         <a asp-action="Sort" asp-route-sortOrder="RegistrationNumber" class="text-black">Registration Number</a>
                     </th>
 
+                    <th class="px-6 py-4 text-left font-weight-bold">
+                        Parking Spot
+                    </th>
+
+                    <th class="px-6 py-4 text-left font-weight-bold">
+                        Arrival Date
+                    </th>
+
                     <th></th>
                 </tr>
             </thead>
@@ -95,6 +103,14 @@
 
                         <td>
                             @Html.DisplayFor(modelItem => item.RegistrationNumber)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ParkingSpot)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CheckInTime)
                         </td>
 
                         <td>
