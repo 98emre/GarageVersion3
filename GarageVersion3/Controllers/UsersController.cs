@@ -43,14 +43,22 @@ namespace GarageVersion3.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var user = await _context.User.FirstOrDefaultAsync(m => m.Id == id);
+
             if (user == null)
             {
                 return NotFound();
             }
 
-            return View(user);
+            var viewModel = new CreateUserViewModel
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                PersonalIdentifyNumber = user.PersonalIdentifyNumber
+            };
+
+            return View(viewModel);
         }
 
         // GET: Users/Create
@@ -64,15 +72,16 @@ namespace GarageVersion3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PersonalIdentifyNumber,FirstName,LastName")] CreateUserViewModel user)
+        public async Task<IActionResult> Create(CreateUserViewModel user)
         {
             if (ModelState.IsValid)
             {
-                User createUser = new User();
-
-                createUser.PersonalIdentifyNumber = user.PersonalIdentifyNumber;
-                createUser.FirstName = user.FirstName;
-                createUser.LastName = user.LastName;
+                User createUser = new User
+                {
+                    PersonalIdentifyNumber = user.PersonalIdentifyNumber,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName
+                };
 
                 _context.Add(createUser);
                 await _context.SaveChangesAsync();
@@ -90,11 +99,21 @@ namespace GarageVersion3.Controllers
             }
 
             var user = await _context.User.FindAsync(id);
+
             if (user == null)
             {
                 return NotFound();
             }
-            return View(user);
+
+            var viewModel = new CreateUserViewModel
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                PersonalIdentifyNumber = user.PersonalIdentifyNumber,
+            };
+
+            return View(viewModel);
         }
 
         // POST: Users/Edit/5
@@ -102,23 +121,30 @@ namespace GarageVersion3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,PersonalIdentifyNumber,FirstName,LastName")] User user)
+        public async Task<IActionResult> Edit(int id, CreateUserViewModel viewModel)
         {
-            if (id != user.Id)
-            {
-                return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    var user = await _context.User.FindAsync(id);
+
+                    if (user == null)
+                    {
+                        return NotFound();
+                    }
+
+                    user.FirstName = viewModel.FirstName;
+                    user.LastName = viewModel.LastName; 
+                    user.PersonalIdentifyNumber = viewModel.PersonalIdentifyNumber;
+                    
                     _context.Update(user);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(user.Id))
+                    if (!UserExists(id))
                     {
                         return NotFound();
                     }
@@ -129,7 +155,7 @@ namespace GarageVersion3.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+            return View(viewModel);
         }
 
         // GET: Users/Delete/5
@@ -140,14 +166,22 @@ namespace GarageVersion3.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var user = await _context.User.FirstOrDefaultAsync(m => m.Id == id);
+
             if (user == null)
             {
                 return NotFound();
             }
 
-            return View(user);
+            var viewModel = new CreateUserViewModel
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                PersonalIdentifyNumber = user.PersonalIdentifyNumber
+            };
+
+            return View(viewModel);
         }
 
         // POST: Users/Delete/5
