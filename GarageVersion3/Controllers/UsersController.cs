@@ -24,12 +24,13 @@ namespace GarageVersion3.Controllers
         public async Task<IActionResult> Index()
         {
             var users = await _context.User
-                .Select(u => new CreateUserViewModel
+                .Select(u => new UserViewModel
                 {
                     Id = u.Id,
                     FirstName = u.FirstName,
                     LastName = u.LastName,
                     PersonalIdentifyNumber = u.PersonalIdentifyNumber,
+                    NrOfVehicles = u.Vehicles.Count()
                 }).ToListAsync();
 
             return View(users);
@@ -50,7 +51,7 @@ namespace GarageVersion3.Controllers
                 return NotFound();
             }
 
-            var viewModel = new CreateUserViewModel
+            var viewModel = new UserViewModel
             {
                 Id = user.Id,
                 FirstName = user.FirstName,
@@ -72,7 +73,7 @@ namespace GarageVersion3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateUserViewModel user)
+        public async Task<IActionResult> Create(UserViewModel user)
         {
             if (ModelState.IsValid)
             {
@@ -105,7 +106,7 @@ namespace GarageVersion3.Controllers
                 return NotFound();
             }
 
-            var viewModel = new CreateUserViewModel
+            var viewModel = new UserViewModel
             {
                 Id = user.Id,
                 FirstName = user.FirstName,
@@ -121,7 +122,7 @@ namespace GarageVersion3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, CreateUserViewModel viewModel)
+        public async Task<IActionResult> Edit(int id, UserViewModel viewModel)
         {
 
             if (ModelState.IsValid)
@@ -173,7 +174,7 @@ namespace GarageVersion3.Controllers
                 return NotFound();
             }
 
-            var viewModel = new CreateUserViewModel
+            var viewModel = new UserViewModel
             {
                 Id = user.Id,
                 FirstName = user.FirstName,
@@ -248,7 +249,7 @@ namespace GarageVersion3.Controllers
             }
 
             var sortedUsers = users
-                        .Select(u => new CreateUserViewModel
+                        .Select(u => new UserViewModel
                         {
                             Id = u.Id,
                             FirstName = u.FirstName,

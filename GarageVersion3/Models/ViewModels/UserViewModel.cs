@@ -3,7 +3,7 @@ using GarageVersion3.Validation;
 
 namespace GarageVersion3.Models.ViewModels
 {
-    public class CreateUserViewModel
+    public class UserViewModel
     {
         public int Id { get; set; }
         [UniquePersonalNr]
@@ -16,5 +16,10 @@ namespace GarageVersion3.Models.ViewModels
 
         [StringLength(32, MinimumLength = 2, ErrorMessage = "Last Name must be between 2 - 32")]
         public string LastName { get; set; }
+
+        public List<Vehicle>? Vehicles { get; set; }
+
+        public int NrOfVehicles { get; set; }
+
     }
 }

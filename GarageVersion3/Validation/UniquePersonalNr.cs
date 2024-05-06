@@ -10,7 +10,7 @@ namespace GarageVersion3.Validation
         {
             if (value is string input)
             {
-                if (validationContext.ObjectInstance is CreateUserViewModel viewModel)
+                if (validationContext.ObjectInstance is UserViewModel viewModel)
                 {
                     /*
                     try
