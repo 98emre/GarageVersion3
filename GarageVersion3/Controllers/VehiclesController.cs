@@ -91,6 +91,15 @@ namespace GarageVersion3.Controllers
         {
             if (ModelState.IsValid)
             {
+                var availableSpot = await GetAvailableParkingSpot();
+
+                if (availableSpot == -1)
+                {
+                    ModelState.AddModelError(string.Empty, "No available parking spots.");
+                    DropdownDataLists();
+                    return View(viewModel);
+                }
+
                 var vehicle = new Vehicle
                 {
                     VehicleTypeId = viewModel.VehicleTypeId,
@@ -104,11 +113,44 @@ namespace GarageVersion3.Controllers
 
                 _context.Add(vehicle);
                 await _context.SaveChangesAsync();
+
+                var parkingLot = new ParkingLot
+                {
+                    VehicleId = vehicle.Id,
+                    ParkingSpot = availableSpot,
+                    Checkin = DateTime.Now,
+                    AvailableParkingSpot = true
+                };
+
+                _context.Add(parkingLot);
+
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
             DropdownDataLists();
             return View(viewModel);
+        }
+
+
+
+        private async Task<int> GetAvailableParkingSpot()
+        {
+            var parkingLot = await _context.ParkingLot.OrderBy(pl => pl.ParkingSpot).ToListAsync();
+
+            int nextSpot = 1;
+
+            foreach (var spot in parkingLot)
+            {
+                if (spot.ParkingSpot != nextSpot)
+                {
+                    return nextSpot;
+                }
+
+                nextSpot++; 
+            }
+
+            return nextSpot;
         }
 
         // GET: Vehicles/Edit/5
@@ -408,23 +450,22 @@ namespace GarageVersion3.Controllers
         [HttpGet]
         public IActionResult Statistics()
         {
-            var parkedVehicles = _context.Vehicle.ToList();
+            var parkedVehicles = _context.ParkingLot.ToList();
 
             var vehicleTypeCount = new Dictionary<VehicleType, int>();
 
             foreach (var vehicle in parkedVehicles)
             {
-                if (!vehicleTypeCount.ContainsKey(vehicle.VehicleType))
+                if (!vehicleTypeCount.ContainsKey(vehicle.Vehicle.VehicleType))
                 {
-                    vehicleTypeCount[vehicle.VehicleType] = 0;
+                    vehicleTypeCount[vehicle.Vehicle.VehicleType] = 0;
                 }
 
-                vehicleTypeCount[vehicle.VehicleType]++;
+                vehicleTypeCount[vehicle.Vehicle.VehicleType]++;
             }
 
-            var totalWheels = parkedVehicles.Sum(v => v.NrOfWheels);
+            var totalWheels = parkedVehicles.Sum(v => v.Vehicle.NrOfWheels);
 
-   
             ViewBag.VehicleType = vehicleTypeCount;
             ViewBag.TotalWheels = totalWheels;
 
