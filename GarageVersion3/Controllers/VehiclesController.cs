@@ -303,6 +303,7 @@ namespace GarageVersion3.Controllers
             var vehicles = await _context.Vehicle
                 .Include(v => v.VehicleType)
                 .Include(v => v.User)
+                .Include(v => v.ParkingLot)
                 .ToListAsync();
 
             if (vehicles.Count() == 0)
@@ -325,10 +326,20 @@ namespace GarageVersion3.Controllers
                     vehicles = vehicles.OrderBy(v => v.User.FirstName).ToList();
                     TempData["Sort"] = "User first name sort was done";
                     break;
-    
+
+                case "ParkingSpot":
+                    vehicles = vehicles.OrderBy(v => v.ParkingLot.ParkingSpot).ToList();
+                    TempData["Sort"] = "Parking Spot sort was done";
+                    break;
+
+                case "CheckInTime":
+                    vehicles = vehicles.OrderBy(v => v.ParkingLot.Checkin).ToList();
+                    TempData["Sort"] = "Check in sort was done";
+                    break;
+
                 default:
                     vehicles = vehicles.OrderBy(v => v.Id).ToList();
-                    break;
+                 break;
             }
 
             var sortedVehicles = vehicles
@@ -339,6 +350,8 @@ namespace GarageVersion3.Controllers
                             RegistrationNumber = v.RegistrationNumber,
                             User = $"{v.User.FirstName} {v.User.LastName} ({v.User.PersonalIdentifyNumber})",
                             UserId = v.UserId,
+                            ParkingSpot = v.ParkingLot.ParkingSpot,
+                            CheckInTime = v.ParkingLot.Checkin,
                             VehicleTypeId = v.VehicleTypeId
                         }).ToList();
 
