@@ -4,10 +4,11 @@
 }
 
 <div class="container d-flex flex-column justify-content-center align-items-center">
-    <h1 class="pt-4">Statistics</h1>
+    <h1 class="display-4 mt-4">Statistics</h1>
 
-    <div class="table-responsive">
-        <table class="table table-bordered border-3 border-dark  table-sm">
+
+    <div class="table-responsive pt-4">
+        <table class="table border table-bordered table-sm">
             <thead>
                 <tr>
                     <th>Vehicle Type</th>
@@ -26,11 +27,11 @@
         </table>
     </div>
 
-    <div class="d-flex align-items-center mt-2 mb-2">
-        <img src="/images/record-vinyl-solid.svg" width="40" alt="Alternate Text" />
-        <h4 class="m-0 px-2">Total Number of Wheels: @ViewBag.TotalWheels</h4>
+    <div class="d-flex flex-column align-items-center mt-2 mb-2">
+        <h5 class="mb-2 pt-2 fw-normal">Total Number of Wheels: @ViewBag.TotalWheels</h5>
+        <h5 class="mb-2 pt-2 fw-normal">Total Revenue: @ViewBag.TotalRevenue</h5>
     </div>
 
-    <a asp-action="Index" class="btn btn-secondary">Return Back</a>
+    <a asp-action="Index" class="btn btn-return mt-3">Return Back</a>
 </div>
 

@@ -26,6 +26,11 @@ body {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
+.btn-return {
+    background-color: var(--color-air-blue);
+    font-weight: 600 !important;
+}
+
 .navbar {
     background-color: var(--color-powder-blue);
     padding-top: 0rem;
@@ -41,6 +46,20 @@ body {
 #icon {
     margin-right: 1rem;
     width: 2rem;
+}
+
+.list-group-item {
+    background-color: var(--color-columbia-blue) !important;
+}
+
+.table-responsive {
+    min-width: 22rem;
+}
+
+.border {
+    background-color: var(--color-columbia-blue) !important;
+    border-color: var(--color-silver-lake-blue) !important;
+    border-radius: 0.25px;
 }
 
 .footer {
