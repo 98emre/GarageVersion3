@@ -65,8 +65,9 @@ namespace GarageVersion3.Controllers
                     Color = v.Color,
                     VehicleModel = v.VehicleModel,
                     NrOfWheels = v.NrOfWheels,
+                    ParkingSpot = v.ParkingLot.ParkingSpot,
+                    CheckInTime = v.ParkingLot.Checkin
                 }).FirstOrDefaultAsync();
-
 
             if (viewModel == null)
             {
@@ -393,6 +394,8 @@ namespace GarageVersion3.Controllers
                             VehicleType = v.VehicleType.Type,
                             RegistrationNumber = v.RegistrationNumber,
                             User = $"{v.User.FirstName} {v.User.LastName} ({v.User.PersonalIdentifyNumber})",
+                            ParkingSpot = v.ParkingLot.ParkingSpot,
+                            CheckInTime = v.ParkingLot.Checkin
                         }).ToListAsync();
 
             if (search.Count == 0)
@@ -419,6 +422,8 @@ namespace GarageVersion3.Controllers
                           VehicleType = v.VehicleType.Type,
                           RegistrationNumber = v.RegistrationNumber,
                           User = $"{v.User.FirstName} {v.User.LastName} ({v.User.PersonalIdentifyNumber})",
+                          ParkingSpot = v.ParkingLot.ParkingSpot,
+                          CheckInTime = v.ParkingLot.Checkin
                       }).ToListAsync();
 
             if (search.Count == 0)
@@ -465,21 +470,24 @@ namespace GarageVersion3.Controllers
         [HttpGet]
         public IActionResult Statistics()
         {
-            var parkedVehicles = _context.ParkingLot.ToList();
+            var parkedVehicles = _context.Vehicle.Include(v => v.VehicleType).ToList();
 
-            var vehicleTypeCount = new Dictionary<VehicleType, int>();
+            var vehicleTypeCount = new Dictionary<string, int>();
 
             foreach (var vehicle in parkedVehicles)
             {
-                if (!vehicleTypeCount.ContainsKey(vehicle.Vehicle.VehicleType))
+                if (vehicle.VehicleType != null)
                 {
-                    vehicleTypeCount[vehicle.Vehicle.VehicleType] = 0;
-                }
+                    if (!vehicleTypeCount.ContainsKey(vehicle.VehicleType.Type))
+                    {
+                        vehicleTypeCount[vehicle.VehicleType.Type] = 0;
+                    }
 
-                vehicleTypeCount[vehicle.Vehicle.VehicleType]++;
+                    vehicleTypeCount[vehicle.VehicleType.Type]++;
+                };
             }
 
-            var totalWheels = parkedVehicles.Sum(v => v.Vehicle.NrOfWheels);
+            var totalWheels = parkedVehicles.Sum(v => v.NrOfWheels);
 
             ViewBag.VehicleType = vehicleTypeCount;
             ViewBag.TotalWheels = totalWheels;
