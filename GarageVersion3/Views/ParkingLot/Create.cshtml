@@ -1,0 +1,44 @@
+﻿@model IEnumerable<SelectListItem>
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Park Vehicle</h1>
+<hr />
+
+<div class="container-fluid">
+
+    <div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="px-6 py-4 text-left font-weight-bold">
+                        Owner & Vehicle
+                    </th
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Text)
+                        </td>
+
+                        <td>
+                            <a asp-action="Create" class="btn btn-primary">Park Vehicle</a>
+                        </td> 
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

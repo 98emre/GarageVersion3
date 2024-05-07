@@ -19,8 +19,6 @@ namespace GarageVersion3.Models
 
         [Required(ErrorMessage = "Add owner for the vehicle")]
         public User? User { get; set; }
-
-        public ParkingLot? ParkingLot { get; set;}
         
         [Required(ErrorMessage = "Add color for your vehicle")]
         public string Color { get; set; }

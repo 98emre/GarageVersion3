@@ -1,0 +1,48 @@
+﻿@model ParkingLotViewModel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Checkout</h1>
+
+<h3>Are you sure you want to checkout this?</h3>
+<div>
+    <h4>Vehicle</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.User)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.User)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RegistrationNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RegistrationNumber)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ParkingSpot)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ParkingSpot)
+        </dd>
+   
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Checkin)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Checkin)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Checkout" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

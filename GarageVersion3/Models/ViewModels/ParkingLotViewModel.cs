@@ -1,23 +1,22 @@
-﻿namespace GarageVersion3.Models.ViewModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace GarageVersion3.Models.ViewModels
 {
     public class ParkingLotViewModel
     {
-      public int Id { get; set; }
-      //User
-      public User User { get; set; }
-      //Membership
-      //?????????????????
-
-      //VehicleType
-      public VehicleType VehicleType { get; set; }
-      //RegistrationNumber
-      public Vehicle RegistrationNumber { get; set; }
+        public int Id { get; set; }
         
-      public DateTime Checkin { get; set; }
-      public int ParkingSpot { get; set; }
-      public bool AvailableParkingSpot { get; set; }
+        public int UserId { get; set; }
+
+        public int VehicleId { get; set; }
+        
+        public string? User { get; set; }
     
-        //ParkingHours
-        // public ReceiptViewModel TotalParkingHours { get; set; }
+        public string? RegistrationNumber { get; set; }
+
+     
+        public DateTime Checkin { get; set; }
+   
+        public int ParkingSpot { get; set; }
     }
 }
