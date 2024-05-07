@@ -239,6 +239,55 @@ namespace GarageVersion3.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> FilterCreate(string firstName, string lastName, string personalIdentifyNumber)
+        {
+            var query = _context.Vehicle.AsQueryable();
+
+            if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName) && string.IsNullOrEmpty(personalIdentifyNumber))
+            {
+                TempData["SearchFail"] = "Please provide input for at least one search criteria";
+                var empyList = new List<VehicleViewModel>();
+                return View("Create", empyList);
+            }
+
+            if (!string.IsNullOrEmpty(firstName))
+            {
+                query = query.Where(u => u.User.FirstName.Trim().ToUpper().Equals(firstName.ToUpper().Trim()));
+            }
+
+            if (!string.IsNullOrEmpty(lastName))
+            {
+                query = query.Where(u => u.User.LastName.Trim().ToUpper().Equals(lastName.ToUpper().Trim()));
+            }
+
+            if (!string.IsNullOrEmpty(personalIdentifyNumber))
+            {
+                query = query.Where(u => u.User.PersonalIdentifyNumber.Equals(personalIdentifyNumber));
+            }
+
+            var searchResults = await query
+                .Where(pt => !_context.ParkingLot.Any(pl => pl.VehicleId == pt.Id))
+                .Select(pt => new VehicleViewModel
+                {
+                    Id = pt.Id,
+                    RegistrationNumber = pt.RegistrationNumber,
+                    User = $"{pt.User.FirstName} {pt.User.LastName} ({pt.User.PersonalIdentifyNumber})"
+                }).ToListAsync();
+
+            if (searchResults.Count == 0)
+            {
+                TempData["SearchFail"] = "No users were found";
+            }
+            else
+            {
+                TempData["SearchSuccess"] = "Search was successful";
+            }
+
+            return View("Create", searchResults);
+        }
+
+
+        [HttpGet]
         public async Task<IActionResult> ShowAllIndex()
         {
             var query = _context.ParkingLot.AsQueryable();
