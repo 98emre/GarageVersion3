@@ -10,6 +10,7 @@ using GarageVersion3.Models;
 using GarageVersion3.Models.ViewModels;
 using System.Drawing.Drawing2D;
 using System.Drawing;
+using GarageVersion3.Helpers;
 
 namespace GarageVersion3.Controllers
 {
@@ -249,9 +250,9 @@ namespace GarageVersion3.Controllers
                     return NotFound();
                 }
 
-                _context.Vehicle.Remove(vehicle);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ReceiptHelper helper = new ReceiptHelper(_context, id);
+                ReceiptViewModel receiptVM = helper.CheckoutVehicle();
+                return View("~/Views/Receipts/Details.cshtml", receiptVM);
             }
 
             catch (Exception ex)
@@ -418,6 +419,7 @@ namespace GarageVersion3.Controllers
             var parkedVehicles = _context.Vehicle.Include(v => v.VehicleType).ToList();
 
             var vehicleTypeCount = new Dictionary<string, int>();
+            double totalRevenue = 0;
 
             foreach (var vehicle in parkedVehicles)
             {
@@ -429,6 +431,9 @@ namespace GarageVersion3.Controllers
                     }
 
                     vehicleTypeCount[vehicle.VehicleType.Type]++;
+
+                    ReceiptViewModel receipt = new ReceiptViewModel();
+                    totalRevenue = totalRevenue + receipt.Price;
                 };
             }
 
@@ -436,6 +441,7 @@ namespace GarageVersion3.Controllers
 
             ViewBag.VehicleType = vehicleTypeCount;
             ViewBag.TotalWheels = totalWheels;
+            ViewBag.TotalRevenue = totalRevenue.ToString("#,##0.00");
 
             return View();
         }

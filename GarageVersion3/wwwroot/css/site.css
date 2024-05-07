@@ -4,11 +4,12 @@
 }
 
 :root {
-    --color-silver-lake-blue: #7392B7;
+    --color-dark-blue: #304D6D;
     --color-air-blue: #759EB8;
     --color-powder-blue: #B3C5D7;
     --color-columbia-blue: #C5D5EA;
     --color-alice-blue: #D8E1E9;
+    --color-argentinian-blue: #63ADF2;
 }
 
 html {
@@ -26,6 +27,37 @@ body {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
+.btn {
+    min-width: 7rem;
+}
+
+.btn-air-blue {
+    background-color: var(--color-air-blue);
+}
+
+    .btn-air-blue:hover {
+        opacity: 0.8;
+    }
+
+.btn-dark-blue {
+    background-color: var(--color-dark-blue);
+    color: #FFF;
+    transition: background-color 0.3s ease;
+}
+
+    .btn-dark-blue:hover {
+        color: #FFF;
+        opacity: 0.8;
+    }
+
+.btn-argentinian-blue {
+    background-color: var(--color-argentinian-blue);
+}
+
+    .btn-argentinian-blue:hover {
+        opacity: 0.8;
+    }
+
 .navbar {
     background-color: var(--color-powder-blue);
     padding-top: 0rem;
@@ -41,6 +73,24 @@ body {
 #icon {
     margin-right: 1rem;
     width: 2rem;
+}
+
+.form-group {
+    padding: 0.25rem 0;
+}
+
+.list-group-item {
+    background-color: var(--color-columbia-blue) !important;
+}
+
+.table-responsive {
+    min-width: 22rem;
+}
+
+.border {
+    background-color: var(--color-columbia-blue) !important;
+    border-color: var(--color-dark-blue) !important;
+    border-radius: 0.25px;
 }
 
 .footer {
