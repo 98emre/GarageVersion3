@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace GarageVersion3.Models.ViewModels
 {
@@ -18,5 +19,8 @@ namespace GarageVersion3.Models.ViewModels
         public DateTime Checkin { get; set; }
    
         public int ParkingSpot { get; set; }
+
+        public VehicleViewModel? VehicleViewModel { get; set; }
+
     }
 }

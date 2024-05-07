@@ -159,10 +159,13 @@ namespace GarageVersion3.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, VehicleViewModel viewModel)
         {
+            if (id != viewModel.Id)
+            {
+                return NotFound();
+            }
 
             if (ModelState.IsValid)
             {
-
                 try
                 {
                     var vehicle = await _context.Vehicle.FindAsync(id);
@@ -170,6 +173,18 @@ namespace GarageVersion3.Controllers
                     if (vehicle == null)
                     {
                         return NotFound();
+                    }
+
+                    // Kontrollera om det angivna registreringsnumret redan används av ett annat fordon
+                    var existingVehicleWithSameRegNumber = await _context.Vehicle
+                        .Where(v => v.Id != id && v.RegistrationNumber.ToUpper().Trim() == viewModel.RegistrationNumber.ToUpper().Trim())
+                        .FirstOrDefaultAsync();
+
+                    if (existingVehicleWithSameRegNumber != null)
+                    {
+                        ModelState.AddModelError(nameof(viewModel.RegistrationNumber), "The registration number is already in use by another vehicle.");
+                        DropdownDataLists();
+                        return View(viewModel);
                     }
 
                     vehicle.VehicleTypeId = viewModel.VehicleTypeId;
