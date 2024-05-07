@@ -22,21 +22,59 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ParkingSpot)
         </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.RegistrationNumber)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.RegistrationNumber)
-        </dd>
+  
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Checkin)
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Checkin)
         </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.VehicleViewModel.RegistrationNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.VehicleViewModel.RegistrationNumber)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.VehicleViewModel.VehicleType)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.VehicleViewModel.VehicleType)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.VehicleViewModel.Brand)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.VehicleViewModel.Brand)
+        </dd>
+
+         <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.VehicleViewModel.VehicleModel)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.VehicleViewModel.VehicleModel)
+        </dd>
+
+         <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.VehicleViewModel.Color)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.VehicleViewModel.Color)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.VehicleViewModel.NrOfWheels)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.VehicleViewModel.NrOfWheels)
+        </dd>
+
+    
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-primary">Back to list</a>
 </div>

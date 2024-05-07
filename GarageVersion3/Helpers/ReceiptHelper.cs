@@ -1,6 +1,7 @@
 ﻿using GarageVersion3.Data;
 using GarageVersion3.Models;
 using GarageVersion3.Models.ViewModels;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace GarageVersion3.Helpers
 {
@@ -15,7 +16,7 @@ namespace GarageVersion3.Helpers
             vehicleId = id;
         }
         
-        public ReceiptViewModel CheckoutVehicle()
+        public ReceiptViewModel CheckoutVehicle() 
         {
             var vehicle = _context.Vehicle.Find(vehicleId);
             var parkingSpot = _context.ParkingLot.Where(p => p.VehicleId == vehicle.Id).FirstOrDefault();

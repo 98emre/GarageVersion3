@@ -19,7 +19,7 @@ namespace GarageVersion3.Validation
                         Personnummer.Personnummer personNr = new Personnummer.Personnummer(value.ToString());
                         if (personNr.Age < 18)
                         {
-                            return new ValidationResult("People under 18 can not park cars!");
+                            return new ValidationResult("People under 18 can not register!");
                         }
                     }
                     catch (Exception e)

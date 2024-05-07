@@ -38,11 +38,13 @@ namespace GarageVersion3.Controllers
         {
             var vehicles = await _context.Vehicle
                 .Where(v => !_context.ParkingLot.Any(pl => pl.VehicleId == v.Id))
-                .Select(v => new SelectListItem
-                {
-                    Text = $"{v.User.FirstName} {v.RegistrationNumber}",
-                    Value = v.Id.ToString()
-                }).ToListAsync();
+                 .Select(v => new VehicleViewModel
+                 {
+                     Id = v.Id,
+                     RegistrationNumber = v.RegistrationNumber,
+                     User = $"{v.User.FirstName} {v.User.LastName} ({v.User.PersonalIdentifyNumber})",
+                     VehicleType = v.VehicleType.Type,
+                 }).ToListAsync();
 
             return View(vehicles);
         }
@@ -75,14 +77,6 @@ namespace GarageVersion3.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var users = _context.User.Select(u => new SelectListItem
-            {
-                Text = $"{u.FirstName} {u.LastName} ({u.PersonalIdentifyNumber})",
-                Value = u.Id.ToString()
-            });
-
-            ViewData["Users"] = users;
-
             return View(viewModel);
         }
 
@@ -104,7 +98,15 @@ namespace GarageVersion3.Controllers
                    Id = pt.Id,
                    User = $"{pt.Vehicle.User.FirstName} {pt.Vehicle.User.LastName} ({pt.Vehicle.User.PersonalIdentifyNumber})",
                    Checkin = DateTime.Now,
-                   RegistrationNumber = pt.Vehicle.RegistrationNumber,
+                   VehicleViewModel = new VehicleViewModel
+                   {
+                       RegistrationNumber = pt.Vehicle.RegistrationNumber,
+                       Brand = pt.Vehicle.Brand,
+                       VehicleModel = pt.Vehicle.VehicleModel,
+                       NrOfWheels = pt.Vehicle.NrOfWheels,
+                       VehicleType = pt.Vehicle.VehicleType.Type,
+                       Color = pt.Vehicle.Color
+                   },
                    ParkingSpot = pt.ParkingSpot
                }).FirstOrDefaultAsync();
 
@@ -115,73 +117,6 @@ namespace GarageVersion3.Controllers
 
 
             return View(viewModel);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var viewModel = await _context.ParkingLot
-                .Where(pt => pt.Id == id)
-                .Select(pt => new ParkingLotViewModel
-                {
-                    Id = pt.Id,
-                    RegistrationNumber = pt.Vehicle.RegistrationNumber,
-                    User = $"{pt.Vehicle.User.FirstName} {pt.Vehicle.User.LastName} ({pt.Vehicle.User.PersonalIdentifyNumber})",
-                    Checkin = pt.Checkin,
-                    UserId = pt.Vehicle.UserId,
-                    ParkingSpot = pt.ParkingSpot
-                }).FirstOrDefaultAsync();
-
-            if (viewModel == null)
-            {
-                return NotFound();
-            }
-
-            await GetUserVehicles(viewModel.UserId);
-            await GetUsers();
-            return View(viewModel);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ParkingLotViewModel parkingLotViewModel)
-        {
-            // 07/05/2024 00:26:07
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var parkingLot = await _context.ParkingLot
-                        .Where(pt => pt.Id == id)
-                        .FirstOrDefaultAsync();
-
-                    if (parkingLot == null)
-                    {
-                        return NotFound();
-                    }
-
-                    parkingLot.VehicleId = parkingLotViewModel.VehicleId;
-                   
-                    _context.Update(parkingLot);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    return NotFound();
-
-                }
-
-                return RedirectToAction(nameof(Index));
-            }
-
-            await GetUserVehicles(parkingLotViewModel.UserId);
-            await GetUsers();
-            return View(parkingLotViewModel);
         }
 
         [HttpGet]
@@ -234,34 +169,6 @@ namespace GarageVersion3.Controllers
                 ModelState.AddModelError(string.Empty, "Error occured while trying to remove a vehicle from parking lot");
                 return RedirectToAction(nameof(Index));
             }
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetUserVehicles(int? userId)
-        {
-            var vehicles = await _context.Vehicle
-                .Where(v => v.UserId == userId && !_context.ParkingLot.Any(pl => pl.VehicleId == v.Id))
-                .Select(v => new SelectListItem
-                {
-                    Text = v.RegistrationNumber,
-                    Value = v.Id.ToString()
-                }).ToListAsync();
-
-            ViewBag.Vehicles = vehicles.Count();
-
-            return Json(vehicles);
-        }
-
-        private async Task GetUsers()
-        {
-            var users = await _context.User
-                   .Select(u => new SelectListItem
-                   {
-                       Text = $"{u.FirstName} {u.LastName} ({u.PersonalIdentifyNumber})",
-                       Value = u.Id.ToString()
-                   }).ToListAsync();
-
-            ViewBag.Users = users;
         }
 
         private async Task<int> GetAvailableParkingSpot()

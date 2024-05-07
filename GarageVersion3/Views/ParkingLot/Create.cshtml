@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SelectListItem>
+﻿@model IEnumerable<VehicleViewModel>
 
 @{
     ViewData["Title"] = "Create";
@@ -9,13 +9,19 @@
 
 <div class="container-fluid">
 
-    <div>
+    <form asp-action="Create" method="post">        
+
         <table class="table">
             <thead>
                 <tr>
                     <th class="px-6 py-4 text-left font-weight-bold">
-                        Owner & Vehicle
+                        Owner
+                    </th>
+
+                     <th class="px-6 py-4 text-left font-weight-bold">
+                        Vehicle
                     </th
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -23,22 +29,31 @@
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Text)
+                            @Html.DisplayFor(modelItem => item.User)
                         </td>
 
                         <td>
-                            <a asp-action="Create" class="btn btn-primary">Park Vehicle</a>
+                            @Html.DisplayFor(modelItem => item.RegistrationNumber)
+                        </td>
+
+                        <td>
+                             <button type="submit" name="vehicleId" value="@item.Id" class="btn btn-primary">Park Vehicle</button>
                         </td> 
                     </tr>
                 }
             </tbody>
         </table>
-    </div>
+
+        @if (!Model.Any())
+        {
+            <p>All vehicles are already parked.</p>
+        }
+    </form>
 
 </div>
 
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-primary">Back to List</a>
 </div>
 
