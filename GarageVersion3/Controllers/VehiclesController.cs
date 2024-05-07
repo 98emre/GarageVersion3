@@ -245,14 +245,17 @@ namespace GarageVersion3.Controllers
             try
             {
                 var vehicle = await _context.Vehicle.FindAsync(id);
+               
                 if (vehicle == null)
                 {
                     return NotFound();
                 }
 
-                ReceiptHelper helper = new ReceiptHelper(_context, id);
-                ReceiptViewModel receiptVM = helper.CheckoutVehicle();
-                return View("~/Views/Receipts/Details.cshtml", receiptVM);
+                _context.Vehicle.Remove(vehicle);
+               await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
+
             }
 
             catch (Exception ex)
