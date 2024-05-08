@@ -324,17 +324,7 @@ namespace GarageVersion3.Controllers
         [HttpGet]
         public async Task<IActionResult> ShowAll()
         {
-            var query = _context.User.AsQueryable();
-            var search = await query
-                      .Select(u => new UserViewModel
-                      {
-                          Id = u.Id,
-                          FirstName = u.FirstName,
-                          LastName = u.LastName,
-                          PersonalIdentifyNumber = u.PersonalIdentifyNumber,
-                          NrOfVehicles = u.Vehicles.Count()
-                          
-                      }).ToListAsync();
+            var search = _context.User.ToList();
 
             if (search.Count == 0)
             {
@@ -346,7 +336,7 @@ namespace GarageVersion3.Controllers
                 TempData["SearchSuccess"] = "Showing all users was successful";
             }
 
-            return View("Index", search);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
