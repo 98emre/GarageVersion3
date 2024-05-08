@@ -25,7 +25,20 @@ namespace GarageVersion3.Controllers
         {
             var garageVersion3Context = _context.Receipt.Include(r => r.User);
             // Omvandla Receipt till ReceiptVM
-            return View(await garageVersion3Context.ToListAsync());
+
+            var viewModel = await _context.Receipt
+                .Include(r => r.User)
+                .Select(r => new ReceiptViewModel
+                {
+                    Id = r.Id,
+                    User = r.User,
+                    Checkin = r.CheckIn,
+                    CheckoutDate = r.CheckOut,
+                    Price = r.Price,
+                    ParkingNumber = r.ParkingNumber
+                }).ToListAsync();
+
+            return View(viewModel);
         }
 
         // GET: Receipts/Details/5

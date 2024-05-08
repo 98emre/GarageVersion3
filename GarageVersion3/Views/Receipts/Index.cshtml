@@ -1,4 +1,4 @@
-﻿@model IEnumerable<GarageVersion3.Models.Receipt>
+﻿@model IEnumerable<ReceiptViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -16,10 +16,10 @@
                 @Html.DisplayNameFor(model => model.ParkingNumber)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CheckIn)
+                @Html.DisplayNameFor(model => model.Checkin)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CheckOut)
+                @Html.DisplayNameFor(model => model.CheckoutDate)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Price)
@@ -38,16 +38,16 @@
                 @Html.DisplayFor(modelItem => item.ParkingNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CheckIn)
+                @Html.DisplayFor(modelItem => item.Checkin)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CheckOut)
+                    @Html.DisplayFor(modelItem => item.CheckoutDate)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
             </td>
         </tr>
 }

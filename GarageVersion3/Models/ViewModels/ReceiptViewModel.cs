@@ -13,6 +13,9 @@ namespace GarageVersion3.Models.ViewModels
         [Display(Name = "Registration Number")]
         public string RegistrationNumber { get; set; }
 
+        [Display(Name = "Parking Spot")]
+        public int ParkingNumber { get; set; }
+
         [Display(Name = "Checkin Date")]
         public DateTime Checkin { get; set; }
 
