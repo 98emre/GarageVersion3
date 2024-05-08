@@ -34,6 +34,7 @@ namespace GarageVersion3.Controllers
                     RegistrationNumber = pt.Vehicle.RegistrationNumber,
                     ParkingSpot = pt.ParkingSpot,
                     Checkin = pt.Checkin,
+                    VehicleId = pt.VehicleId,
                     User = $"{pt.Vehicle.User.FirstName} {pt.Vehicle.User.LastName} ({pt.Vehicle.User.PersonalIdentifyNumber})",
                     VehicleViewModel = new VehicleViewModel
                     {
@@ -145,6 +146,7 @@ namespace GarageVersion3.Controllers
                    Id = pt.Id,
                    User = $"{pt.Vehicle.User.FirstName} {pt.Vehicle.User.LastName} ({pt.Vehicle.User.PersonalIdentifyNumber})",
                    Checkin = DateTime.Now,
+                   VehicleId = pt.VehicleId,
                    VehicleViewModel = new VehicleViewModel
                    {
                        RegistrationNumber = pt.Vehicle.RegistrationNumber,

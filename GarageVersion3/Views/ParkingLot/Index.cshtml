@@ -107,6 +107,8 @@
                         </td>
 
                         <td align="right">
+
+                            <a asp-controller="Vehicles" asp-action="Edit" asp-route-id="@item.VehicleId" class="btn btn-dark-blue">Edit</a>
                             <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary-blue">Details</a>
                             <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger ms-2">Checkout </a>
                         </td>
