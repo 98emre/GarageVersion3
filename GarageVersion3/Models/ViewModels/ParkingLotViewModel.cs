@@ -12,12 +12,14 @@ namespace GarageVersion3.Models.ViewModels
         public int VehicleId { get; set; }
         
         public string? User { get; set; }
-    
+
+        [Display(Name = "Registration Number")]
         public string? RegistrationNumber { get; set; }
 
      
         public DateTime Checkin { get; set; }
-   
+
+        [Display(Name = "Parking Spot")]
         public int ParkingSpot { get; set; }
 
         public VehicleViewModel? VehicleViewModel { get; set; }
