@@ -10,6 +10,7 @@
     --color-columbia-blue: #C5D5EA;
     --color-alice-blue: #D8E1E9;
     --color-argentinian-blue: #63ADF2;
+    --color-mid-blue: #2562ad;
 }
 
 html {
@@ -31,11 +32,30 @@ body {
     min-width: 7rem;
 }
 
-.btn-air-blue {
+.btn-primary-blue {
+    background-color: var(--color-argentinian-blue);
+}
+
+    .btn-primary-blue:hover {
+        opacity: 0.8;
+    }
+
+.btn-secondary-blue {
     background-color: var(--color-air-blue);
 }
 
-    .btn-air-blue:hover {
+    .btn-secondary-blue:hover {
+        opacity: 0.8;
+    }
+
+.btn-mid-blue {
+    background-color: var(--color-mid-blue);
+    color: #FFF;
+    transition: background-color 0.3s ease;
+}
+
+    .btn-mid-blue:hover {
+        color: #FFF;
         opacity: 0.8;
     }
 
@@ -47,14 +67,6 @@ body {
 
     .btn-dark-blue:hover {
         color: #FFF;
-        opacity: 0.8;
-    }
-
-.btn-argentinian-blue {
-    background-color: var(--color-argentinian-blue);
-}
-
-    .btn-argentinian-blue:hover {
         opacity: 0.8;
     }
 
@@ -95,6 +107,12 @@ body {
     background-color: var(--color-columbia-blue) !important;
     border-color: var(--color-dark-blue) !important;
     border-radius: 0.25px;
+}
+
+tbody:before {
+    content: '';
+    display: block;
+    height: 10px;
 }
 
 .footer {

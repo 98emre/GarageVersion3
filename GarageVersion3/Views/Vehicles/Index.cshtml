@@ -38,9 +38,9 @@
 
 
     <div class="row justify-content-center">
-        <div class="mt-3 mb-3">
-            <a asp-action="Create" class="btn btn-primary">Add Vehicle</a>
-            <a asp-action="ShowAll" class="btn btn-info ml-2">Show All Vehicles</a>
+        <div class="text-center mt-4 mb-3">
+            <a asp-action="Create" class="btn btn-primary-blue">Add Vehicle</a>
+            <a asp-action="ShowAll" class="btn btn-secondary-blue ms-2">Show All Vehicles</a>
         </div>
 
         <form asp-action="Filter" method="get" class="form-inline m-3 d-flex flex-column align-items-center">
@@ -56,26 +56,26 @@
                     <input type="text" class="form-control" name="brand" placeholder="Search by brand">
                 </div>
                 <div>
-                    <button type="submit" class="btn btn-argentinian-blue ms-4">Search</button>
+                    <button type="submit" class="btn btn-mid-blue ms-2">Search</button>
                 </div>
             </div>
         </form>
     </div>
 
     <div>
-        <table class="table">
+        <table class="table mt-3">
             <thead>
                 <tr>
-                    <th class="px-6 py-4 text-left font-weight-bold">
-                        <a asp-action="Sort" asp-route-sortOrder="VehicleType" class="text-black">Vehicle Type</a>
+                    <th class="pb-3 text-left font-weight-bold">
+                        <a asp-action="Sort" asp-route-sortOrder="VehicleType" class="text-black h5 text-decoration-none">Vehicle Type</a>
                     </th>
 
-                    <th class="px-6 py-4 text-left font-weight-bold">
-                        <a asp-action="Sort" asp-route-sortOrder="User" class="text-black">User</a>
+                    <th class="pb-3 text-left font-weight-bold">
+                        <a asp-action="Sort" asp-route-sortOrder="User" class="text-black h5 text-decoration-none">User</a>
                     </th>
 
-                    <th class="px-6 py-4 text-left font-weight-bold">
-                        <a asp-action="Sort" asp-route-sortOrder="RegistrationNumber" class="text-black">Registration Number</a>
+                    <th class="pb-3 text-left font-weight-bold">
+                        <a asp-action="Sort" asp-route-sortOrder="RegistrationNumber" class="text-black h5 text-decoration-none">Registration Number</a>
                     </th>
                     <th></th>
                 </tr>
@@ -96,10 +96,10 @@
                             @Html.DisplayFor(modelItem => item.RegistrationNumber)
                         </td>
 
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                        <td align ="right">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary-blue">Edit</a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary-blue ms-2">Details</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger ms-2">Remove</a>
                         </td>
                     </tr>
                 }
