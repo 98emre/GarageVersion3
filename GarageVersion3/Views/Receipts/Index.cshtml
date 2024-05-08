@@ -4,52 +4,92 @@
     ViewData["Title"] = "Index";
 }
 
+@if (TempData.ContainsKey("SearchFail"))
+{
+    <div class="alert alert-warning" role="alert">
+        @TempData["SearchFail"]
+    </div>
+}
+
+@if (TempData.ContainsKey("SearchSuccess"))
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SearchSuccess"]
+    </div>
+}
+
 <h1>Receipts Page</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ParkingNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Checkin)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CheckoutDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.FirstName) 
-                @Html.DisplayFor(modelItem => item.User.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ParkingNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Checkin)
-            </td>
-            <td>
-                    @Html.DisplayFor(modelItem => item.CheckoutDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="text-center mt-4 mb-3">
+            <a asp-action="ShowAll" class="btn btn-primary-blue ms-2">Show All Receipts</a>
+        </div>
+
+        <form asp-action="Filter" method="get" class="form-inline m-3 d-flex flex-column align-items-center">
+            <p>Choose 1-2 attributes to search for users receipts</p>
+            <div class="d-flex flex-row input-group-sm align-items-center">
+                <div class="form-group mr-2">
+                    <input type="text" class="form-control" name="firstName" placeholder="Search by first name">
+                </div>
+                <div class="form-group mr-2">
+                    <input type="text" class="form-control" name="lastName" placeholder="Search by last name">
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-mid-blue ms-2">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.User)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ParkingNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Checkin)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CheckoutDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.User.FirstName)
+                        @Html.DisplayFor(modelItem => item.User.LastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ParkingNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Checkin)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CheckoutDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+</div>

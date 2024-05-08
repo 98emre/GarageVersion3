@@ -265,7 +265,7 @@ namespace GarageVersion3.Controllers
 
             if (searchResults.Count == 0)
             {
-                TempData["SearchFail"] = "No users were found";
+                TempData["SearchFail"] = "Could not find the receipt for the user";
             }
             else
             {

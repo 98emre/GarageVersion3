@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using GarageVersion3.Data;
 using GarageVersion3.Models;
 using GarageVersion3.Models.ViewModels;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 
 namespace GarageVersion3.Controllers
 {
@@ -104,6 +105,71 @@ namespace GarageVersion3.Controllers
         private bool ReceiptExists(int id)
         {
             return _context.Receipt.Any(e => e.Id == id);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Filter(string firstName, string lastName)
+        {
+            var query = _context.Receipt.AsQueryable();
+
+            if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName))
+            {
+                TempData["SearchFail"] = "Please provide input for at least one search criteria";
+                var empyList = new List<ReceiptViewModel>();
+                return View("Index", empyList);
+            }
+
+            if (!string.IsNullOrEmpty(firstName))
+            {
+                query = query.Where(u => u.User.FirstName.Trim().ToUpper().Equals(firstName.ToUpper().Trim()));
+            }
+
+            if (!string.IsNullOrEmpty(lastName))
+            {
+                query = query.Where(u => u.User.LastName.Trim().ToUpper().Equals(lastName.ToUpper().Trim()));
+            }
+
+            var searchResults = await query
+                .Include(r => r.User)
+                .Select(r => new ReceiptViewModel
+                {
+                    Id = r.Id,
+                    User = r.User,
+                    Checkin = r.CheckIn,
+                    CheckoutDate = r.CheckOut,
+                    Price = r.Price,
+                    ParkingNumber = r.ParkingNumber
+                }).ToListAsync();
+
+            if (searchResults.Count == 0)
+            {
+                TempData["SearchFail"] = "No users were found";
+            }
+            else
+            {
+                TempData["SearchSuccess"] = "Search was successful";
+            }
+
+            return View("Index", searchResults);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ShowAll()
+        {
+            var list = _context.Receipt.Count();
+
+            if (list == 0)
+            {
+                TempData["SearchFail"] = "There are no receipts";
+            }
+
+            else
+            {
+                TempData["SearchSuccess"] = "Showing all receipts was successful";
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
