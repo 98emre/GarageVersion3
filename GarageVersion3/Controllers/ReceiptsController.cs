@@ -23,9 +23,6 @@ namespace GarageVersion3.Controllers
         // GET: Receipts
         public async Task<IActionResult> Index()
         {
-            var garageVersion3Context = _context.Receipt.Include(r => r.User);
-            // Omvandla Receipt till ReceiptVM
-
             var viewModel = await _context.Receipt
                 .Include(r => r.User)
                 .Select(r => new ReceiptViewModel
@@ -48,6 +45,7 @@ namespace GarageVersion3.Controllers
             {
                 return NotFound();
             }
+
             var viewModel = await _context.Receipt
                 .Include(r => r.User)
                 .Select(r => new ReceiptViewModel
@@ -60,6 +58,11 @@ namespace GarageVersion3.Controllers
                     ParkingNumber = r.ParkingNumber
                 })
                 .FirstOrDefaultAsync(r => r.Id == id);
+
+            if(viewModel == null)
+            {
+                return NotFound();
+            }
                
             return View(viewModel);
         }
