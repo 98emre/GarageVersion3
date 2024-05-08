@@ -235,7 +235,8 @@ namespace GarageVersion3.Controllers
 
             if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName))
             {
-                TempData["Search"] = "Please provide input for at least one search criteria";
+                TempData["SearchMessage"] = "Please provide input for at least one search criteria";
+                TempData["SearchStatus"] = "alert alert-warning";
                 var empyList = new List<ParkingLotViewModel>();
                 return View("Index", empyList);
             }
@@ -263,15 +264,10 @@ namespace GarageVersion3.Controllers
                     User = $"{pt.Vehicle.User.FirstName} {pt.Vehicle.User.LastName} ({pt.Vehicle.User.PersonalIdentifyNumber})"
                 }).ToListAsync();
 
-            if (searchResults.Count == 0)
-            {
-                TempData["Search"] = "Could not find the receipt for the user";
-            }
-            else
-            {
-                TempData["Search"] = "Search was successful";
-            }
+            TempData["SearchMessage"] = (searchResults.Count == 0) ? "Could not find the receipt for the user" : "Search was successful";
+            TempData["SearchStatus"] = (searchResults.Count == 0) ? "alert alert-warning" : "alert alert-success";
 
+        
             return View("Index", searchResults);
         }
 
@@ -286,7 +282,8 @@ namespace GarageVersion3.Controllers
 
             if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName))
             {
-                TempData["Search"] = "Please provide input for at least one search criteria";
+                TempData["SearchMessage"] = "Please provide input for at least one search criteria";
+                TempData["SearchStatus"] = "alert alert-warning";
                 var empyList = new List<VehicleViewModel>();
                 return View("Create", empyList);
             }
@@ -310,14 +307,8 @@ namespace GarageVersion3.Controllers
                     User = $"{pt.User.FirstName} {pt.User.LastName} ({pt.User.PersonalIdentifyNumber})"
                 }).ToListAsync();
 
-            if (searchResults.Count == 0)
-            {
-                TempData["Search"] = "No users were found";
-            }
-            else
-            {
-                TempData["Search"] = "Search was successful";
-            }
+            TempData["SearchMessage"] = (searchResults.Count == 0) ? "Could not find the receipt for the user" : "Search was successful";
+            TempData["SearchStatus"] = (searchResults.Count == 0) ? "alert alert-warning" : "alert alert-success";
 
             return View("Create", searchResults);
         }

@@ -114,7 +114,8 @@ namespace GarageVersion3.Controllers
 
             if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName))
             {
-                TempData["Search"] = "Please provide input for at least one search criteria";
+                TempData["SearchMessage"] = "Please provide input for at least one search criteria";
+                TempData["SearchStatus"] = "alert alert-warning";
                 var empyList = new List<ReceiptViewModel>();
                 return View("Index", empyList);
             }
@@ -141,14 +142,8 @@ namespace GarageVersion3.Controllers
                     ParkingNumber = r.ParkingNumber
                 }).ToListAsync();
 
-            if (searchResults.Count == 0)
-            {
-                TempData["Search"] = "No users were found";
-            }
-            else
-            {
-                TempData["Search"] = "Search was successful";
-            }
+            TempData["SearchMessage"] = (searchResults.Count() == 0) ? "No users were fo" : "Search was successful";
+            TempData["SearchStatus"] = (searchResults.Count() == 0) ? "alert alert-warning" : "alert alert-success";
 
             return View("Index", searchResults);
         }

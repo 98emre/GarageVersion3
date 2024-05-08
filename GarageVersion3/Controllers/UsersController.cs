@@ -272,14 +272,15 @@ namespace GarageVersion3.Controllers
         [HttpGet]
         public async Task<IActionResult> Filter(string firstName, string lastName, string personalIdentifyNumber)
         {
+            var query = _context.User.AsQueryable();
+
             if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName) && string.IsNullOrEmpty(personalIdentifyNumber))
             {
-                TempData["Search"] = "Please provide input for at least one search criteria";
+                TempData["SearchMessage"] = "Please provide input for at least one search criteria";
+                TempData["SearchStatus"] = "alert alert-warning";
                 var empyList = new List<UserViewModel>();
                 return View("Index", empyList);
             }
-
-            var query = _context.User.AsQueryable();
 
             if (!string.IsNullOrEmpty(firstName))
             {
@@ -307,15 +308,8 @@ namespace GarageVersion3.Controllers
                             NrOfVehicles = u.Vehicles.Count()
                         }).ToListAsync();
 
-            if (search.Count == 0)
-            {
-                TempData["Search"] = "No User found";
-            }
-
-            else
-            {
-                TempData["Search"] = "Search was successful";
-            }
+            TempData["SearchMessage"] = (search.Count == 0) ? "No user could be found" : "Search was successful";
+            TempData["SearchStatus"] = (search.Count == 0) ? "alert alert-warning" : "alert alert-success";
 
             return View("Index", search);
         }

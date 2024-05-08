@@ -336,7 +336,8 @@ namespace GarageVersion3.Controllers
         {
             if (string.IsNullOrEmpty(registrationNumber) && string.IsNullOrEmpty(color) && string.IsNullOrEmpty(brand))
             {
-                TempData["Search"] = "Please provide input for at least one search criteria";
+                TempData["SearchMessage"] = "Please provide input for at least one search criteria";
+                TempData["SearchStatus"] = "alert alert-warning";
                 var empyList = new List<VehicleViewModel>();
                 return View("Index", empyList);
             }
@@ -367,15 +368,8 @@ namespace GarageVersion3.Controllers
                             User = $"{v.User.FirstName} {v.User.LastName} ({v.User.PersonalIdentifyNumber})",
                         }).ToListAsync();
 
-            if (search.Count == 0)
-            {
-                TempData["Search"] = "No vehicles found";
-            }
-
-            else
-            {
-                TempData["Search"] = "Search was successful";
-            }
+            TempData["SearchMessage"] = (search.Count == 0) ? "No vehicles could be found" : "Search was successful";
+            TempData["SearchStatus"] = (search.Count == 0) ? "alert alert-warning" :"alert alert-success";
 
             return View("Index", search);
         }
