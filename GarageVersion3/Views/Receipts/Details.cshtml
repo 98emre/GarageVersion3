@@ -4,9 +4,8 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Receipt Details</h1>
-
-<div>
+<div class="container">
+    <h1 class="display-4 mt-4">Receipt Details</h1>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -41,7 +40,7 @@
             @Html.DisplayFor(model => model.Price)
         </dd>
     </dl>
-</div>
-<div>
-    <a asp-action="Index" class="btn btn-primary-blue ms-2">Back to list</a>
+    <div class="pt-2">
+        <a asp-action="Index" class="btn btn-dark-blue">Back to list</a>
+    </div>
 </div>
