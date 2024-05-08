@@ -128,6 +128,8 @@ namespace GarageVersion3.Controllers
                    User = $"{pt.Vehicle.User.FirstName} {pt.Vehicle.User.LastName} ({pt.Vehicle.User.PersonalIdentifyNumber})",
                    Checkin = DateTime.Now,
                    VehicleId = pt.VehicleId,
+                   ParkingSpot = pt.ParkingSpot,
+                   UserId = pt.Vehicle.UserId,
                    VehicleViewModel = new VehicleViewModel
                    {
                        RegistrationNumber = pt.Vehicle.RegistrationNumber,
@@ -137,7 +139,6 @@ namespace GarageVersion3.Controllers
                        VehicleType = pt.Vehicle.VehicleType.Type,
                        Color = pt.Vehicle.Color
                    },
-                   ParkingSpot = pt.ParkingSpot
                }).FirstOrDefaultAsync();
 
             if (viewModel == null)
@@ -213,7 +214,6 @@ namespace GarageVersion3.Controllers
             ModelState.Remove("firstName");
             ModelState.Remove("lastName");
            
-
             if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName))
             {
                 TempData["SearchMessage"] = "Please provide input for at least one search criteria";
@@ -247,8 +247,7 @@ namespace GarageVersion3.Controllers
 
             TempData["SearchMessage"] = (searchResults.Count == 0) ? "Could not find the receipt for the user" : "Search was successful";
             TempData["SearchStatus"] = (searchResults.Count == 0) ? "alert alert-warning" : "alert alert-success";
-
-        
+  
             return View("Index", searchResults);
         }
 
