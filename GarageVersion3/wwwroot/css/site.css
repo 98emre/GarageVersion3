@@ -29,7 +29,8 @@ body {
 }
 
 .btn {
-    min-width: 7rem;
+    margin-top: 0.25rem;
+    min-width: 5.5rem;
 }
 
 .btn-primary-blue {
@@ -74,6 +75,11 @@ body {
     margin-bottom: 0rem !important;
 }
 
+.container-fluid {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+}
+
 .navbar {
     background-color: var(--color-powder-blue);
     padding-top: 0rem;
@@ -107,16 +113,28 @@ body {
     min-width: 22rem;
 }
 
+.table > :not(caption) > * > * {
+    padding: 0.075rem;
+}
+
 .border {
     background-color: var(--color-columbia-blue) !important;
     border-color: var(--color-dark-blue) !important;
     border-radius: 0.25px;
 }
 
-tbody:before {
+tbody.index-page:before {
     content: '';
     display: block;
     height: 10px;
+}
+
+.flex-searchbar {
+    flex-direction: column;
+}
+
+.table-txt {
+    font-weight: 500;
 }
 
 .footer {
@@ -126,5 +144,18 @@ tbody:before {
 @media (min-width: 768px) {
     html {
         font-size: 16px;
+    }
+
+    .btn {
+        min-width: 7rem;
+    }
+
+    .flex-searchbar {
+        flex-direction: row;
+    }
+
+    .table-txt {
+        font-size: 1.25rem;
+        line-height: 1.2;
     }
 }

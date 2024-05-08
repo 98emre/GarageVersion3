@@ -49,7 +49,7 @@
 
         <form asp-action="FilterIndex" method="get" class="form-inline m-3 d-flex flex-column align-items-center">
             <p>Choose 1-2 attributes for searching a user</p>
-            <div class="d-flex flex-row input-group-sm align-items-center">
+            <div class="d-flex flex-searchbar input-group-sm align-items-center">
                 <div class="form-group mr-2">
                     <input type="text" class="form-control" name="firstName" placeholder="Search by first name">
                 </div>
@@ -67,25 +67,25 @@
         <table class="table mt-3">
             <thead>
                 <tr>
-                    <th class="pb-3 h5 text-left font-weight-bold">
+                    <th class="pb-3 table-txt text-left font-weight-bold">
                         Owner
                     </th>
 
-                    <th class="pb-3 h5 text-left font-weight-bold">
+                    <th class="pb-3 table-txt text-left font-weight-bold">
                         Registration Number
                     </th>
 
-                    <th class="pb-3 h5 text-left font-weight-bold">
+                    <th class="pb-3 table-txt text-left font-weight-bold">
                         Check In
                     </th>
 
-                    <th class="pb-3 h5 text-left font-weight-bold">
+                    <th class="pb-3 table-txt text-left font-weight-bold">
                         Parking Spot
                     </th>
                     <th></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="index-page">
                 @foreach (var item in Model)
                 {
                     <tr>

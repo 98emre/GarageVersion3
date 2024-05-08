@@ -44,7 +44,7 @@
 
         <form asp-action="Filter" method="get" class="form-inline m-3 d-flex flex-column align-items-center">
             <p>Choose 1-3 attributes for searching user</p>
-            <div class="d-flex flex-row input-group-sm align-items-center">
+            <div class="d-flex flex-searchbar input-group-sm align-items-center">
                 <div class="form-group mr-2">
                     <input type="text" class="form-control" name="firstName" placeholder="Search by first name">
                 </div>
@@ -62,25 +62,25 @@
     </div>
 
     <div>
-        <table class="table mt-3">
+        <table class="table table-responsive mt-3">
             <thead>
                 <tr>
                     <th class="pb-3 text-left font-weight-bold">
-                        <a asp-action="Sort" asp-route-sortOrder="PersonalIdentifyNumber" class="text-black h5 text-decoration-none">Personal Identify Number</a>
+                        <a asp-action="Sort" asp-route-sortOrder="PersonalIdentifyNumber" class="text-black table-txt text-decoration-none">Personal Identify Number</a>
                     </th>
                     <th class="pb-3 text-left font-weight-bold">
-                        <a asp-action="Sort" asp-route-sortOrder="FirstName" class="text-black h5 text-decoration-none">First Name</a>
+                        <a asp-action="Sort" asp-route-sortOrder="FirstName" class="text-black table-txt text-decoration-none">First Name</a>
                     </th>
                     <th class="pb-3 text-left font-weight-bold">
-                        <a asp-action="Sort" asp-route-sortOrder="LastName" class="text-black h5 text-decoration-none">Last Name</a>
+                        <a asp-action="Sort" asp-route-sortOrder="LastName" class="text-black table-txt text-decoration-none">Last Name</a>
                     </th>
                     <th class="pb-3 text-left font-weight-bold">
-                        <a asp-action="Sort" asp-route-sortOrder="NumberOfVehicles" class="text-black h5 text-decoration-none">Number Of Vehicles</a>
+                        <a asp-action="Sort" asp-route-sortOrder="NumberOfVehicles" class="text-black table-txt text-decoration-none">Number Of Vehicles</a>
                     </th>
                     <th></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="index-page">
                 @foreach (var item in Model)
                 {
                     <tr>
