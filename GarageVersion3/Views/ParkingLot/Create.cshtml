@@ -83,8 +83,8 @@
                         </td>
 
                         <td align="right">
-                             <button type="submit" name="vehicleId" value="@item.Id" class="btn btn-primary-blue" @(ViewBag.Vehicles >= item.MaxParkingSize ? "disabled" : "")>
-                                @if(ViewBag.Vehicles >= item.MaxParkingSize)
+                             <button type="submit" name="vehicleId" value="@item.Id" class="btn btn-primary-blue" @(ViewBag.Vehicles == item.MaxParkingSize) ? "disabled" : "")>
+                                @if (ViewBag.Vehicles == item.MaxParkingSize)
                                 {
                                     <p id="btn-txt-park">Parking Spaces full</p>
                                 }

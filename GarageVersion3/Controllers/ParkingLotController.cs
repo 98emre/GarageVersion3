@@ -49,7 +49,7 @@ namespace GarageVersion3.Controllers
                     }
                 }).ToListAsync();
 
-            ViewBag.Vehicles = maxParkingSize - viewModel.Count();
+            ViewBag.Vehicles = maxParkingSize - _context.ParkingLot.Count();
                 
             return View(viewModel);
         }
@@ -92,25 +92,6 @@ namespace GarageVersion3.Controllers
                     ModelState.AddModelError(string.Empty, "No available parking spots.");
                     return RedirectToAction(nameof(Index));
                 }
-
-                /*
-                if (availableSpot == -1 || )
-                {
-                    ModelState.AddModelError(string.Empty, "No available parking spots.");
-
-                    var vehicles = await _context.Vehicle
-                     .Where(v => !_context.ParkingLot.Any(pl => pl.VehicleId == v.Id))
-                     .Select(v => new VehicleViewModel
-                     {
-                         Id = v.Id,
-                         RegistrationNumber = v.RegistrationNumber,
-                         User = $"{v.User.FirstName} {v.User.LastName} ({v.User.PersonalIdentifyNumber})",
-                         VehicleType = v.VehicleType.Type,
-                         MaxParkingSize = maxParkingSize
-                     }).ToListAsync();
-
-                    return View(vehicles);
-                } */
 
                 var parkingLot = new ParkingLot
                 {
@@ -303,6 +284,7 @@ namespace GarageVersion3.Controllers
                 .Select(pt => new VehicleViewModel
                 {
                     Id = pt.Id,
+                    VehicleType = pt.VehicleType.Type,
                     RegistrationNumber = pt.RegistrationNumber,
                     User = $"{pt.User.FirstName} {pt.User.LastName} ({pt.User.PersonalIdentifyNumber})"
                 }).ToListAsync();
