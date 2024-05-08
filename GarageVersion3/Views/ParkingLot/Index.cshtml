@@ -19,9 +19,8 @@
     </div>
 }
 
-
 <div class="container-fluid">
-    <h1 class="display-4 text-center mt-4">Parkinglot</h1>
+    <h1 class="display-4 text-center mt-4">Parking Lot</h1>
 
     <div class="row justify-content-center">
 
@@ -43,7 +42,7 @@
             }
             else
             {
-                <a asp-action="Create" class="btn btn-primary-blue me-2">Park Vehicle</a>
+                <a asp-action="Create" class="btn btn-primary-blue me-2">Check In</a>
             }
             <a asp-action="ShowAll" asp-route-status="true" class="btn btn-secondary-blue">Show All</a>
         </div>
@@ -69,15 +68,15 @@
             <thead>
                 <tr>
                     <th class="pb-3 h5 text-left font-weight-bold">
-                        User
+                        Owner
                     </th>
 
                     <th class="pb-3 h5 text-left font-weight-bold">
-                        Vehicle Registration Number
+                        Registration Number
                     </th>
 
                     <th class="pb-3 h5 text-left font-weight-bold">
-                        Checkin
+                        Check In
                     </th>
 
                     <th class="pb-3 h5 text-left font-weight-bold">
@@ -108,9 +107,9 @@
 
                         <td align="right">
 
-                            <a asp-controller="Vehicles" asp-action="Edit" asp-route-id="@item.VehicleId" class="btn btn-dark-blue">Edit</a>
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary-blue">Details</a>
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger ms-2">Checkout </a>
+                            <a asp-controller="Vehicles" asp-action="Edit" asp-route-id="@item.VehicleId" class="btn btn-primary-blue">Edit</a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary-blue ms-2">Details</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger ms-2">Check Out</a>
                         </td>
                     </tr>
                 }
