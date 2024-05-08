@@ -66,9 +66,9 @@ namespace GarageVersion3.Controllers
 
             return View(viewModel);
         }
-        
+
         [HttpGet]
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             return View();
         }
@@ -304,7 +304,7 @@ namespace GarageVersion3.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ShowAll()
+        public IActionResult ShowAll()
         {
             TempData["SearchMessage"] = (_context.User.ToList().Count() == 0) ? "There are no users in the system" : "Showing all users was successful";
             TempData["SearchStatus"] = (_context.User.ToList().Count() == 0) ? "alert alert-warning" : "alert alert-success";

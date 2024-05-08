@@ -314,7 +314,7 @@ namespace GarageVersion3.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ShowAll(bool status)
+        public IActionResult ShowAll(bool status)
         {
             var message = status ? "There are no vehicles to choose from" : "There are no vehicles in the parking lot";
             var count = status ? _context.ParkingLot.Count() : _context.Vehicle.Where(pt => !_context.ParkingLot.Any(v => v.VehicleId == pt.Id)).Count();

@@ -73,7 +73,7 @@ namespace GarageVersion3.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             DropdownDataLists();
 
@@ -376,7 +376,7 @@ namespace GarageVersion3.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ShowAll()
+        public IActionResult ShowAll()
         {
             TempData["SearchMessage"] = (_context.Vehicle.ToList().Count == 0) ? "There are no vehicles in the system" : "Showing all vehicles was successful";
             TempData["SearchStatus"] = (_context.Vehicle.ToList().Count == 0) ? "alert alert-warning" : "alert alert-success";

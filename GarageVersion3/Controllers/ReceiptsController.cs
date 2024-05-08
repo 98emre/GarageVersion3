@@ -143,7 +143,7 @@ namespace GarageVersion3.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ShowAll()
+        public IActionResult ShowAll()
         {
             TempData["SearchMessage"] = (_context.Receipt.Count() == 0) ? "There are no receipts" : "Showing all receipts was successful";
             TempData["SearchStatus"] = (_context.Receipt.Count() == 0) ? "alert alert-warning" : "alert alert-success";
