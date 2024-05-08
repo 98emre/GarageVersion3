@@ -30,7 +30,7 @@ namespace GarageVersion3.Validation
                     */
                     var dbContext = validationContext.GetRequiredService<GarageVersion3Context>();
                     
-                    if (dbContext.User.Any(u => u.PersonalIdentifyNumber == viewModel.PersonalIdentifyNumber))
+                    if (dbContext.User.Any(u => u.Id != viewModel.Id && u.PersonalIdentifyNumber == viewModel.PersonalIdentifyNumber))
                     {
                         return new ValidationResult("Personal Number already exists.");
                     }
