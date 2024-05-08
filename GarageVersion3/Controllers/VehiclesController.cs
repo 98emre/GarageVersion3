@@ -17,12 +17,10 @@ namespace GarageVersion3.Controllers
     public class VehiclesController : Controller
     {
         private readonly GarageVersion3Context _context;
-        private readonly ILogger<VehiclesController> _logger;
 
-        public VehiclesController(GarageVersion3Context context, ILogger<VehiclesController> logger)
+        public VehiclesController(GarageVersion3Context context)
         {
             _context = context;
-            _logger = logger;
         }
 
         // GET: Vehicles
