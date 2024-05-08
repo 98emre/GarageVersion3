@@ -142,7 +142,7 @@ namespace GarageVersion3.Controllers
                     ParkingNumber = r.ParkingNumber
                 }).ToListAsync();
 
-            TempData["SearchMessage"] = (searchResults.Count() == 0) ? "No users were fo" : "Search was successful";
+            TempData["SearchMessage"] = (searchResults.Count() == 0) ? "No receipts where found on the search user" : "Search was successful";
             TempData["SearchStatus"] = (searchResults.Count() == 0) ? "alert alert-warning" : "alert alert-success";
 
             return View("Index", searchResults);

@@ -42,19 +42,10 @@
     <table class="table mt-3">
         <thead>
             <tr>
-                <th class="pb-3 table-txt text-left font-weight-bold">
+                <th class="pb-3 table-txt text-left">
                     @Html.DisplayNameFor(model => model.User)
                 </th>
-                <th class="pb-3 table-txt text-left font-weight-bold">
-                    @Html.DisplayNameFor(model => model.ParkingNumber)
-                </th>
-                <th class="pb-3 table-txt text-left font-weight-bold">
-                    @Html.DisplayNameFor(model => model.Checkin)
-                </th>
-                <th class="pb-3 table-txt text-left font-weight-bold">
-                    @Html.DisplayNameFor(model => model.CheckoutDate)
-                </th>
-                <th class="pb-3 table-txt text-left font-weight-bold">
+                <th class="pb-3 table-txt text-left">
                     @Html.DisplayNameFor(model => model.Price)
                 </th>
                 <th></th>
@@ -67,15 +58,6 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.User.FirstName)
                         @Html.DisplayFor(modelItem => item.User.LastName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ParkingNumber)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Checkin)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CheckoutDate)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Price)

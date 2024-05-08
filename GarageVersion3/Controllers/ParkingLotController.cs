@@ -288,7 +288,7 @@ namespace GarageVersion3.Controllers
                     User = $"{pt.User.FirstName} {pt.User.LastName} ({pt.User.PersonalIdentifyNumber})"
                 }).ToListAsync();
 
-            TempData["SearchMessage"] = (searchResults.Count == 0) ? "Could not find the receipt for the user" : "Search was successful";
+            TempData["SearchMessage"] = (searchResults.Count == 0) ? "Could not find any vehciels that belong to the user" : "Search was successful";
             TempData["SearchStatus"] = (searchResults.Count == 0) ? "alert alert-warning" : "alert alert-success";
 
             return View("Create", searchResults);
