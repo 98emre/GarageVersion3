@@ -1,41 +1,40 @@
 ﻿@model GarageVersion3.Models.ViewModels.UserViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Add User";
 }
 
-<h1>Create</h1>
+<div class="container">
+    <h1 class="display-4 mt-4">Add User</h1>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="PersonalIdentifyNumber" class="control-label">Personal Identify Number</label>
+                    <input asp-for="PersonalIdentifyNumber" class="form-control" />
+                    <span asp-validation-for="PersonalIdentifyNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FirstName" class="control-label">First Name</label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName" class="control-label">Last Name</label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-2">
+                    <input type="submit" value="Add User" class="btn btn-primary-blue" />
+                    <a asp-action="Index" class="btn btn-dark-blue ms-2">Back to List</a>
 
-<h4>CreateUserViewModel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="PersonalIdentifyNumber" class="control-label"></label>
-                <input asp-for="PersonalIdentifyNumber" class="form-control" />
-                <span asp-validation-for="PersonalIdentifyNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" /> |
-                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-
-            </div>
-        </form>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

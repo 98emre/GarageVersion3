@@ -4,10 +4,8 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>User</h4>
+<div class="container">
+    <h1 class="display-4 mt-4">User Details</h1>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -36,39 +34,39 @@
             @Html.DisplayFor(model => model.NrOfVehicles)
         </dd>
     </dl>
-</div>
 
-<h4>Your Vehicles</h4>
 
-@if (Model.Vehicles != null && Model.Vehicles.Any())
-{
-    <div>
-        <table class="table">
-            <thead>
-                <tr>
-                  <th>Registration Number</th>
-                  <th>Vehicle Type</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var vehicle in Model.Vehicles)
-                {
+    <h3 class="pt-5">Your Vehicles</h3>
+
+    @if (Model.Vehicles != null && Model.Vehicles.Any())
+    {
+        <div>
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>@vehicle.RegistrationNumber</td>
-                        <td>@vehicle.VehicleType.Type</td>
+                      <th>Registration Number</th>
+                      <th>Vehicle Type</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var vehicle in Model.Vehicles)
+                    {
+                        <tr>
+                            <td>@vehicle.RegistrationNumber</td>
+                            <td>@vehicle.VehicleType.Type</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    else{
+        <h6>Empty List</h6>
+    }
+
+    <div class="pt-2">
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary-blue">Edit</a>
+        <a asp-action="Index" class="btn btn-dark-blue ms-2">Back to List</a> 
     </div>
-}
-
-else{
-    <h6>Empty List</h6>
-}
-
-
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Edit</a> |
-    <a asp-action="Index" class="btn btn-secondary">Back to List</a> 
 </div>
