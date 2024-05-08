@@ -242,7 +242,12 @@ namespace GarageVersion3.Controllers
                     RegistrationNumber = pt.Vehicle.RegistrationNumber,
                     ParkingSpot = pt.ParkingSpot,
                     Checkin = pt.Checkin,
-                    User = $"{pt.Vehicle.User.FirstName} {pt.Vehicle.User.LastName} ({pt.Vehicle.User.PersonalIdentifyNumber})"
+                    User = $"{pt.Vehicle.User.FirstName} {pt.Vehicle.User.LastName} ({pt.Vehicle.User.PersonalIdentifyNumber})",
+                    VehicleViewModel = new VehicleViewModel
+                    {
+                        Id = pt.Vehicle.Id,
+                        VehicleType = pt.Vehicle.VehicleType.Type
+                    }
                 }).ToListAsync();
 
             TempData["SearchMessage"] = (searchResults.Count == 0) ? "Could not find the receipt for the user" : "Search was successful";

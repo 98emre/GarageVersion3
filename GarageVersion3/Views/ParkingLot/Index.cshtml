@@ -69,6 +69,10 @@
                     </th>
 
                     <th class="pb-3 table-txt text-left font-weight-bold">
+                        Vehicle Type
+                    </th>
+
+                    <th class="pb-3 table-txt text-left font-weight-bold">
                         Registration Number
                     </th>
 
@@ -88,6 +92,9 @@
                     <tr>
                         <td>
                             @Html.DisplayFor(modelItem => item.User)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.VehicleViewModel.VehicleType)
                         </td>
 
                         <td>
