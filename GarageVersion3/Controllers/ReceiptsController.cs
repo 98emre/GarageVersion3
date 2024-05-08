@@ -48,8 +48,20 @@ namespace GarageVersion3.Controllers
             {
                 return NotFound();
             }
-            var receipt = _context.Receipt.Include(u => u.User).FirstOrDefault(v => v.Id == id);
-            return View(receipt);
+            var viewModel = await _context.Receipt
+                .Include(r => r.User)
+                .Select(r => new ReceiptViewModel
+                {
+                    Id = r.Id,
+                    User = r.User,
+                    Checkin = r.CheckIn,
+                    CheckoutDate = r.CheckOut,
+                    Price = r.Price,
+                    ParkingNumber = r.ParkingNumber
+                })
+                .FirstOrDefaultAsync(r => r.Id == id);
+               
+            return View(viewModel);
         }
 
         // GET: Receipts/Delete/5
