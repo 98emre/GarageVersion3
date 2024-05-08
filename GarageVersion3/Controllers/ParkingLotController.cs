@@ -167,14 +167,14 @@ namespace GarageVersion3.Controllers
         {
             try
             {
-                var parkingLot = await _context.ParkingLot.FindAsync(id);
+                var parkingLot = _context.ParkingLot.Find(id);
 
                 if (parkingLot == null)
                 {
                     return NotFound();
                 }
 
-                ReceiptHelper helper = new ReceiptHelper(_context, id);
+                ReceiptHelper helper = new ReceiptHelper(_context, parkingLot);
                 helper.CheckoutVehicle();
 
                 _context.ParkingLot.Remove(parkingLot);
