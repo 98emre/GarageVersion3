@@ -224,9 +224,12 @@ namespace GarageVersion3.Controllers
         [HttpGet]
         public async Task<IActionResult> FilterIndex(string firstName, string lastName)
         {
+            ViewBag.Vehicles = maxParkingSize - _context.ParkingLot.ToList().Count();
+
             var query = _context.ParkingLot.AsQueryable();
             ModelState.Remove("firstName");
             ModelState.Remove("lastName");
+           
 
             if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName))
             {
@@ -273,6 +276,7 @@ namespace GarageVersion3.Controllers
         [HttpGet]
         public async Task<IActionResult> FilterCreate(string firstName, string lastName)
         {
+            ViewBag.Vehicles = maxParkingSize - _context.ParkingLot.ToList().Count();
             var query = _context.Vehicle.AsQueryable();
 
             ModelState.Remove("firstName");
