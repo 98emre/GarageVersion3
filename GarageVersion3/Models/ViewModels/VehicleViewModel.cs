@@ -33,5 +33,8 @@ namespace GarageVersion3.Models.ViewModels
         [Range(0, 100)]
         [Required(ErrorMessage = "Add number of wheels for your vehicle")]
         public int NrOfWheels { get; set; }
+
+        public int MaxParkingSize { get; set; }
+
     }
 }

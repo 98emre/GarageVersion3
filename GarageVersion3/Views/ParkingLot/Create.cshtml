@@ -27,7 +27,7 @@
     <div class="row justify-content-center">
 
         <div class="mt-3 mb-3">
-            <a asp-action="ShowAllCreate" class="btn btn-primary">Show All</a>
+            <a asp-action="ShowAll" asp-route-status="false" class="btn btn-primary">Show All</a>
         </div>
 
         <form asp-action="FilterCreate" method="get" class="form-inline m-3 d-flex flex-column align-items-center">
@@ -49,6 +49,9 @@
         </form>
     </div>
 
+        <div>
+        <h2 class="text-danger"> @Html.ValidationSummary(false)</h2>
+    </div>
     <form asp-action="Create" method="post">        
 
         <table class="table">
@@ -77,7 +80,16 @@
                         </td>
 
                         <td>
-                             <button type="submit" name="vehicleId" value="@item.Id" class="btn btn-primary">Park Vehicle</button>
+                             <button type="submit" name="vehicleId" value="@item.Id" class="btn btn-primary" @(ViewBag.Vehicles >= item.MaxParkingSize ? "disabled" : "")>
+                                    @if(ViewBag.Vehicles >= item.MaxParkingSize)
+                                    {
+                                        <p>Parking Spaces full</p>
+                                    }
+                                    else
+                                    {
+                                        <p>Park Vehicle</p>
+                                    }
+                                </button>
                         </td> 
                     </tr>
                 }
