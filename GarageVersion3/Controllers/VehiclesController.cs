@@ -17,10 +17,12 @@ namespace GarageVersion3.Controllers
     public class VehiclesController : Controller
     {
         private readonly GarageVersion3Context _context;
+        private readonly ILogger<VehiclesController> _logger;
 
-        public VehiclesController(GarageVersion3Context context)
+        public VehiclesController(GarageVersion3Context context, ILogger<VehiclesController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: Vehicles
@@ -97,7 +99,7 @@ namespace GarageVersion3.Controllers
 
             if (ModelState.IsValid)
             {
-               
+
                 var vehicle = new Vehicle
                 {
                     VehicleTypeId = viewModel.VehicleTypeId,
@@ -260,14 +262,14 @@ namespace GarageVersion3.Controllers
             try
             {
                 var vehicle = await _context.Vehicle.FindAsync(id);
-               
+
                 if (vehicle == null)
                 {
                     return NotFound();
                 }
 
                 _context.Vehicle.Remove(vehicle);
-               await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
 
@@ -314,7 +316,7 @@ namespace GarageVersion3.Controllers
 
                 default:
                     vehicles = vehicles.OrderBy(v => v.Id).ToList();
-                 break;
+                    break;
             }
 
             var sortedVehicles = vehicles
@@ -432,32 +434,38 @@ namespace GarageVersion3.Controllers
         }
 
         [HttpGet]
-        public IActionResult Statistics()
+        public async Task<IActionResult> Statistics()
         {
-            var parkedVehicles = _context.Vehicle.Include(v => v.VehicleType).ToList();
+            var parkedVehicles = await _context.Vehicle
+                .Where(v => _context.ParkingLot.Any(pt => pt.VehicleId == v.Id))
+                .Include(v => v.VehicleType)
+                .ToListAsync();
 
-            var vehicleTypeCount = new Dictionary<string, int>();
-            double totalRevenue = 0;
+            List<Vehicle> vehicles = new List<Vehicle>();
 
-            foreach (var vehicle in parkedVehicles)
+            foreach (var parkingSpot in availableParkingSpot)
             {
-                if (vehicle.VehicleType != null)
-                {
-                    if (!vehicleTypeCount.ContainsKey(vehicle.VehicleType.Type))
-                    {
-                        vehicleTypeCount[vehicle.VehicleType.Type] = 0;
-                    }
-
-                    vehicleTypeCount[vehicle.VehicleType.Type]++;
-
-                    ReceiptViewModel receipt = new ReceiptViewModel();
-                    totalRevenue = totalRevenue + receipt.Price;
-                };
+                Console.WriteLine(parkingSpot.VehicleId);
             }
 
+            var parkedVehicles = _context.ParkingLot
+                .Where(pl => pl.AvailableParkingSpot == false) // Filter for occupied parking spots
+                .Select(pl => pl.Vehicle) // Select the associated Vehicle for each ParkingLot
+                .ToList();
+
+            Dictionary<string, int> vehicleTypeDict = new Dictionary<string, int>();
+
+            foreach (var vehicleType in parkedVehicles)
+            {
+                int count = _context.Vehicle.Count(v => v.VehicleTypeId == vehicleType.Id);
+                // Add the type and its count to the dictionary
+                vehicleTypeDict.Add(vehicleType.VehicleType.Type, count);
+            }
+
+            var totalRevenue = _context.Receipt.Sum(r => r.Price);
             var totalWheels = parkedVehicles.Sum(v => v.NrOfWheels);
 
-            ViewBag.VehicleType = vehicleTypeCount;
+            ViewBag.vehicleTypeCount = vehicleTypeCount;
             ViewBag.TotalWheels = totalWheels;
             ViewBag.TotalRevenue = totalRevenue.ToString("#,##0.00");
 

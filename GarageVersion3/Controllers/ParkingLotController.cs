@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Drawing.Drawing2D;
 using System.Drawing;
 using Microsoft.CodeAnalysis.Elfie.Diagnostics;
+using GarageVersion3.Helpers;
 
 namespace GarageVersion3.Controllers
 {
@@ -79,7 +80,7 @@ namespace GarageVersion3.Controllers
 
                 var parkingLot = new ParkingLot
                 {
-                    AvailableParkingSpot = true,
+                    AvailableParkingSpot = false,
                     Checkin = DateTime.Now,
                     VehicleId = viewModel.VehicleId,
                     ParkingSpot = availableSpot
@@ -166,12 +167,15 @@ namespace GarageVersion3.Controllers
         {
             try
             {
-                var parkingLot = await _context.ParkingLot.FindAsync(id);
+                var parkingLot = _context.ParkingLot.Find(id);
 
                 if (parkingLot == null)
                 {
                     return NotFound();
                 }
+
+                ReceiptHelper helper = new ReceiptHelper(_context, parkingLot);
+                helper.CheckoutVehicle();
 
                 _context.ParkingLot.Remove(parkingLot);
                 await _context.SaveChangesAsync();
