@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<ParkingLotViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Parking Lot";
 }
 
 
@@ -19,26 +19,27 @@
     </div>
 }
 
-<h1>Parkinglot Page</h1>
+
 
 <div class="container-fluid">
+    <h1 class="display-4 text-center mt-4">Parkinglot</h1>
 
     <div class="row justify-content-center">
 
         <div class="mt-3 mb-3">
             @if(ViewBag.Vehicles == 0)
             {
-                <h2>Parking spaces full</h2>
+                <h2 class="h5 text-center">Parking spots full</h2>
             }
 
             else{
-                <h2>Parking spaces left: @ViewBag.Vehicles</h2>
+                <h2 class="h5 text-center">Parking spots left: @ViewBag.Vehicles</h2>
             }
         </div>
 
-        <div class="mt-3 mb-3">
-            <a asp-action="Create" class="btn btn-primary">Park Vehicle</a>
-            <a asp-action="ShowAll" asp-route-status="true" class="btn btn-primary">Show All</a>
+        <div class="mt-3 mb-3 text-center">
+            <a asp-action="Create" class="btn btn-primary-blue">Park Vehicle</a>
+            <a asp-action="ShowAll" asp-route-status="true" class="btn btn-secondary-blue ms-2">Show All</a>
         </div>
 
         <form asp-action="FilterIndex" method="get" class="form-inline m-3 d-flex flex-column align-items-center">
@@ -51,29 +52,29 @@
                     <input type="text" class="form-control" name="lastName" placeholder="Search by last name">
                 </div>
                 <div>
-                    <button type="submit" class="btn btn-secondary-blue ms-4">Search</button>
+                    <button type="submit" class="btn btn-mid-blue ms-2">Search</button>
                 </div>
             </div>
         </form>
     </div>
 
     <div>
-        <table class="table">
+        <table class="table mt-3">
             <thead>
                 <tr>
-                    <th class="px-6 py-4 text-left font-weight-bold">
+                    <th class="pb-3 h5 text-left font-weight-bold">
                         User
                     </th>
 
-                    <th class="px-6 py-4 text-left font-weight-bold">
+                    <th class="pb-3 h5 text-left font-weight-bold">
                         Vehicle Registration Number
                     </th>
 
-                    <th class="px-6 py-4 text-left font-weight-bold">
+                    <th class="pb-3 h5 text-left font-weight-bold">
                         Checkin
                     </th>
 
-                    <th class="px-6 py-4 text-left font-weight-bold">
+                    <th class="pb-3 h5 text-left font-weight-bold">
                         Parking Spot
                     </th>
                     <th></th>
@@ -99,9 +100,9 @@
                             @Html.DisplayFor(modelItem => item.ParkingSpot)
                         </td>
 
-                        <td>
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Checkout </a>
+                        <td align="right">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary-blue">Details</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger ms-2">Checkout </a>
                         </td>
                     </tr>
                 }
