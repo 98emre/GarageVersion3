@@ -75,6 +75,10 @@ body {
     width: 2rem;
 }
 
+.landingpage-list {
+    min-width: 16rem;
+}
+
 .form-group {
     padding: 0.25rem 0;
 }
