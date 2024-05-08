@@ -14,9 +14,11 @@ namespace GarageVersion3.Controllers
     public class ParkingLotController : Controller
     {
         private readonly GarageVersion3Context _context;
+        private int maxParkingSize;
 
         public ParkingLotController(GarageVersion3Context context)
         {
+            maxParkingSize = 25;
             _context = context;
         }
 
@@ -41,9 +43,12 @@ namespace GarageVersion3.Controllers
                         VehicleModel = pt.Vehicle.VehicleModel,
                         NrOfWheels = pt.Vehicle.NrOfWheels,
                         VehicleType = pt.Vehicle.VehicleType.Type,
-                        Color = pt.Vehicle.Color
+                        Color = pt.Vehicle.Color,
+                        MaxParkingSize = maxParkingSize
                     }
                 }).ToListAsync();
+
+            ViewBag.Vehicles = maxParkingSize - viewModel.Count();
                 
             return View(viewModel);
         }
@@ -51,6 +56,8 @@ namespace GarageVersion3.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
+            ViewBag.Vehicles = _context.ParkingLot.ToList().Count();
+
             var vehicles = await _context.Vehicle
                  .Where(v => !_context.ParkingLot.Any(pl => pl.VehicleId == v.Id))
                  .Select(v => new VehicleViewModel
@@ -59,6 +66,7 @@ namespace GarageVersion3.Controllers
                      RegistrationNumber = v.RegistrationNumber,
                      User = $"{v.User.FirstName} {v.User.LastName} ({v.User.PersonalIdentifyNumber})",
                      VehicleType = v.VehicleType.Type,
+                     MaxParkingSize = maxParkingSize
                  }).ToListAsync();
 
             return View(vehicles);
@@ -71,11 +79,24 @@ namespace GarageVersion3.Controllers
             if (ModelState.IsValid)
             {
                 var availableSpot = await GetAvailableParkingSpot();
+                ViewBag.Vehicles = _context.ParkingLot.ToList().Count();
 
                 if (availableSpot == -1)
                 {
                     ModelState.AddModelError(string.Empty, "No available parking spots.");
-                    return View(viewModel);
+
+                    var vehicles = await _context.Vehicle
+                     .Where(v => !_context.ParkingLot.Any(pl => pl.VehicleId == v.Id))
+                     .Select(v => new VehicleViewModel
+                     {
+                         Id = v.Id,
+                         RegistrationNumber = v.RegistrationNumber,
+                         User = $"{v.User.FirstName} {v.User.LastName} ({v.User.PersonalIdentifyNumber})",
+                         VehicleType = v.VehicleType.Type,
+                         MaxParkingSize = maxParkingSize
+                     }).ToListAsync();
+
+                    return View(vehicles);
                 }
 
                 var parkingLot = new ParkingLot
@@ -94,7 +115,6 @@ namespace GarageVersion3.Controllers
 
             return View(viewModel);
         }
-
 
         [HttpGet]
         public async Task<IActionResult> Details(int? id)
@@ -189,13 +209,14 @@ namespace GarageVersion3.Controllers
             }
         }
 
-       
         [HttpGet]
-        public async Task<IActionResult> FilterIndex(string firstName, string lastName, string personalIdentifyNumber)
+        public async Task<IActionResult> FilterIndex(string firstName, string lastName)
         {
             var query = _context.ParkingLot.AsQueryable();
+            ModelState.Remove("firstName");
+            ModelState.Remove("lastName");
 
-            if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName) && string.IsNullOrEmpty(personalIdentifyNumber))
+            if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName))
             {
                 TempData["SearchFail"] = "Please provide input for at least one search criteria";
                 var empyList = new List<ParkingLotViewModel>();
@@ -210,11 +231,6 @@ namespace GarageVersion3.Controllers
             if (!string.IsNullOrEmpty(lastName))
             {
                 query = query.Where(u => u.Vehicle.User.LastName.Trim().ToUpper().Equals(lastName.ToUpper().Trim()));
-            }
-
-            if (!string.IsNullOrEmpty(personalIdentifyNumber))
-            {
-                query = query.Where(u => u.Vehicle.User.PersonalIdentifyNumber.Equals(personalIdentifyNumber));
             }
 
             var searchResults = await query
@@ -243,11 +259,14 @@ namespace GarageVersion3.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> FilterCreate(string firstName, string lastName, string personalIdentifyNumber)
+        public async Task<IActionResult> FilterCreate(string firstName, string lastName)
         {
             var query = _context.Vehicle.AsQueryable();
 
-            if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName) && string.IsNullOrEmpty(personalIdentifyNumber))
+            ModelState.Remove("firstName");
+            ModelState.Remove("lastName");
+
+            if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName))
             {
                 TempData["SearchFail"] = "Please provide input for at least one search criteria";
                 var empyList = new List<VehicleViewModel>();
@@ -262,11 +281,6 @@ namespace GarageVersion3.Controllers
             if (!string.IsNullOrEmpty(lastName))
             {
                 query = query.Where(u => u.User.LastName.Trim().ToUpper().Equals(lastName.ToUpper().Trim()));
-            }
-
-            if (!string.IsNullOrEmpty(personalIdentifyNumber))
-            {
-                query = query.Where(u => u.User.PersonalIdentifyNumber.Equals(personalIdentifyNumber));
             }
 
             var searchResults = await query
@@ -290,64 +304,36 @@ namespace GarageVersion3.Controllers
             return View("Create", searchResults);
         }
 
-
         [HttpGet]
-        public async Task<IActionResult> ShowAllIndex()
+        public async Task<IActionResult> ShowAll(bool status)
         {
-            var query = _context.ParkingLot.AsQueryable();
-            var search = await query
-                      .Select(pt => new ParkingLotViewModel
-                      {
-                          Id = pt.Id,
-                          RegistrationNumber = pt.Vehicle.RegistrationNumber,
-                          User = $"{pt.Vehicle.User.FirstName} {pt.Vehicle.User.LastName} ({pt.Vehicle.User.PersonalIdentifyNumber})",
-                          ParkingSpot = pt.ParkingSpot,
-                          Checkin = pt.Checkin
-                      }).ToListAsync();
-
-            if (search.Count == 0)
+            var list = _context.ParkingLot.ToList().Count();
+      
+            if (list == 0)
             {
-                TempData["SearchFail"] = "There are no vehicles in the system";
+                TempData["SearchFail"] = "There are no vehicles in the parking lot";
             }
             else
             {
                 TempData["SearchSuccess"] = "Showing all vehicles was successful";
             }
 
-            return View("Index", search);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> ShowAllCreate()
-        {
-            var query = _context.Vehicle
-                        .Where(v => !_context.ParkingLot.Any(pl => pl.VehicleId == v.Id))
-                        .AsQueryable();
-
-            var search = await query
-                       .Select(v => new VehicleViewModel
-                       {
-                           Id = v.Id,
-                           RegistrationNumber = v.RegistrationNumber,
-                           User = $"{v.User.FirstName} {v.User.LastName} ({v.User.PersonalIdentifyNumber})"
-                       }).ToListAsync();
-
-            if (search.Count == 0)
+            if (status)
             {
-                TempData["SearchFail"] = "There are no vehicles in the system";
-            }
-            else
-            {
-                TempData["SearchSuccess"] = "Showing all vehicles was successful";
+                return RedirectToAction(nameof(Index));
             }
 
-            return View("Create", search);
+            return RedirectToAction(nameof(Create));
         }
-
 
         private async Task<int> GetAvailableParkingSpot()
         {
             var parkingLot = await _context.ParkingLot.OrderBy(pl => pl.ParkingSpot).ToListAsync();
+
+            if(parkingLot.Count() == maxParkingSize)
+            {
+                return -1;
+            }
 
             int nextSpot = 1;
 
