@@ -18,7 +18,7 @@ namespace GarageVersion3.Controllers
 
         public ParkingLotController(GarageVersion3Context context)
         {
-            maxParkingSize = 25;
+            maxParkingSize = 5;
             _context = context;
         }
 
@@ -58,6 +58,11 @@ namespace GarageVersion3.Controllers
         {
             ViewBag.Vehicles = _context.ParkingLot.ToList().Count();
 
+            if (ViewBag.Vehicles == maxParkingSize)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
             var vehicles = await _context.Vehicle
                  .Where(v => !_context.ParkingLot.Any(pl => pl.VehicleId == v.Id))
                  .Select(v => new VehicleViewModel
@@ -81,7 +86,14 @@ namespace GarageVersion3.Controllers
                 var availableSpot = await GetAvailableParkingSpot();
                 ViewBag.Vehicles = _context.ParkingLot.ToList().Count();
 
-                if (availableSpot == -1)
+                if (availableSpot == -1 || ViewBag.Vehicles == maxParkingSize)
+                {
+                    ModelState.AddModelError(string.Empty, "No available parking spots.");
+                    return RedirectToAction(nameof(Index));
+                }
+
+                /*
+                if (availableSpot == -1 || )
                 {
                     ModelState.AddModelError(string.Empty, "No available parking spots.");
 
@@ -97,7 +109,7 @@ namespace GarageVersion3.Controllers
                      }).ToListAsync();
 
                     return View(vehicles);
-                }
+                } */
 
                 var parkingLot = new ParkingLot
                 {
