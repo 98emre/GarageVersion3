@@ -322,21 +322,39 @@ namespace GarageVersion3.Controllers
 
         [HttpGet]
         public async Task<IActionResult> ShowAll(bool status)
-        {
-            var list = _context.ParkingLot.ToList().Count();
-      
-            if (list == 0)
-            {
-                TempData["SearchFail"] = "There are no vehicles in the parking lot";
-            }
-            else
-            {
-                TempData["SearchSuccess"] = "Showing all vehicles was successful";
-            }
-
+        {   
             if (status)
             {
+                var list = _context.ParkingLot.Count();
+
+                if (list == 0)
+                {
+                    TempData["SearchFail"] = "There are no vehicles to choose from";
+                }
+
+                else
+                {
+                    TempData["SearchSuccess"] = "Showing all vehicles was successful";
+                }
+
                 return RedirectToAction(nameof(Index));
+            }
+
+            else
+            {
+                var list = _context.Vehicle
+                                     .Where(pt => !_context.ParkingLot.Any(v => v.VehicleId == pt.Id))
+                                     .Count();
+
+                if (list == 0)
+                {
+                    TempData["SearchFail"] = "There are no vehicles in the parking lot";
+                }
+
+                else
+                {
+                    TempData["SearchSuccess"] = "Showing all vehicles was successful";
+                }
             }
 
             return RedirectToAction(nameof(Create));
