@@ -332,9 +332,9 @@ namespace GarageVersion3.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Filter(string registrationNumber, string color, string brand)
+        public async Task<IActionResult> Filter(string registrationNumber, string color, string brand, string vehicleType)
         {
-            if (string.IsNullOrEmpty(registrationNumber) && string.IsNullOrEmpty(color) && string.IsNullOrEmpty(brand))
+            if (string.IsNullOrEmpty(registrationNumber) && string.IsNullOrEmpty(color) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(vehicleType))
             {
                 TempData["SearchMessage"] = "Please provide input for at least one search criteria";
                 TempData["SearchStatus"] = "alert alert-warning";
@@ -359,11 +359,20 @@ namespace GarageVersion3.Controllers
                 query = query.Where(v => v.Brand.Equals(brand.Trim()));
             }
 
+            if (!string.IsNullOrEmpty(vehicleType))
+            {
+                query = query.Where(v => v.VehicleType.Type.Trim().ToUpper().Equals(vehicleType.Trim().ToUpper()));
+            }
+
             var search = await query
                         .Select(v => new VehicleViewModel
                         {
                             Id = v.Id,
                             VehicleType = v.VehicleType.Type,
+                            Brand = v.Brand,
+                            Color = v.Color,
+                            NrOfWheels = v.NrOfWheels,
+                            UserId = v.UserId,
                             RegistrationNumber = v.RegistrationNumber,
                             User = $"{v.User.FirstName} {v.User.LastName} ({v.User.PersonalIdentifyNumber})",
                         }).ToListAsync();
