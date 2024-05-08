@@ -58,6 +58,11 @@ namespace GarageVersion3.Controllers
         {
             ViewBag.Vehicles = _context.ParkingLot.ToList().Count();
 
+            if (ViewBag.Vehicles == maxParkingSize)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
             var vehicles = await _context.Vehicle
                  .Where(v => !_context.ParkingLot.Any(pl => pl.VehicleId == v.Id))
                  .Select(v => new VehicleViewModel
@@ -81,7 +86,14 @@ namespace GarageVersion3.Controllers
                 var availableSpot = await GetAvailableParkingSpot();
                 ViewBag.Vehicles = _context.ParkingLot.ToList().Count();
 
-                if (availableSpot == -1)
+                if (availableSpot == -1 || ViewBag.Vehicles == maxParkingSize)
+                {
+                    ModelState.AddModelError(string.Empty, "No available parking spots.");
+                    return RedirectToAction(nameof(Index));
+                }
+
+                /*
+                if (availableSpot == -1 || )
                 {
                     ModelState.AddModelError(string.Empty, "No available parking spots.");
 
@@ -97,7 +109,7 @@ namespace GarageVersion3.Controllers
                      }).ToListAsync();
 
                     return View(vehicles);
-                }
+                } */
 
                 var parkingLot = new ParkingLot
                 {
@@ -212,9 +224,12 @@ namespace GarageVersion3.Controllers
         [HttpGet]
         public async Task<IActionResult> FilterIndex(string firstName, string lastName)
         {
+            ViewBag.Vehicles = maxParkingSize - _context.ParkingLot.ToList().Count();
+
             var query = _context.ParkingLot.AsQueryable();
             ModelState.Remove("firstName");
             ModelState.Remove("lastName");
+           
 
             if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName))
             {
@@ -261,6 +276,7 @@ namespace GarageVersion3.Controllers
         [HttpGet]
         public async Task<IActionResult> FilterCreate(string firstName, string lastName)
         {
+            ViewBag.Vehicles = maxParkingSize - _context.ParkingLot.ToList().Count();
             var query = _context.Vehicle.AsQueryable();
 
             ModelState.Remove("firstName");
