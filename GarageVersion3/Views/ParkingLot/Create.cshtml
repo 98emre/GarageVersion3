@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<VehicleViewModel>
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Park";
 }
 
 
@@ -19,15 +19,13 @@
     </div>
 }
 
-<h1>Park Vehicle</h1>
-<hr />
-
 <div class="container-fluid">
+    <h1 class="display-4 text-center mt-4">Park Vehicle</h1>
 
     <div class="row justify-content-center">
-
-        <div class="mt-3 mb-3">
-            <a asp-action="ShowAll" asp-route-status="false" class="btn btn-primary">Show All</a>
+        <div class="text-center mt-4 mb-3">
+            <a asp-action="ShowAll" asp-route-status="false" class="btn btn-primary-blue">Show All</a>
+            <a asp-action="Index" class="btn btn-secondary-blue ms-2">Back to List</a>
         </div>
 
         <form asp-action="FilterCreate" method="get" class="form-inline m-3 d-flex flex-column align-items-center">
@@ -42,7 +40,7 @@
                 </div>
 
                 <div>
-                    <button type="submit" class="btn btn-secondary-blue ms-4">Search</button>
+                    <button type="submit" class="btn btn-mid-blue ms-2">Search</button>
                 </div>
             </div>
         </form>
@@ -55,16 +53,20 @@
     
     <form asp-action="Create" method="post">        
 
-        <table class="table">
+        <table class="table mt-3">
             <thead>
                 <tr>
-                    <th class="px-6 py-4 text-left font-weight-bold">
+                    <th class="pb-3 h5 text-left font-weight-bold">
+                        Vehicle Type
+                    </th>
+
+                    <th class="pb-3 h5 text-left font-weight-bold">
                         Owner
                     </th>
 
-                     <th class="px-6 py-4 text-left font-weight-bold">
-                        Vehicle
-                    </th
+                     <th class="pb-3 h5 text-left font-weight-bold">
+                        Registration Number
+                    </th>
                     <th></th>
                 </tr>
             </thead>
@@ -73,6 +75,10 @@
                 {
                     <tr>
                         <td>
+                            @Html.DisplayFor(modelItem => item.VehicleType)
+                        </td>
+
+                        <td>
                             @Html.DisplayFor(modelItem => item.User)
                         </td>
 
@@ -80,17 +86,17 @@
                             @Html.DisplayFor(modelItem => item.RegistrationNumber)
                         </td>
 
-                        <td>
-                             <button type="submit" name="vehicleId" value="@item.Id" class="btn btn-primary" @(ViewBag.Vehicles >= item.MaxParkingSize ? "disabled" : "")>
-                                    @if(ViewBag.Vehicles >= item.MaxParkingSize)
-                                    {
-                                        <p>Parking Spaces full</p>
-                                    }
-                                    else
-                                    {
-                                        <p>Park Vehicle</p>
-                                    }
-                                </button>
+                        <td align="right">
+                             <button type="submit" name="vehicleId" value="@item.Id" class="btn btn-primary-blue" @(ViewBag.Vehicles >= item.MaxParkingSize ? "disabled" : "")>
+                                @if(ViewBag.Vehicles >= item.MaxParkingSize)
+                                {
+                                    <p id="btn-txt-park">Parking Spaces full</p>
+                                }
+                                else
+                                {
+                                    <p id="btn-txt-park">Park Vehicle</p>
+                                }
+                            </button>
                         </td> 
                     </tr>
                 }
@@ -99,10 +105,5 @@
 
     </form>
 
-</div>
-
-
-<div>
-    <a asp-action="Index" class="btn btn-primary">Back to List</a>
 </div>
 

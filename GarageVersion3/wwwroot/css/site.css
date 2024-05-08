@@ -70,6 +70,10 @@ body {
         opacity: 0.8;
     }
 
+#btn-txt-park {
+    margin-bottom: 0rem !important;
+}
+
 .navbar {
     background-color: var(--color-powder-blue);
     padding-top: 0rem;

@@ -1,48 +1,49 @@
 ﻿@model ParkingLotViewModel
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Check Out";
 }
 
-<h1>Checkout</h1>
+<div class="container">
+    <h1 class="display-4 mt-4">Check Out Vehicle</h1>
+    <div class="row">
+        <h3 class="mt-2 mb-4">Are you sure you want to check out this vehicle?</h3>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.User)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.User)
+            </dd>
 
-<h3>Are you sure you want to checkout this?</h3>
-<div>
-    <h4>Vehicle</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.User)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User)
-        </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.RegistrationNumber)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.RegistrationNumber)
+            </dd>
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.RegistrationNumber)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.RegistrationNumber)
-        </dd>
-
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ParkingSpot)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ParkingSpot)
-        </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.ParkingSpot)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ParkingSpot)
+            </dd>
    
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Checkin)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Checkin)
-        </dd>
-    </dl>
-
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Checkout" class="btn btn-danger" /> |
-        <a asp-action="Index" class="btn btn-primary">Back to List</a>
-    </form>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Checkin)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Checkin)
+            </dd>
+        </dl>
+        <div class="pt-2">
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="Id" />
+                <input type="submit" value="Checkout" class="btn btn-danger" />
+                <a asp-action="Index" class="btn btn-dark-blue ms-2">Back to List</a>
+            </form>
+        </div>
+    </div>
 </div>

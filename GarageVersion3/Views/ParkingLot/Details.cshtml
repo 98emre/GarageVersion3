@@ -4,10 +4,8 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>Parking Space</h4>
+<div class="container">
+    <h1 class="display-4 mt-4">Parking Spot Details</h1>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -22,59 +20,51 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ParkingSpot)
         </dd>
-  
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Checkin)
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Checkin)
         </dd>
-
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.VehicleViewModel.RegistrationNumber)
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.VehicleViewModel.RegistrationNumber)
         </dd>
-
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.VehicleViewModel.VehicleType)
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.VehicleViewModel.VehicleType)
         </dd>
-
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.VehicleViewModel.Brand)
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.VehicleViewModel.Brand)
         </dd>
-
-         <dt class="col-sm-2">
+            <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.VehicleViewModel.VehicleModel)
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.VehicleViewModel.VehicleModel)
         </dd>
-
-         <dt class="col-sm-2">
+            <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.VehicleViewModel.Color)
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.VehicleViewModel.Color)
         </dd>
-
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.VehicleViewModel.NrOfWheels)
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.VehicleViewModel.NrOfWheels)
         </dd>
-
-    
     </dl>
+    <div class="pt-2">
+        <a asp-action="Index" class="btn btn-dark-blue">Back to list</a>
+    </div>
 </div>
-<div>
-    <a asp-action="Index" class="btn btn-primary">Back to list</a>
-</div>
+
