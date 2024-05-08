@@ -24,6 +24,9 @@ namespace GarageVersion3.Models.ViewModels
 
         [Display(Name = "Total Hours of Parking")]
         public int TotalParkingHours { get; set; }
+
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N} SEK")]
         public double Price { get; set; }
 
         public void CalculateTotalParkingHours()
