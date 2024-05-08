@@ -18,7 +18,7 @@ namespace GarageVersion3.Controllers
 
         public ParkingLotController(GarageVersion3Context context)
         {
-            maxParkingSize = 5;
+            maxParkingSize = 25;
             _context = context;
         }
 
