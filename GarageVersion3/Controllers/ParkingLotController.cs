@@ -17,7 +17,7 @@ namespace GarageVersion3.Controllers
 
         public ParkingLotController(GarageVersion3Context context)
         {
-            maxParkingSize = 5;
+            maxParkingSize = 25;
             _context = context;
         }
 
@@ -206,11 +206,13 @@ namespace GarageVersion3.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> FilterIndex(string firstName, string lastName, string personalIdentifyNumber)
+        public async Task<IActionResult> FilterIndex(string firstName, string lastName)
         {
             var query = _context.ParkingLot.AsQueryable();
+            ModelState.Remove("firstName");
+            ModelState.Remove("lastName");
 
-            if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName) && string.IsNullOrEmpty(personalIdentifyNumber))
+            if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName))
             {
                 TempData["SearchFail"] = "Please provide input for at least one search criteria";
                 var empyList = new List<ParkingLotViewModel>();
@@ -225,11 +227,6 @@ namespace GarageVersion3.Controllers
             if (!string.IsNullOrEmpty(lastName))
             {
                 query = query.Where(u => u.Vehicle.User.LastName.Trim().ToUpper().Equals(lastName.ToUpper().Trim()));
-            }
-
-            if (!string.IsNullOrEmpty(personalIdentifyNumber))
-            {
-                query = query.Where(u => u.Vehicle.User.PersonalIdentifyNumber.Equals(personalIdentifyNumber));
             }
 
             var searchResults = await query
@@ -258,11 +255,14 @@ namespace GarageVersion3.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> FilterCreate(string firstName, string lastName, string personalIdentifyNumber)
+        public async Task<IActionResult> FilterCreate(string firstName, string lastName)
         {
             var query = _context.Vehicle.AsQueryable();
 
-            if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName) && string.IsNullOrEmpty(personalIdentifyNumber))
+            ModelState.Remove("firstName");
+            ModelState.Remove("lastName");
+
+            if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName))
             {
                 TempData["SearchFail"] = "Please provide input for at least one search criteria";
                 var empyList = new List<VehicleViewModel>();
@@ -277,11 +277,6 @@ namespace GarageVersion3.Controllers
             if (!string.IsNullOrEmpty(lastName))
             {
                 query = query.Where(u => u.User.LastName.Trim().ToUpper().Equals(lastName.ToUpper().Trim()));
-            }
-
-            if (!string.IsNullOrEmpty(personalIdentifyNumber))
-            {
-                query = query.Where(u => u.User.PersonalIdentifyNumber.Equals(personalIdentifyNumber));
             }
 
             var searchResults = await query

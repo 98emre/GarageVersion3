@@ -31,17 +31,16 @@
         </div>
 
         <form asp-action="FilterCreate" method="get" class="form-inline m-3 d-flex flex-column align-items-center">
-            <p>Choose 1-3 attributes for searching a user</p>
+            <p>Choose 1-2 attributes for searching a user</p>
             <div class="d-flex flex-row input-group-sm align-items-center">
                 <div class="form-group mr-2">
                     <input type="text" class="form-control" name="firstName" placeholder="Search by first name">
                 </div>
+                
                 <div class="form-group mr-2">
                     <input type="text" class="form-control" name="lastName" placeholder="Search by last name">
                 </div>
-                <div class="form-group mr-2">
-                    <input type="text" class="form-control" name="personalIdentifyNumber" placeholder="Search by PIN">
-                </div>
+
                 <div>
                     <button type="submit" class="btn btn-argentinian-blue ms-4">Search</button>
                 </div>
@@ -49,9 +48,11 @@
         </form>
     </div>
 
-        <div>
+        
+    <div>
         <h2 class="text-danger"> @Html.ValidationSummary(false)</h2>
     </div>
+    
     <form asp-action="Create" method="post">        
 
         <table class="table">
