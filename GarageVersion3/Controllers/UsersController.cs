@@ -274,7 +274,7 @@ namespace GarageVersion3.Controllers
         {
             if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName) && string.IsNullOrEmpty(personalIdentifyNumber))
             {
-                TempData["SearchFail"] = "Please provide input for at least one search criteria";
+                TempData["Search"] = "Please provide input for at least one search criteria";
                 var empyList = new List<UserViewModel>();
                 return View("Index", empyList);
             }
@@ -309,12 +309,12 @@ namespace GarageVersion3.Controllers
 
             if (search.Count == 0)
             {
-                TempData["SearchFail"] = "No User found";
+                TempData["Search"] = "No User found";
             }
 
             else
             {
-                TempData["SearchSuccess"] = "Search was successful";
+                TempData["Search"] = "Search was successful";
             }
 
             return View("Index", search);
@@ -324,17 +324,8 @@ namespace GarageVersion3.Controllers
         [HttpGet]
         public async Task<IActionResult> ShowAll()
         {
-            var search = _context.User.ToList();
-
-            if (search.Count == 0)
-            {
-                TempData["SearchFail"] = "There are no users in the system";
-            }
-
-            else
-            {
-                TempData["SearchSuccess"] = "Showing all users was successful";
-            }
+            TempData["SearchMessage"] = (_context.User.ToList().Count() == 0) ? "There are no users in the system" : "Showing all users was successful";
+            TempData["SearchStatus"] = (_context.User.ToList().Count() == 0) ? "alert alert-warning" : "alert alert-success";
 
             return RedirectToAction(nameof(Index));
         }

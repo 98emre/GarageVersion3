@@ -235,7 +235,7 @@ namespace GarageVersion3.Controllers
 
             if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName))
             {
-                TempData["SearchFail"] = "Please provide input for at least one search criteria";
+                TempData["Search"] = "Please provide input for at least one search criteria";
                 var empyList = new List<ParkingLotViewModel>();
                 return View("Index", empyList);
             }
@@ -265,11 +265,11 @@ namespace GarageVersion3.Controllers
 
             if (searchResults.Count == 0)
             {
-                TempData["SearchFail"] = "Could not find the receipt for the user";
+                TempData["Search"] = "Could not find the receipt for the user";
             }
             else
             {
-                TempData["SearchSuccess"] = "Search was successful";
+                TempData["Search"] = "Search was successful";
             }
 
             return View("Index", searchResults);
@@ -286,7 +286,7 @@ namespace GarageVersion3.Controllers
 
             if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName))
             {
-                TempData["SearchFail"] = "Please provide input for at least one search criteria";
+                TempData["Search"] = "Please provide input for at least one search criteria";
                 var empyList = new List<VehicleViewModel>();
                 return View("Create", empyList);
             }
@@ -312,11 +312,11 @@ namespace GarageVersion3.Controllers
 
             if (searchResults.Count == 0)
             {
-                TempData["SearchFail"] = "No users were found";
+                TempData["Search"] = "No users were found";
             }
             else
             {
-                TempData["SearchSuccess"] = "Search was successful";
+                TempData["Search"] = "Search was successful";
             }
 
             return View("Create", searchResults);
@@ -324,42 +324,15 @@ namespace GarageVersion3.Controllers
 
         [HttpGet]
         public async Task<IActionResult> ShowAll(bool status)
-        {   
-            if (status)
-            {
-                var list = _context.ParkingLot.Count();
+        {
+            var message = status ? "There are no vehicles to choose from" : "There are no vehicles in the parking lot";
+            var count = status ? _context.ParkingLot.Count() : _context.Vehicle.Where(pt => !_context.ParkingLot.Any(v => v.VehicleId == pt.Id)).Count();
 
-                if (list == 0)
-                {
-                    TempData["SearchFail"] = "There are no vehicles to choose from";
-                }
+            TempData["SearchMessage"] = (count == 0) ? message : "Showing all vehicles was successful";
+            TempData["SearchStatus"] = (count == 0) ? "alert alert-warning" : "alert alert-success";
 
-                else
-                {
-                    TempData["SearchSuccess"] = "Showing all vehicles was successful";
-                }
+            return RedirectToAction(status ? nameof(Index) : nameof(Create));
 
-                return RedirectToAction(nameof(Index));
-            }
-
-            else
-            {
-                var list = _context.Vehicle
-                                     .Where(pt => !_context.ParkingLot.Any(v => v.VehicleId == pt.Id))
-                                     .Count();
-
-                if (list == 0)
-                {
-                    TempData["SearchFail"] = "There are no vehicles in the parking lot";
-                }
-
-                else
-                {
-                    TempData["SearchSuccess"] = "Showing all vehicles was successful";
-                }
-            }
-
-            return RedirectToAction(nameof(Create));
         }
 
         private async Task<int> GetAvailableParkingSpot()

@@ -19,17 +19,13 @@
     </div>
 }
 
-@if (TempData.ContainsKey("SearchFail"))
+@if (TempData.ContainsKey("Search"))
 {
-    <div class="alert alert-warning" role="alert">
-        @TempData["SearchFail"]
-    </div>
-}
+    var message = TempData["SearchMessage"] as string;
+    var status = TempData["SearchStatus"] as string;
 
-@if (TempData.ContainsKey("SearchSuccess"))
-{
-    <div class="alert alert-success" role="alert">
-        @TempData["SearchSuccess"]
+    <div class="@status" role="alert">
+        @message
     </div>
 }
 

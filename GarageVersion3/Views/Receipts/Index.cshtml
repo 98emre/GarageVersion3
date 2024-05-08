@@ -4,17 +4,14 @@
     ViewData["Title"] = "Index";
 }
 
-@if (TempData.ContainsKey("SearchFail"))
-{
-    <div class="alert alert-warning" role="alert">
-        @TempData["SearchFail"]
-    </div>
-}
 
-@if (TempData.ContainsKey("SearchSuccess"))
+@if (TempData.ContainsKey("Search"))
 {
-    <div class="alert alert-success" role="alert">
-        @TempData["SearchSuccess"]
+    var message = TempData["SearchMessage"] as string;
+    var status = TempData["SearchStatus"] as string;
+
+    <div class="@status" role="alert">
+        @message
     </div>
 }
 

@@ -336,7 +336,7 @@ namespace GarageVersion3.Controllers
         {
             if (string.IsNullOrEmpty(registrationNumber) && string.IsNullOrEmpty(color) && string.IsNullOrEmpty(brand))
             {
-                TempData["SearchFail"] = "Please provide input for at least one search criteria";
+                TempData["Search"] = "Please provide input for at least one search criteria";
                 var empyList = new List<VehicleViewModel>();
                 return View("Index", empyList);
             }
@@ -369,12 +369,12 @@ namespace GarageVersion3.Controllers
 
             if (search.Count == 0)
             {
-                TempData["SearchFail"] = "No vehicles found";
+                TempData["Search"] = "No vehicles found";
             }
 
             else
             {
-                TempData["SearchSuccess"] = "Search was successful";
+                TempData["Search"] = "Search was successful";
             }
 
             return View("Index", search);
@@ -383,27 +383,10 @@ namespace GarageVersion3.Controllers
         [HttpGet]
         public async Task<IActionResult> ShowAll()
         {
-            var query = _context.Vehicle.AsQueryable();
-            var search = await query
-                      .Select(v => new VehicleViewModel
-                      {
-                          Id = v.Id,
-                          VehicleType = v.VehicleType.Type,
-                          RegistrationNumber = v.RegistrationNumber,
-                          User = $"{v.User.FirstName} {v.User.LastName} ({v.User.PersonalIdentifyNumber})",
-                      }).ToListAsync();
+            TempData["SearchMessage"] = (_context.Vehicle.ToList().Count == 0) ? "There are no vehicles in the system" : "Showing all vehicles was successful";
+            TempData["SearchStatus"] = (_context.Vehicle.ToList().Count == 0) ? "alert alert-warning" : "alert alert-success";
 
-            if (search.Count == 0)
-            {
-                TempData["SearchFail"] = "There are no vehicles in the system";
-            }
-
-            else
-            {
-                TempData["SearchSuccess"] = "Showing all vehicles was successful";
-            }
-
-            return View("Index", search);
+            return RedirectToAction(nameof(Index));
         }
 
         private bool VehicleExists(int id)
