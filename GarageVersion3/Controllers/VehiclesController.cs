@@ -17,10 +17,12 @@ namespace GarageVersion3.Controllers
     public class VehiclesController : Controller
     {
         private readonly GarageVersion3Context _context;
+        private readonly ILogger<VehiclesController> _logger;
 
-        public VehiclesController(GarageVersion3Context context)
+        public VehiclesController(GarageVersion3Context context, ILogger<VehiclesController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: Vehicles
@@ -432,9 +434,12 @@ namespace GarageVersion3.Controllers
         }
 
         [HttpGet]
-        public IActionResult Statistics()
+        public async Task<IActionResult> Statistics()
         {
-            var parkedVehicles = _context.Vehicle.Include(v => v.VehicleType).ToList();
+            var parkedVehicles = await _context.Vehicle
+                .Where(v => _context.ParkingLot.Any(pt => pt.VehicleId == v.Id))
+                .Include(v => v.VehicleType)
+                .ToListAsync();
 
             var vehicleTypeCount = new Dictionary<string, int>();
             double totalRevenue = 0;
@@ -457,7 +462,7 @@ namespace GarageVersion3.Controllers
 
             var totalWheels = parkedVehicles.Sum(v => v.NrOfWheels);
 
-            ViewBag.VehicleType = vehicleTypeCount;
+            ViewBag.vehicleTypeCount = vehicleTypeCount;
             ViewBag.TotalWheels = totalWheels;
             ViewBag.TotalRevenue = totalRevenue.ToString("#,##0.00");
 
