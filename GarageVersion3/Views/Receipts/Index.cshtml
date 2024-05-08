@@ -15,12 +15,12 @@
     </div>
 }
 
-<h1>Receipts Page</h1>
-
 <div class="container-fluid">
+    <h1 class="display-4 text-center mt-4">Receipts</h1>
+
     <div class="row justify-content-center">
         <div class="text-center mt-4 mb-3">
-            <a asp-action="ShowAll" class="btn btn-primary-blue ms-2">Show All Receipts</a>
+            <a asp-action="ShowAll" class="btn btn-secondary-blue">Show All Receipts</a>
         </div>
 
         <form asp-action="Filter" method="get" class="form-inline m-3 d-flex flex-column align-items-center">
@@ -39,28 +39,28 @@
         </form>
     </div>
 
-    <table class="table">
+    <table class="table mt-3">
         <thead>
             <tr>
-                <th>
+                <th class="pb-3 table-txt text-left font-weight-bold">
                     @Html.DisplayNameFor(model => model.User)
                 </th>
-                <th>
+                <th class="pb-3 table-txt text-left font-weight-bold">
                     @Html.DisplayNameFor(model => model.ParkingNumber)
                 </th>
-                <th>
+                <th class="pb-3 table-txt text-left font-weight-bold">
                     @Html.DisplayNameFor(model => model.Checkin)
                 </th>
-                <th>
+                <th class="pb-3 table-txt text-left font-weight-bold">
                     @Html.DisplayNameFor(model => model.CheckoutDate)
                 </th>
-                <th>
+                <th class="pb-3 table-txt text-left font-weight-bold">
                     @Html.DisplayNameFor(model => model.Price)
                 </th>
                 <th></th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="index-page">
             @foreach (var item in Model)
             {
                 <tr>
@@ -80,8 +80,8 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Price)
                     </td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
+                    <td align="right">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary-blue">Details</a>
                     </td>
                 </tr>
             }
