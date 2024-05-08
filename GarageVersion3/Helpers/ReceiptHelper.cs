@@ -8,17 +8,17 @@ namespace GarageVersion3.Helpers
     public class ReceiptHelper
     {
         private readonly GarageVersion3Context _context;
-        private readonly int vehicleId;
+        private readonly ParkingLot parkingLotToCheckout;
 
-        public ReceiptHelper(GarageVersion3Context dbContext, int id)
+        public ReceiptHelper(GarageVersion3Context dbContext, ParkingLot parkingLot)
         {
             _context = dbContext;
-            vehicleId = id;
+            parkingLotToCheckout = parkingLot;
         }
         
         public ReceiptViewModel CheckoutVehicle() 
         {
-            var vehicle = _context.Vehicle.Find(vehicleId);
+            var vehicle = _context.Vehicle.Find(parkingLotToCheckout.VehicleId);
             var parkingSpot = _context.ParkingLot.Where(p => p.VehicleId == vehicle.Id).FirstOrDefault();
 
             parkingSpot.AvailableParkingSpot = true;
@@ -26,6 +26,7 @@ namespace GarageVersion3.Helpers
             _context.SaveChanges();
 
             ReceiptViewModel receiptVM = new ReceiptViewModel();
+            receiptVM.User = vehicle.User;
             receiptVM.VehicleType = vehicle.VehicleType;
             receiptVM.RegistrationNumber = vehicle.RegistrationNumber;
             receiptVM.Checkin = parkingSpot.Checkin;

@@ -24,12 +24,18 @@ namespace GarageVersion3.Controllers
         public async Task<IActionResult> Index()
         {
             var garageVersion3Context = _context.Receipt.Include(r => r.User);
+            // Omvandla Receipt till ReceiptVM
             return View(await garageVersion3Context.ToListAsync());
         }
 
         // GET: Receipts/Details/5
-        public async Task<IActionResult> Details(ReceiptViewModel receipt)
+        public async Task<IActionResult> Details(int? id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var receipt = _context.Receipt.Include(u => u.User).FirstOrDefault(v => v.Id == id);
             return View(receipt);
         }
 
