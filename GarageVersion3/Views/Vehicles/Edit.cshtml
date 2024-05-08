@@ -54,7 +54,7 @@
 
                 <div class="form-group mt-2">
                     <input type="submit" value="Update" class="btn btn-primary-blue" /> |
-                    <a asp-action="Index" class="btn btn-dark-blue">Back to List</a>
+                    <a onclick="goBack()" class="btn btn-dark-blue">Back to List</a>
                 </div>
             </form>
         </div>
@@ -65,4 +65,10 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
 }
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
