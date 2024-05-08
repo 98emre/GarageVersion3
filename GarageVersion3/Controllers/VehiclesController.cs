@@ -23,7 +23,7 @@ namespace GarageVersion3.Controllers
             _context = context;
         }
 
-        // GET: Vehicles
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var viewModel = await _context.Vehicle
@@ -40,7 +40,7 @@ namespace GarageVersion3.Controllers
             return View(viewModel);
         }
 
-        // GET: Vehicles/Details/5
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -72,17 +72,14 @@ namespace GarageVersion3.Controllers
             return View(viewModel);
         }
 
-        // GET: Vehicles/Create
-        public IActionResult Create()
+        [HttpGet]
+        public async Task<IActionResult> Create()
         {
             DropdownDataLists();
 
             return View();
         }
 
-        // POST: Vehicles/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(VehicleViewModel viewModel)
@@ -119,7 +116,6 @@ namespace GarageVersion3.Controllers
             return View(viewModel);
         }
 
-        // GET: Vehicles/Edit/5
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -152,9 +148,6 @@ namespace GarageVersion3.Controllers
             return View(viewModel);
         }
 
-        // POST: Vehicles/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, VehicleViewModel viewModel)
@@ -216,7 +209,7 @@ namespace GarageVersion3.Controllers
             return View(viewModel);
         }
 
-        // GET: Vehicles/Delete/5
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -252,7 +245,6 @@ namespace GarageVersion3.Controllers
             return View(viewModel);
         }
 
-        // POST: Vehicles/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

@@ -20,7 +20,7 @@ namespace GarageVersion3.Controllers
             _context = context;
         }
 
-        // GET: Users
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var users = await _context.User
@@ -35,8 +35,8 @@ namespace GarageVersion3.Controllers
 
             return View(users);
         }
-
-        // GET: Users/Details/5
+        
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -66,16 +66,13 @@ namespace GarageVersion3.Controllers
 
             return View(viewModel);
         }
-
-        // GET: Users/Create
-        public IActionResult Create()
+        
+        [HttpGet]
+        public async Task<IActionResult> Create()
         {
             return View();
         }
 
-        // POST: Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(UserViewModel user)
@@ -96,7 +93,7 @@ namespace GarageVersion3.Controllers
             return View(user);
         }
 
-        // GET: Users/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -122,9 +119,6 @@ namespace GarageVersion3.Controllers
             return View(viewModel);
         }
 
-        // POST: Users/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, UserViewModel viewModel)
@@ -141,6 +135,7 @@ namespace GarageVersion3.Controllers
                         return NotFound();
                     }
 
+                    user.Id = viewModel.Id;
                     user.FirstName = viewModel.FirstName;
                     user.LastName = viewModel.LastName; 
                     user.PersonalIdentifyNumber = viewModel.PersonalIdentifyNumber;
@@ -164,7 +159,7 @@ namespace GarageVersion3.Controllers
             return View(viewModel);
         }
 
-        // GET: Users/Delete/5
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -190,7 +185,6 @@ namespace GarageVersion3.Controllers
             return View(viewModel);
         }
 
-        // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -203,11 +197,6 @@ namespace GarageVersion3.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool UserExists(int id)
-        {
-            return _context.User.Any(e => e.Id == id);
         }
 
         [HttpGet]
@@ -314,7 +303,6 @@ namespace GarageVersion3.Controllers
             return View("Index", search);
         }
 
-
         [HttpGet]
         public async Task<IActionResult> ShowAll()
         {
@@ -322,6 +310,11 @@ namespace GarageVersion3.Controllers
             TempData["SearchStatus"] = (_context.User.ToList().Count() == 0) ? "alert alert-warning" : "alert alert-success";
 
             return RedirectToAction(nameof(Index));
+        }
+
+        private bool UserExists(int id)
+        {
+            return _context.User.Any(e => e.Id == id);
         }
     }
 }

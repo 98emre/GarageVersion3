@@ -14,13 +14,12 @@ namespace GarageVersion3.Controllers
             _context = context;
         }
 
-        // GET: VehicleTypes/Create
-        public IActionResult Create()
+        [HttpGet]
+        public async Task<IActionResult> Create()
         {
             return View();
         }
-
-        // POST: VehicleTypes/Create
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(VehicleType vehicleType)

@@ -21,7 +21,7 @@ namespace GarageVersion3.Controllers
             _context = context;
         }
 
-        // GET: Receipts
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var viewModel = await _context.Receipt
@@ -39,7 +39,7 @@ namespace GarageVersion3.Controllers
             return View(viewModel);
         }
 
-        // GET: Receipts/Details/5
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -68,7 +68,7 @@ namespace GarageVersion3.Controllers
             return View(viewModel);
         }
 
-        // GET: Receipts/Delete/5
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -87,7 +87,6 @@ namespace GarageVersion3.Controllers
             return View(receipt);
         }
 
-        // POST: Receipts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -100,11 +99,6 @@ namespace GarageVersion3.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool ReceiptExists(int id)
-        {
-            return _context.Receipt.Any(e => e.Id == id);
         }
 
         [HttpGet]
@@ -148,7 +142,6 @@ namespace GarageVersion3.Controllers
             return View("Index", searchResults);
         }
 
-
         [HttpGet]
         public async Task<IActionResult> ShowAll()
         {
@@ -156,6 +149,11 @@ namespace GarageVersion3.Controllers
             TempData["SearchStatus"] = (_context.Receipt.Count() == 0) ? "alert alert-warning" : "alert alert-success";
 
             return RedirectToAction(nameof(Index));
+        }
+
+        private bool ReceiptExists(int id)
+        {
+            return _context.Receipt.Any(e => e.Id == id);
         }
     }
 }

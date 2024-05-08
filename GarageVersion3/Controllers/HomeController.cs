@@ -15,7 +15,8 @@ namespace GarageVersion3.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
             return View();
         }
