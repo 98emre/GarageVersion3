@@ -29,8 +29,13 @@ namespace GarageVersion3.Controllers
         }
 
         // GET: Receipts/Details/5
-        public async Task<IActionResult> Details(ReceiptViewModel receipt)
+        public async Task<IActionResult> Details(int? id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var receipt = _context.Receipt.Include(u => u.User).FirstOrDefault(v => v.Id == id);
             return View(receipt);
         }
 
