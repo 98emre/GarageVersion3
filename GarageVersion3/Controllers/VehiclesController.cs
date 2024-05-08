@@ -439,33 +439,28 @@ namespace GarageVersion3.Controllers
                 .Include(v => v.VehicleType)
                 .ToListAsync();
 
-            List<Vehicle> vehicles = new List<Vehicle>();
+            var vehicleTypeCount = new Dictionary<string, int>();
 
-            foreach (var parkingSpot in availableParkingSpot)
+            foreach (var vehicle in parkedVehicles)
             {
-                Console.WriteLine(parkingSpot.VehicleId);
+                if (vehicle.VehicleType != null)
+                {
+                    if (!vehicleTypeCount.ContainsKey(vehicle.VehicleType.Type))
+                    {
+                        vehicleTypeCount[vehicle.VehicleType.Type] = 0;
+                    }
+
+                    vehicleTypeCount[vehicle.VehicleType.Type]++;
+                };
             }
 
-            var parkedVehicles = _context.ParkingLot
-                .Where(pl => pl.AvailableParkingSpot == false) // Filter for occupied parking spots
-                .Select(pl => pl.Vehicle) // Select the associated Vehicle for each ParkingLot
-                .ToList();
-
-            Dictionary<string, int> vehicleTypeDict = new Dictionary<string, int>();
-
-            foreach (var vehicleType in parkedVehicles)
-            {
-                int count = _context.Vehicle.Count(v => v.VehicleTypeId == vehicleType.Id);
-                // Add the type and its count to the dictionary
-                vehicleTypeDict.Add(vehicleType.VehicleType.Type, count);
-            }
-
-            var totalRevenue = _context.Receipt.Sum(r => r.Price);
             var totalWheels = parkedVehicles.Sum(v => v.NrOfWheels);
+            var totalRevenue = _context.Receipt.Sum(r => r.Price);
 
             ViewBag.vehicleTypeCount = vehicleTypeCount;
             ViewBag.TotalWheels = totalWheels;
             ViewBag.TotalRevenue = totalRevenue.ToString("#,##0.00");
+
 
             return View();
         }
