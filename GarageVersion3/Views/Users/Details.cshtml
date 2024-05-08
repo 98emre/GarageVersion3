@@ -35,8 +35,12 @@
         </dd>
     </dl>
 
+    <div class="pt-2 pb-3">
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary-blue">Edit</a>
+        <a asp-action="Index" class="btn btn-dark-blue ms-2">Back to List</a>
+    </div>
 
-    <h3 class="pt-5">Your Vehicles</h3>
+    <h3 class="pt-5 pb-3">Your Vehicles</h3>
 
     @if (Model.Vehicles != null && Model.Vehicles.Any())
     {
@@ -44,16 +48,16 @@
             <table class="table">
                 <thead>
                     <tr>
-                      <th>Registration Number</th>
-                      <th>Vehicle Type</th>
+                        <th class="pb-2 table-txt">Registration Number</th>
+                        <th class="pb-2 table-txt">Vehicle Type</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var vehicle in Model.Vehicles)
                     {
                         <tr>
-                            <td>@vehicle.RegistrationNumber</td>
-                            <td>@vehicle.VehicleType.Type</td>
+                            <td class="pt-1">@vehicle.RegistrationNumber</td>
+                            <td class="pt-1">@vehicle.VehicleType.Type</td>
                         </tr>
                     }
                 </tbody>
@@ -65,8 +69,4 @@
         <h6>Empty List</h6>
     }
 
-    <div class="pt-2">
-        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary-blue">Edit</a>
-        <a asp-action="Index" class="btn btn-dark-blue ms-2">Back to List</a> 
-    </div>
 </div>
