@@ -24,6 +24,7 @@ namespace GarageVersion3.Controllers
         public async Task<IActionResult> Index()
         {
             var garageVersion3Context = _context.Receipt.Include(r => r.User);
+            // Omvandla Receipt till ReceiptVM
             return View(await garageVersion3Context.ToListAsync());
         }
 

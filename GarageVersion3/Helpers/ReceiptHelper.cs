@@ -26,6 +26,7 @@ namespace GarageVersion3.Helpers
             _context.SaveChanges();
 
             ReceiptViewModel receiptVM = new ReceiptViewModel();
+            receiptVM.User = vehicle.User;
             receiptVM.VehicleType = vehicle.VehicleType;
             receiptVM.RegistrationNumber = vehicle.RegistrationNumber;
             receiptVM.Checkin = parkingSpot.Checkin;
