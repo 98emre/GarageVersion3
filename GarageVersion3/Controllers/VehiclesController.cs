@@ -86,11 +86,12 @@ namespace GarageVersion3.Controllers
         {
             if (ModelState.IsValid)
             {
-                viewModel.RegistrationNumber = viewModel.RegistrationNumber.Replace(" ", "");
+                bool existingVehicle = _context.Vehicle.Any(v => v.RegistrationNumber.ToUpper().Trim().Replace(" ", "").Equals(viewModel.RegistrationNumber.Trim().ToUpper().Replace(" ", "")));
+                int nrOfCharacters = viewModel.RegistrationNumber.ToUpper().Trim().Replace(" ", "").Count();
 
-                if (_context.Vehicle.Any(v => v.RegistrationNumber.ToUpper().Trim().Equals(viewModel.RegistrationNumber.Trim().ToUpper())))
+                if (existingVehicle || nrOfCharacters < 6)
                 {
-                    ModelState.AddModelError("RegistrationNumber", "A vehicle with this registration number already exists");
+                    ModelState.AddModelError("RegistrationNumber", existingVehicle ? "A vehicle with this registration number already exists":"Registration number must be between 6 and 10");
                     DropdownDataLists();
                     return View();
                 }
@@ -99,7 +100,7 @@ namespace GarageVersion3.Controllers
                 {
                     VehicleTypeId = viewModel.VehicleTypeId,
                     UserId = viewModel.UserId,
-                    RegistrationNumber = viewModel.RegistrationNumber.ToUpper().Trim(),
+                    RegistrationNumber = viewModel.RegistrationNumber.ToUpper().Trim().Replace(" ",""),
                     Brand = viewModel.Brand.Trim(),
                     Color = viewModel.Color.Trim(),
                     VehicleModel = viewModel.VehicleModel.Trim(),
@@ -168,11 +169,18 @@ namespace GarageVersion3.Controllers
                         return NotFound();
                     }
 
-                    viewModel.RegistrationNumber = viewModel.RegistrationNumber.Replace(" ", "");
-
                     var existingVehicleWithSameRegNumber = await _context.Vehicle
-                        .Where(v => v.Id != id && v.RegistrationNumber.ToUpper().Trim() == viewModel.RegistrationNumber.ToUpper().Trim())
+                        .Where(v => v.Id != id && v.RegistrationNumber.ToUpper().Trim().Replace(" ", "").Equals(viewModel.RegistrationNumber.ToUpper().Trim().Replace(" ", "")))
                         .FirstOrDefaultAsync();
+
+                    int nrOfCharacters = viewModel.RegistrationNumber.ToUpper().Trim().Replace(" ", "").Count();
+
+                    if (existingVehicleWithSameRegNumber != null || nrOfCharacters < 6)
+                    {
+                        ModelState.AddModelError("RegistrationNumber", (existingVehicleWithSameRegNumber != null) ? "A vehicle with this registration number already exists" : "Registration number must be between 6 and 10");
+                        DropdownDataLists();
+                        return View();
+                    }
 
                     if (existingVehicleWithSameRegNumber != null)
                     {
@@ -183,7 +191,7 @@ namespace GarageVersion3.Controllers
 
                     vehicle.VehicleTypeId = viewModel.VehicleTypeId;
                     vehicle.UserId = viewModel.UserId;
-                    vehicle.RegistrationNumber = viewModel.RegistrationNumber.ToUpper().Trim();
+                    vehicle.RegistrationNumber = viewModel.RegistrationNumber.ToUpper().Trim().Replace(" ", "");
                     vehicle.Brand = viewModel.Brand.Trim();
                     vehicle.Color = viewModel.Color.Trim();
                     vehicle.VehicleModel = viewModel.VehicleModel.Trim();

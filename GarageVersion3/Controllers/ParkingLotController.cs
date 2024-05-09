@@ -57,9 +57,7 @@ namespace GarageVersion3.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            ViewBag.Vehicles = _context.ParkingLot.ToList().Count();
-
-            if (ViewBag.Vehicles == maxParkingSize)
+            if (_context.ParkingLot.ToList().Count() == maxParkingSize)
             {
                 return RedirectToAction(nameof(Index));
             }
@@ -85,9 +83,8 @@ namespace GarageVersion3.Controllers
             if (ModelState.IsValid)
             {
                 var availableSpot = await GetAvailableParkingSpot();
-                ViewBag.Vehicles = _context.ParkingLot.ToList().Count();
 
-                if (availableSpot == -1 || ViewBag.Vehicles == maxParkingSize)
+                if (availableSpot == -1 || _context.ParkingLot.ToList().Count() == maxParkingSize)
                 {
                     ModelState.AddModelError(string.Empty, "No available parking spots.");
                     return RedirectToAction(nameof(Index));
@@ -211,9 +208,6 @@ namespace GarageVersion3.Controllers
             ViewBag.Vehicles = maxParkingSize - _context.ParkingLot.ToList().Count();
 
             var query = _context.ParkingLot.AsQueryable();
-            ModelState.Remove("firstName");
-            ModelState.Remove("lastName");
-            ModelState.Remove("vehicleType");
 
             if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName) && string.IsNullOrEmpty(vehicleType))
             {
@@ -267,10 +261,6 @@ namespace GarageVersion3.Controllers
         {
             ViewBag.Vehicles = maxParkingSize - _context.ParkingLot.ToList().Count();
             var query = _context.Vehicle.AsQueryable();
-
-            ModelState.Remove("firstName");
-            ModelState.Remove("lastName");
-            ModelState.Remove("vehicleType");
 
             if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName) && string.IsNullOrEmpty(vehicleType))
             {
