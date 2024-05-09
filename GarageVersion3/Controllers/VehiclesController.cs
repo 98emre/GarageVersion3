@@ -84,16 +84,16 @@ namespace GarageVersion3.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(VehicleViewModel viewModel)
         {
-            if (_context.Vehicle.Any(v => v.RegistrationNumber.Trim().ToUpper() == viewModel.RegistrationNumber.Trim().ToUpper()))
-            {
-                ModelState.AddModelError("RegistrationNumber", "A vehicle with this registration number already exists");
-                DropdownDataLists();
-                return View();
-            }
-
-
             if (ModelState.IsValid)
             {
+                viewModel.RegistrationNumber = viewModel.RegistrationNumber.Replace(" ", "");
+
+                if (_context.Vehicle.Any(v => v.RegistrationNumber.ToUpper().Trim().Equals(viewModel.RegistrationNumber.Trim().ToUpper())))
+                {
+                    ModelState.AddModelError("RegistrationNumber", "A vehicle with this registration number already exists");
+                    DropdownDataLists();
+                    return View();
+                }
 
                 var vehicle = new Vehicle
                 {
@@ -168,7 +168,8 @@ namespace GarageVersion3.Controllers
                         return NotFound();
                     }
 
-                    // Kontrollera om det angivna registreringsnumret redan används av ett annat fordon
+                    viewModel.RegistrationNumber = viewModel.RegistrationNumber.Replace(" ", "");
+
                     var existingVehicleWithSameRegNumber = await _context.Vehicle
                         .Where(v => v.Id != id && v.RegistrationNumber.ToUpper().Trim() == viewModel.RegistrationNumber.ToUpper().Trim())
                         .FirstOrDefaultAsync();
