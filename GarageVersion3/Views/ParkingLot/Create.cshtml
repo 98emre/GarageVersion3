@@ -5,7 +5,7 @@
 }
 
 
-@if (TempData.ContainsKey("Search"))
+@if (TempData.ContainsKey("SearchMessage"))
 {
     var message = TempData["SearchMessage"] as string;
     var status = TempData["SearchStatus"] as string;
@@ -20,12 +20,12 @@
 
     <div class="row justify-content-center">
         <div class="text-center mt-4 mb-3">
-            <a asp-action="ShowAll" asp-route-status="false" class="btn btn-primary-blue">Show All</a>
-            <a asp-action="Index" class="btn btn-secondary-blue ms-2">Back to List</a>
+            <a asp-action="ShowAll" asp-route-status="false" class="btn btn-primary-blue">Show All</a> |
+            <a asp-action="Index" class="btn btn-secondary-blue">Back to List</a>
         </div>
 
         <form asp-action="FilterCreate" method="get" class="form-inline m-3 d-flex flex-column align-items-center">
-            <p>Choose 1-2 attributes for searching a user</p>
+            <p>Choose 1-3 attributes for searching a user</p>
             <div class="d-flex flex-row input-group-sm align-items-center">
                 <div class="form-group mr-2">
                     <input type="text" class="form-control" name="firstName" placeholder="Search by first name">
@@ -35,6 +35,9 @@
                     <input type="text" class="form-control" name="lastName" placeholder="Search by last name">
                 </div>
 
+                <div class="form-group mr-2">
+                    <input type="text" class="form-control" name="vehicleType" placeholder="Search by vehicle type">
+                </div>
                 <div>
                     <button type="submit" class="btn btn-mid-blue ms-2">Search</button>
                 </div>
@@ -53,11 +56,10 @@
             <thead>
                 <tr>
                     <th class="pb-3 h5 text-left font-weight-bold">
-                        Vehicle Type
-                    </th>
-
-                    <th class="pb-3 h5 text-left font-weight-bold">
                         Owner
+                    </th>
+                    <th class="pb-3 h5 text-left font-weight-bold">
+                        Vehicle Type
                     </th>
 
                      <th class="pb-3 h5 text-left font-weight-bold">
@@ -71,11 +73,11 @@
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.VehicleType)
+                            @Html.DisplayFor(modelItem => item.User)
                         </td>
 
                         <td>
-                            @Html.DisplayFor(modelItem => item.User)
+                            @Html.DisplayFor(modelItem => item.VehicleType)
                         </td>
 
                         <td>

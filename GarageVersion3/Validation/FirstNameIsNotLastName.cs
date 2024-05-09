@@ -13,7 +13,7 @@ namespace GarageVersion3.Validation
             {
                 if(validationContext.ObjectInstance is UserViewModel viewModel)
                 {
-                    if(viewModel.LastName.ToUpper().Trim() != input.ToUpper().Trim())
+                    if(viewModel.LastName.Replace(" ","").ToUpper().Trim() != input.Replace(" ","").ToUpper().Trim())
                     {
                         return ValidationResult.Success;
                     } else

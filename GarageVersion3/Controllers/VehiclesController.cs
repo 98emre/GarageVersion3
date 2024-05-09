@@ -23,7 +23,7 @@ namespace GarageVersion3.Controllers
             _context = context;
         }
 
-        // GET: Vehicles
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var viewModel = await _context.Vehicle
@@ -40,7 +40,7 @@ namespace GarageVersion3.Controllers
             return View(viewModel);
         }
 
-        // GET: Vehicles/Details/5
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -72,7 +72,7 @@ namespace GarageVersion3.Controllers
             return View(viewModel);
         }
 
-        // GET: Vehicles/Create
+        [HttpGet]
         public IActionResult Create()
         {
             DropdownDataLists();
@@ -80,32 +80,29 @@ namespace GarageVersion3.Controllers
             return View();
         }
 
-        // POST: Vehicles/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(VehicleViewModel viewModel)
         {
-            if (_context.Vehicle.Any(v => v.RegistrationNumber == viewModel.RegistrationNumber))
-            {
-                ModelState.AddModelError("RegistrationNumber", "A vehicle with this registration number already exists");
-                DropdownDataLists();
-                return View();
-            }
-
-
             if (ModelState.IsValid)
             {
+                viewModel.RegistrationNumber = viewModel.RegistrationNumber.Replace(" ", "");
+
+                if (_context.Vehicle.Any(v => v.RegistrationNumber.ToUpper().Trim().Equals(viewModel.RegistrationNumber.Trim().ToUpper())))
+                {
+                    ModelState.AddModelError("RegistrationNumber", "A vehicle with this registration number already exists");
+                    DropdownDataLists();
+                    return View();
+                }
 
                 var vehicle = new Vehicle
                 {
                     VehicleTypeId = viewModel.VehicleTypeId,
                     UserId = viewModel.UserId,
                     RegistrationNumber = viewModel.RegistrationNumber.ToUpper().Trim(),
-                    Brand = viewModel.Brand,
-                    Color = viewModel.Color,
-                    VehicleModel = viewModel.VehicleModel,
+                    Brand = viewModel.Brand.Trim(),
+                    Color = viewModel.Color.Trim(),
+                    VehicleModel = viewModel.VehicleModel.Trim(),
                     NrOfWheels = viewModel.NrOfWheels,
                 };
 
@@ -119,7 +116,6 @@ namespace GarageVersion3.Controllers
             return View(viewModel);
         }
 
-        // GET: Vehicles/Edit/5
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -152,9 +148,6 @@ namespace GarageVersion3.Controllers
             return View(viewModel);
         }
 
-        // POST: Vehicles/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, VehicleViewModel viewModel)
@@ -175,7 +168,8 @@ namespace GarageVersion3.Controllers
                         return NotFound();
                     }
 
-                    // Kontrollera om det angivna registreringsnumret redan används av ett annat fordon
+                    viewModel.RegistrationNumber = viewModel.RegistrationNumber.Replace(" ", "");
+
                     var existingVehicleWithSameRegNumber = await _context.Vehicle
                         .Where(v => v.Id != id && v.RegistrationNumber.ToUpper().Trim() == viewModel.RegistrationNumber.ToUpper().Trim())
                         .FirstOrDefaultAsync();
@@ -190,9 +184,9 @@ namespace GarageVersion3.Controllers
                     vehicle.VehicleTypeId = viewModel.VehicleTypeId;
                     vehicle.UserId = viewModel.UserId;
                     vehicle.RegistrationNumber = viewModel.RegistrationNumber.ToUpper().Trim();
-                    vehicle.Brand = viewModel.Brand;
-                    vehicle.Color = viewModel.Color;
-                    vehicle.VehicleModel = viewModel.VehicleModel;
+                    vehicle.Brand = viewModel.Brand.Trim();
+                    vehicle.Color = viewModel.Color.Trim();
+                    vehicle.VehicleModel = viewModel.VehicleModel.Trim();
                     vehicle.NrOfWheels = viewModel.NrOfWheels;
 
                     _context.Update(vehicle);
@@ -216,7 +210,7 @@ namespace GarageVersion3.Controllers
             return View(viewModel);
         }
 
-        // GET: Vehicles/Delete/5
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -252,7 +246,6 @@ namespace GarageVersion3.Controllers
             return View(viewModel);
         }
 
-        // POST: Vehicles/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -309,7 +302,7 @@ namespace GarageVersion3.Controllers
                         .OrderBy(v => v.User.FirstName.Substring(0, 2))
                         .ThenBy(v => v.User.FirstName)
                         .ToList();
-                    TempData["Sort"] = "Users sort was done";
+                    TempData["Sort"] = "Owner sort was done";
                     break;
 
                 default:
@@ -332,9 +325,9 @@ namespace GarageVersion3.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Filter(string registrationNumber, string color, string brand)
+        public async Task<IActionResult> Filter(string registrationNumber, string color, string brand, string vehicleType)
         {
-            if (string.IsNullOrEmpty(registrationNumber) && string.IsNullOrEmpty(color) && string.IsNullOrEmpty(brand))
+            if (string.IsNullOrEmpty(registrationNumber) && string.IsNullOrEmpty(color) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(vehicleType))
             {
                 TempData["SearchMessage"] = "Please provide input for at least one search criteria";
                 TempData["SearchStatus"] = "alert alert-warning";
@@ -346,17 +339,22 @@ namespace GarageVersion3.Controllers
 
             if (!string.IsNullOrEmpty(registrationNumber))
             {
-                query = query.Where(v => v.RegistrationNumber.Equals(registrationNumber.ToUpper().Trim()));
+                query = query.Where(v => v.RegistrationNumber.Replace(" ", "").ToUpper().Trim().Equals(registrationNumber.Replace(" ", "").ToUpper().Trim()));
             }
 
             if (!string.IsNullOrEmpty(color))
             {
-                query = query.Where(v => v.Color.Equals(color.Trim()));
+                query = query.Where(v => v.Color.Replace(" ", "").ToUpper().Trim().Equals(color.Replace(" ", "").ToUpper().Trim()));
             }
 
             if (!string.IsNullOrEmpty(brand))
             {
-                query = query.Where(v => v.Brand.Equals(brand.Trim()));
+                query = query.Where(v => v.Brand.Replace(" ", "").ToUpper().Trim().Equals(brand.Replace(" ", "").ToUpper().Trim()));
+            }
+
+            if (!string.IsNullOrEmpty(vehicleType))
+            {
+                query = query.Where(v => v.VehicleType.Type.Replace(" ", "").Trim().ToUpper().Equals(vehicleType.Replace(" ", "").Trim().ToUpper()));
             }
 
             var search = await query
@@ -364,6 +362,10 @@ namespace GarageVersion3.Controllers
                         {
                             Id = v.Id,
                             VehicleType = v.VehicleType.Type,
+                            Brand = v.Brand,
+                            Color = v.Color,
+                            NrOfWheels = v.NrOfWheels,
+                            UserId = v.UserId,
                             RegistrationNumber = v.RegistrationNumber,
                             User = $"{v.User.FirstName} {v.User.LastName} ({v.User.PersonalIdentifyNumber})",
                         }).ToListAsync();
@@ -375,7 +377,7 @@ namespace GarageVersion3.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ShowAll()
+        public IActionResult ShowAll()
         {
             TempData["SearchMessage"] = (_context.Vehicle.ToList().Count == 0) ? "There are no vehicles in the system" : "Showing all vehicles was successful";
             TempData["SearchStatus"] = (_context.Vehicle.ToList().Count == 0) ? "alert alert-warning" : "alert alert-success";
@@ -403,43 +405,9 @@ namespace GarageVersion3.Controllers
             {
                 Text = vt.Type,
                 Value = vt.Id.ToString()
-            }).ToList();
+            });
 
             ViewData["VehicleTypes"] = vehicleTypes;
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Statistics()
-        {
-            var parkedVehicles = await _context.Vehicle
-                .Where(v => _context.ParkingLot.Any(pt => pt.VehicleId == v.Id))
-                .Include(v => v.VehicleType)
-                .ToListAsync();
-
-            var vehicleTypeCount = new Dictionary<string, int>();
-
-            foreach (var vehicle in parkedVehicles)
-            {
-                if (vehicle.VehicleType != null)
-                {
-                    if (!vehicleTypeCount.ContainsKey(vehicle.VehicleType.Type))
-                    {
-                        vehicleTypeCount[vehicle.VehicleType.Type] = 0;
-                    }
-
-                    vehicleTypeCount[vehicle.VehicleType.Type]++;
-                };
-            }
-
-            var totalWheels = parkedVehicles.Sum(v => v.NrOfWheels);
-            var totalRevenue = _context.Receipt.Sum(r => r.Price);
-
-            ViewBag.vehicleTypeCount = vehicleTypeCount;
-            ViewBag.TotalWheels = totalWheels;
-            ViewBag.TotalRevenue = totalRevenue.ToString("#,##0.00");
-
-
-            return View();
         }
     }
 }

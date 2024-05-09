@@ -20,7 +20,7 @@ namespace GarageVersion3.Controllers
             _context = context;
         }
 
-        // GET: Users
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var users = await _context.User
@@ -35,8 +35,8 @@ namespace GarageVersion3.Controllers
 
             return View(users);
         }
-
-        // GET: Users/Details/5
+        
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -67,15 +67,12 @@ namespace GarageVersion3.Controllers
             return View(viewModel);
         }
 
-        // GET: Users/Create
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(UserViewModel user)
@@ -84,9 +81,9 @@ namespace GarageVersion3.Controllers
             {
                 User createUser = new User
                 {
-                    PersonalIdentifyNumber = user.PersonalIdentifyNumber,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName
+                    PersonalIdentifyNumber = user.PersonalIdentifyNumber.Trim().Replace(" ", ""),
+                    FirstName = user.FirstName.Trim().Replace(" ", ""),
+                    LastName = user.LastName.Trim().Replace(" ","")
                 };
 
                 _context.Add(createUser);
@@ -96,7 +93,7 @@ namespace GarageVersion3.Controllers
             return View(user);
         }
 
-        // GET: Users/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -116,15 +113,12 @@ namespace GarageVersion3.Controllers
                 Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                PersonalIdentifyNumber = user.PersonalIdentifyNumber,
+                PersonalIdentifyNumber = user.PersonalIdentifyNumber.Trim(),
             };
 
             return View(viewModel);
         }
 
-        // POST: Users/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, UserViewModel viewModel)
@@ -141,9 +135,10 @@ namespace GarageVersion3.Controllers
                         return NotFound();
                     }
 
-                    user.FirstName = viewModel.FirstName;
-                    user.LastName = viewModel.LastName; 
-                    user.PersonalIdentifyNumber = viewModel.PersonalIdentifyNumber;
+                    user.Id = viewModel.Id;
+                    user.FirstName = viewModel.FirstName.Trim().Replace(" ","");
+                    user.LastName = viewModel.LastName.Trim().Replace(" ", ""); 
+                    user.PersonalIdentifyNumber = viewModel.PersonalIdentifyNumber.Trim().Replace(" ", "");
                     
                     _context.Update(user);
                     await _context.SaveChangesAsync();
@@ -164,7 +159,7 @@ namespace GarageVersion3.Controllers
             return View(viewModel);
         }
 
-        // GET: Users/Delete/5
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -190,7 +185,6 @@ namespace GarageVersion3.Controllers
             return View(viewModel);
         }
 
-        // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -203,11 +197,6 @@ namespace GarageVersion3.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool UserExists(int id)
-        {
-            return _context.User.Any(e => e.Id == id);
         }
 
         [HttpGet]
@@ -284,17 +273,17 @@ namespace GarageVersion3.Controllers
 
             if (!string.IsNullOrEmpty(firstName))
             {
-                query = query.Where(v => v.FirstName.ToUpper().Equals(firstName.ToUpper().Trim()));
+                query = query.Where(v => v.FirstName.Replace(" ", "").Trim().ToUpper().Equals(firstName.Replace(" ", "").ToUpper().Trim()));
             }
 
             if (!string.IsNullOrEmpty(lastName))
             {
-                query = query.Where(v => v.LastName.ToUpper().Equals(lastName.ToUpper().Trim()));
+                query = query.Where(v => v.LastName.Replace(" ", "").Trim().ToUpper().Equals(lastName.Replace(" ", "").ToUpper().Trim()));
             }
 
             if (!string.IsNullOrEmpty(personalIdentifyNumber))
             {
-                query = query.Where(v => v.PersonalIdentifyNumber.Equals(personalIdentifyNumber.Trim()));
+                query = query.Where(v => v.PersonalIdentifyNumber.Replace(" ", "").Trim().Equals(personalIdentifyNumber.Replace(" ", "").Trim()));
             }
 
             var search = await query
@@ -314,14 +303,18 @@ namespace GarageVersion3.Controllers
             return View("Index", search);
         }
 
-
         [HttpGet]
-        public async Task<IActionResult> ShowAll()
+        public IActionResult ShowAll()
         {
             TempData["SearchMessage"] = (_context.User.ToList().Count() == 0) ? "There are no users in the system" : "Showing all users was successful";
             TempData["SearchStatus"] = (_context.User.ToList().Count() == 0) ? "alert alert-warning" : "alert alert-success";
 
             return RedirectToAction(nameof(Index));
+        }
+
+        private bool UserExists(int id)
+        {
+            return _context.User.Any(e => e.Id == id);
         }
     }
 }

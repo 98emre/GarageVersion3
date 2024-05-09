@@ -14,23 +14,24 @@ namespace GarageVersion3.Controllers
             _context = context;
         }
 
-        // GET: VehicleTypes/Create
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: VehicleTypes/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(VehicleType vehicleType)
         {
-            var existingType = await _context.VehicleType.FirstOrDefaultAsync(vt => vt.Type.Trim().ToUpper() == vehicleType.Type.ToUpper());
+            var existingType = await _context.VehicleType.FirstOrDefaultAsync(vt => vt.Type.Trim().ToUpper() == vehicleType.Type.Trim().ToUpper());
 
             if (existingType != null)
             {
                 ModelState.AddModelError(nameof(vehicleType.Type), "A vehicle type with this name already exists");
             }
+
+            vehicleType.Type = vehicleType.Type.Trim().ToUpper();
 
             if (ModelState.IsValid)
             {

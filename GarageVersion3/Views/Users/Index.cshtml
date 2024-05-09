@@ -21,7 +21,7 @@
 
 
 
-@if (TempData.ContainsKey("Search"))
+@if (TempData.ContainsKey("SearchMessage"))
 {
     var message = TempData["SearchMessage"] as string;
     var status = TempData["SearchStatus"] as string;
@@ -37,8 +37,8 @@
 
     <div class="row justify-content-center">
         <div class="text-center mt-3 mb-3">
-            <a asp-action="Create" class="btn btn-primary-blue">Add User</a>
-            <a asp-action="ShowAll" class="btn btn-secondary-blue ms-2">Show All Users</a>
+            <a asp-action="Create" class="btn btn-primary-blue">Add User</a> |
+            <a asp-action="ShowAll" class="btn btn-secondary-blue">Show All Users</a>
         </div>
 
         <form asp-action="Filter" method="get" class="form-inline m-3 d-flex flex-column align-items-center">
@@ -96,8 +96,9 @@
                             @Html.DisplayFor(modelItem => item.NrOfVehicles)
                         </td>
                         <td align="right">
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary-blue">Details</a>
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger ms-2">Delete</a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary-blue">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary-blue">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
                         </td>
                     </tr>
                 }

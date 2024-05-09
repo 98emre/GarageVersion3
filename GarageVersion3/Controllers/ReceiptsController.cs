@@ -21,7 +21,7 @@ namespace GarageVersion3.Controllers
             _context = context;
         }
 
-        // GET: Receipts
+        [HttpGet]
         public async Task<IActionResult> Index(string selectedUserPersonalNr)
         {
             var userList = await _context.User.ToListAsync();
@@ -66,26 +66,7 @@ namespace GarageVersion3.Controllers
             }
         }
 
-        /*
-        [HttpPost]
-        public async Task<IActionResult> GetUserReceipts(string selectedUserPersonalNr)
-        {
-
-            var user = _context.User.FirstOrDefault(u => u.PersonalIdentifyNumber == selectedUserPersonalNr);
-            var userReceipts = await _context.Receipt.Where(u => u.UserId == user.Id).Select(u => new ReceiptViewModel{
-                Id = u.Id,
-                User = u.User,
-                Checkin = u.CheckIn,
-                CheckoutDate = u.CheckOut,
-                Price = u.Price,
-                ParkingNumber = u.ParkingNumber
-            }).ToListAsync();
-
-            return View("Index", userReceipts);
-        }
-        */
-
-        // GET: Receipts/Details/5
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -114,7 +95,7 @@ namespace GarageVersion3.Controllers
             return View(viewModel);
         }
 
-        // GET: Receipts/Delete/5
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -133,7 +114,6 @@ namespace GarageVersion3.Controllers
             return View(receipt);
         }
 
-        // POST: Receipts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -146,11 +126,6 @@ namespace GarageVersion3.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool ReceiptExists(int id)
-        {
-            return _context.Receipt.Any(e => e.Id == id);
         }
 
         [HttpGet]
@@ -168,12 +143,12 @@ namespace GarageVersion3.Controllers
 
             if (!string.IsNullOrEmpty(firstName))
             {
-                query = query.Where(u => u.User.FirstName.Trim().ToUpper().Equals(firstName.ToUpper().Trim()));
+                query = query.Where(u => u.User.FirstName.Replace(" ", "").Replace(" ", "").Trim().ToUpper().Equals(firstName.Replace(" ", "").ToUpper().Trim()));
             }
 
             if (!string.IsNullOrEmpty(lastName))
             {
-                query = query.Where(u => u.User.LastName.Trim().ToUpper().Equals(lastName.ToUpper().Trim()));
+                query = query.Where(u => u.User.LastName.Replace(" ", "").Trim().ToUpper().Equals(lastName.Replace(" ", "").ToUpper().Trim()));
             }
 
             var searchResults = await query
@@ -194,14 +169,18 @@ namespace GarageVersion3.Controllers
             return View("Index", searchResults);
         }
 
-
         [HttpGet]
-        public async Task<IActionResult> ShowAll()
+        public IActionResult ShowAll()
         {
             TempData["SearchMessage"] = (_context.Receipt.Count() == 0) ? "There are no receipts" : "Showing all receipts was successful";
             TempData["SearchStatus"] = (_context.Receipt.Count() == 0) ? "alert alert-warning" : "alert alert-success";
 
             return RedirectToAction(nameof(Index));
+        }
+
+        private bool ReceiptExists(int id)
+        {
+            return _context.Receipt.Any(e => e.Id == id);
         }
     }
 }

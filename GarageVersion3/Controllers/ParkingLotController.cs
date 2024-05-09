@@ -69,8 +69,8 @@ namespace GarageVersion3.Controllers
                  .Select(v => new VehicleViewModel
                  {
                      Id = v.Id,
-                     RegistrationNumber = v.RegistrationNumber,
-                     User = $"{v.User.FirstName} {v.User.LastName} ({v.User.PersonalIdentifyNumber})",
+                     RegistrationNumber = v.RegistrationNumber.ToUpper().Trim(),
+                     User = $"{v.User.FirstName.Trim()} {v.User.LastName.Trim()} ({v.User.PersonalIdentifyNumber.Trim()})",
                      VehicleType = v.VehicleType.Type,
                      MaxParkingSize = maxParkingSize
                  }).ToListAsync();
@@ -206,15 +206,16 @@ namespace GarageVersion3.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> FilterIndex(string firstName, string lastName)
+        public async Task<IActionResult> FilterIndex(string firstName, string lastName, string vehicleType)
         {
             ViewBag.Vehicles = maxParkingSize - _context.ParkingLot.ToList().Count();
 
             var query = _context.ParkingLot.AsQueryable();
             ModelState.Remove("firstName");
             ModelState.Remove("lastName");
-           
-            if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName))
+            ModelState.Remove("vehicleType");
+
+            if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName) && string.IsNullOrEmpty(vehicleType))
             {
                 TempData["SearchMessage"] = "Please provide input for at least one search criteria";
                 TempData["SearchStatus"] = "alert alert-warning";
@@ -224,12 +225,17 @@ namespace GarageVersion3.Controllers
 
             if (!string.IsNullOrEmpty(firstName))
             {
-                query = query.Where(u => u.Vehicle.User.FirstName.Trim().ToUpper().Equals(firstName.ToUpper().Trim()));
+                query = query.Where(u => u.Vehicle.User.FirstName.Replace(" ", "").Trim().ToUpper().Equals(firstName.Replace(" ", "").Trim().ToUpper()));
             }
 
             if (!string.IsNullOrEmpty(lastName))
             {
-                query = query.Where(u => u.Vehicle.User.LastName.Trim().ToUpper().Equals(lastName.ToUpper().Trim()));
+                query = query.Where(u => u.Vehicle.User.LastName.Replace(" ", "").Trim().ToUpper().Equals(lastName.Replace(" ", "").Trim().ToUpper()));
+            }
+
+            if (!string.IsNullOrEmpty(vehicleType))
+            {
+                query = query.Where(u => u.Vehicle.VehicleType.Type.Replace(" ", "").Trim().ToUpper().Equals(vehicleType.Replace(" ", "").Trim().ToUpper()));
             }
 
             var searchResults = await query
@@ -242,7 +248,12 @@ namespace GarageVersion3.Controllers
                     RegistrationNumber = pt.Vehicle.RegistrationNumber,
                     ParkingSpot = pt.ParkingSpot,
                     Checkin = pt.Checkin,
-                    User = $"{pt.Vehicle.User.FirstName} {pt.Vehicle.User.LastName} ({pt.Vehicle.User.PersonalIdentifyNumber})"
+                    User = $"{pt.Vehicle.User.FirstName} {pt.Vehicle.User.LastName} ({pt.Vehicle.User.PersonalIdentifyNumber})",
+                    VehicleViewModel = new VehicleViewModel
+                    {
+                        Id = pt.Vehicle.Id,
+                        VehicleType = pt.Vehicle.VehicleType.Type
+                    }
                 }).ToListAsync();
 
             TempData["SearchMessage"] = (searchResults.Count == 0) ? "Could not find the receipt for the user" : "Search was successful";
@@ -252,15 +263,16 @@ namespace GarageVersion3.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> FilterCreate(string firstName, string lastName)
+        public async Task<IActionResult> FilterCreate(string firstName, string lastName, string vehicleType)
         {
             ViewBag.Vehicles = maxParkingSize - _context.ParkingLot.ToList().Count();
             var query = _context.Vehicle.AsQueryable();
 
             ModelState.Remove("firstName");
             ModelState.Remove("lastName");
+            ModelState.Remove("vehicleType");
 
-            if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName))
+            if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName) && string.IsNullOrEmpty(vehicleType))
             {
                 TempData["SearchMessage"] = "Please provide input for at least one search criteria";
                 TempData["SearchStatus"] = "alert alert-warning";
@@ -270,16 +282,23 @@ namespace GarageVersion3.Controllers
 
             if (!string.IsNullOrEmpty(firstName))
             {
-                query = query.Where(u => u.User.FirstName.Trim().ToUpper().Equals(firstName.ToUpper().Trim()));
+                query = query.Where(u => u.User.FirstName.Replace(" ", "").Trim().ToUpper().Equals(firstName.Replace(" ", "").ToUpper().Trim()));
             }
 
             if (!string.IsNullOrEmpty(lastName))
             {
-                query = query.Where(u => u.User.LastName.Trim().ToUpper().Equals(lastName.ToUpper().Trim()));
+                query = query.Where(u => u.User.LastName.Replace(" ", "").Trim().ToUpper().Equals(lastName.Replace(" ", "").ToUpper().Trim()));
             }
+
+            if (!string.IsNullOrEmpty(vehicleType))
+            {
+                query = query.Where(u => u.VehicleType.Type.Replace(" ", "").Trim().ToUpper().Equals(vehicleType.Replace(" ", "").ToUpper().Trim()));
+            }
+
 
             var searchResults = await query
                 .Where(pt => !_context.ParkingLot.Any(pl => pl.VehicleId == pt.Id))
+                .Include(pt => pt.VehicleType)
                 .Select(pt => new VehicleViewModel
                 {
                     Id = pt.Id,
@@ -295,7 +314,7 @@ namespace GarageVersion3.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ShowAll(bool status)
+        public IActionResult ShowAll(bool status)
         {
             var message = status ? "There are no vehicles to choose from" : "There are no vehicles in the parking lot";
             var count = status ? _context.ParkingLot.Count() : _context.Vehicle.Where(pt => !_context.ParkingLot.Any(v => v.VehicleId == pt.Id)).Count();
