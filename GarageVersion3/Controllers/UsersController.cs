@@ -81,9 +81,9 @@ namespace GarageVersion3.Controllers
             {
                 User createUser = new User
                 {
-                    PersonalIdentifyNumber = user.PersonalIdentifyNumber,
-                    FirstName = user.FirstName.Trim(),
-                    LastName = user.LastName.Trim()
+                    PersonalIdentifyNumber = user.PersonalIdentifyNumber.Trim().Replace(" ", ""),
+                    FirstName = user.FirstName.Trim().Replace(" ", ""),
+                    LastName = user.LastName.Trim().Replace(" ","")
                 };
 
                 _context.Add(createUser);
@@ -136,9 +136,9 @@ namespace GarageVersion3.Controllers
                     }
 
                     user.Id = viewModel.Id;
-                    user.FirstName = viewModel.FirstName.Trim();
-                    user.LastName = viewModel.LastName.Trim(); 
-                    user.PersonalIdentifyNumber = viewModel.PersonalIdentifyNumber.Trim();
+                    user.FirstName = viewModel.FirstName.Trim().Replace(" ","");
+                    user.LastName = viewModel.LastName.Trim().Replace(" ", ""); 
+                    user.PersonalIdentifyNumber = viewModel.PersonalIdentifyNumber.Trim().Replace(" ", "");
                     
                     _context.Update(user);
                     await _context.SaveChangesAsync();
