@@ -22,22 +22,68 @@ namespace GarageVersion3.Controllers
         }
 
         // GET: Receipts
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string selectedUserPersonalNr)
         {
-            var viewModel = await _context.Receipt
-                .Include(r => r.User)
-                .Select(r => new ReceiptViewModel
+            var userList = await _context.User.ToListAsync();
+            TempData["Users"] = userList;
+            if (selectedUserPersonalNr == null || selectedUserPersonalNr == "")
+            {
+                var viewModel = await _context.Receipt
+                    .Include(r => r.User)
+                    .Select(r => new ReceiptViewModel
+                    {
+                        Id = r.Id,
+                        User = r.User,
+                        Checkin = r.CheckIn,
+                        CheckoutDate = r.CheckOut,
+                        Price = r.Price,
+                        ParkingNumber = r.ParkingNumber
+                    }).ToListAsync();
+
+                return View(viewModel);
+            }
+            else
+            {
+
+                var user = _context.User.FirstOrDefault(u => u.PersonalIdentifyNumber == selectedUserPersonalNr);
+                if (user == null)
                 {
-                    Id = r.Id,
-                    User = r.User,
-                    Checkin = r.CheckIn,
-                    CheckoutDate = r.CheckOut,
-                    Price = r.Price,
-                    ParkingNumber = r.ParkingNumber
+                    // Handle case where user is not found
+                    return NotFound();
+                }
+
+                var userReceipts = await _context.Receipt.Where(u => u.UserId == user.Id).Select(u => new ReceiptViewModel
+                {
+                    Id = u.Id,
+                    User = u.User,
+                    Checkin = u.CheckIn,
+                    CheckoutDate = u.CheckOut,
+                    Price = u.Price,
+                    ParkingNumber = u.ParkingNumber
                 }).ToListAsync();
 
-            return View(viewModel);
+                return View(userReceipts);
+            }
         }
+
+        /*
+        [HttpPost]
+        public async Task<IActionResult> GetUserReceipts(string selectedUserPersonalNr)
+        {
+
+            var user = _context.User.FirstOrDefault(u => u.PersonalIdentifyNumber == selectedUserPersonalNr);
+            var userReceipts = await _context.Receipt.Where(u => u.UserId == user.Id).Select(u => new ReceiptViewModel{
+                Id = u.Id,
+                User = u.User,
+                Checkin = u.CheckIn,
+                CheckoutDate = u.CheckOut,
+                Price = u.Price,
+                ParkingNumber = u.ParkingNumber
+            }).ToListAsync();
+
+            return View("Index", userReceipts);
+        }
+        */
 
         // GET: Receipts/Details/5
         public async Task<IActionResult> Details(int? id)
