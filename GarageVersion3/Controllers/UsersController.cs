@@ -82,8 +82,8 @@ namespace GarageVersion3.Controllers
                 User createUser = new User
                 {
                     PersonalIdentifyNumber = user.PersonalIdentifyNumber,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName
+                    FirstName = user.FirstName.Trim(),
+                    LastName = user.LastName.Trim()
                 };
 
                 _context.Add(createUser);
@@ -113,7 +113,7 @@ namespace GarageVersion3.Controllers
                 Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                PersonalIdentifyNumber = user.PersonalIdentifyNumber,
+                PersonalIdentifyNumber = user.PersonalIdentifyNumber.Trim(),
             };
 
             return View(viewModel);
@@ -136,9 +136,9 @@ namespace GarageVersion3.Controllers
                     }
 
                     user.Id = viewModel.Id;
-                    user.FirstName = viewModel.FirstName;
-                    user.LastName = viewModel.LastName; 
-                    user.PersonalIdentifyNumber = viewModel.PersonalIdentifyNumber;
+                    user.FirstName = viewModel.FirstName.Trim();
+                    user.LastName = viewModel.LastName.Trim(); 
+                    user.PersonalIdentifyNumber = viewModel.PersonalIdentifyNumber.Trim();
                     
                     _context.Update(user);
                     await _context.SaveChangesAsync();
@@ -273,17 +273,17 @@ namespace GarageVersion3.Controllers
 
             if (!string.IsNullOrEmpty(firstName))
             {
-                query = query.Where(v => v.FirstName.ToUpper().Equals(firstName.ToUpper().Trim()));
+                query = query.Where(v => v.FirstName.Trim().ToUpper().Equals(firstName.ToUpper().Trim()));
             }
 
             if (!string.IsNullOrEmpty(lastName))
             {
-                query = query.Where(v => v.LastName.ToUpper().Equals(lastName.ToUpper().Trim()));
+                query = query.Where(v => v.LastName.Trim().ToUpper().Equals(lastName.ToUpper().Trim()));
             }
 
             if (!string.IsNullOrEmpty(personalIdentifyNumber))
             {
-                query = query.Where(v => v.PersonalIdentifyNumber.Equals(personalIdentifyNumber.Trim()));
+                query = query.Where(v => v.PersonalIdentifyNumber.Trim().Equals(personalIdentifyNumber.Trim()));
             }
 
             var search = await query

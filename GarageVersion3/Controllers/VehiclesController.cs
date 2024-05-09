@@ -301,7 +301,7 @@ namespace GarageVersion3.Controllers
                         .OrderBy(v => v.User.FirstName.Substring(0, 2))
                         .ThenBy(v => v.User.FirstName)
                         .ToList();
-                    TempData["Sort"] = "Users sort was done";
+                    TempData["Sort"] = "Owner sort was done";
                     break;
 
                 default:
@@ -338,17 +338,17 @@ namespace GarageVersion3.Controllers
 
             if (!string.IsNullOrEmpty(registrationNumber))
             {
-                query = query.Where(v => v.RegistrationNumber.Equals(registrationNumber.ToUpper().Trim()));
+                query = query.Where(v => v.RegistrationNumber.ToUpper().Trim().Equals(registrationNumber.ToUpper().Trim()));
             }
 
             if (!string.IsNullOrEmpty(color))
             {
-                query = query.Where(v => v.Color.Equals(color.Trim()));
+                query = query.Where(v => v.Color.ToUpper().Trim().Equals(color.ToUpper().Trim()));
             }
 
             if (!string.IsNullOrEmpty(brand))
             {
-                query = query.Where(v => v.Brand.Equals(brand.Trim()));
+                query = query.Where(v => v.Brand.ToUpper().Trim().Equals(brand.ToUpper().Trim()));
             }
 
             if (!string.IsNullOrEmpty(vehicleType))
