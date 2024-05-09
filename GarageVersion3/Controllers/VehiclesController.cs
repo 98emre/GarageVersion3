@@ -84,7 +84,7 @@ namespace GarageVersion3.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(VehicleViewModel viewModel)
         {
-            if (_context.Vehicle.Any(v => v.RegistrationNumber == viewModel.RegistrationNumber))
+            if (_context.Vehicle.Any(v => v.RegistrationNumber.Trim().ToUpper() == viewModel.RegistrationNumber.Trim().ToUpper()))
             {
                 ModelState.AddModelError("RegistrationNumber", "A vehicle with this registration number already exists");
                 DropdownDataLists();
@@ -100,9 +100,9 @@ namespace GarageVersion3.Controllers
                     VehicleTypeId = viewModel.VehicleTypeId,
                     UserId = viewModel.UserId,
                     RegistrationNumber = viewModel.RegistrationNumber.ToUpper().Trim(),
-                    Brand = viewModel.Brand,
-                    Color = viewModel.Color,
-                    VehicleModel = viewModel.VehicleModel,
+                    Brand = viewModel.Brand.Trim(),
+                    Color = viewModel.Color.Trim(),
+                    VehicleModel = viewModel.VehicleModel.Trim(),
                     NrOfWheels = viewModel.NrOfWheels,
                 };
 
@@ -183,9 +183,9 @@ namespace GarageVersion3.Controllers
                     vehicle.VehicleTypeId = viewModel.VehicleTypeId;
                     vehicle.UserId = viewModel.UserId;
                     vehicle.RegistrationNumber = viewModel.RegistrationNumber.ToUpper().Trim();
-                    vehicle.Brand = viewModel.Brand;
-                    vehicle.Color = viewModel.Color;
-                    vehicle.VehicleModel = viewModel.VehicleModel;
+                    vehicle.Brand = viewModel.Brand.Trim();
+                    vehicle.Color = viewModel.Color.Trim();
+                    vehicle.VehicleModel = viewModel.VehicleModel.Trim();
                     vehicle.NrOfWheels = viewModel.NrOfWheels;
 
                     _context.Update(vehicle);

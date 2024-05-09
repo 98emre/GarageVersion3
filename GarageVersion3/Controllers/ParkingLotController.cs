@@ -69,8 +69,8 @@ namespace GarageVersion3.Controllers
                  .Select(v => new VehicleViewModel
                  {
                      Id = v.Id,
-                     RegistrationNumber = v.RegistrationNumber,
-                     User = $"{v.User.FirstName} {v.User.LastName} ({v.User.PersonalIdentifyNumber})",
+                     RegistrationNumber = v.RegistrationNumber.ToUpper().Trim(),
+                     User = $"{v.User.FirstName.Trim()} {v.User.LastName.Trim()} ({v.User.PersonalIdentifyNumber.Trim()})",
                      VehicleType = v.VehicleType.Type,
                      MaxParkingSize = maxParkingSize
                  }).ToListAsync();
