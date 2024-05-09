@@ -225,17 +225,17 @@ namespace GarageVersion3.Controllers
 
             if (!string.IsNullOrEmpty(firstName))
             {
-                query = query.Where(u => u.Vehicle.User.FirstName.Trim().ToUpper().Equals(firstName.Trim().ToUpper()));
+                query = query.Where(u => u.Vehicle.User.FirstName.Replace(" ", "").Trim().ToUpper().Equals(firstName.Replace(" ", "").Trim().ToUpper()));
             }
 
             if (!string.IsNullOrEmpty(lastName))
             {
-                query = query.Where(u => u.Vehicle.User.LastName.Trim().ToUpper().Equals(lastName.Trim().ToUpper()));
+                query = query.Where(u => u.Vehicle.User.LastName.Replace(" ", "").Trim().ToUpper().Equals(lastName.Replace(" ", "").Trim().ToUpper()));
             }
 
             if (!string.IsNullOrEmpty(vehicleType))
             {
-                query = query.Where(u => u.Vehicle.VehicleType.Type.Trim().ToUpper().Equals(vehicleType.Trim().ToUpper()));
+                query = query.Where(u => u.Vehicle.VehicleType.Type.Replace(" ", "").Trim().ToUpper().Equals(vehicleType.Replace(" ", "").Trim().ToUpper()));
             }
 
             var searchResults = await query
@@ -282,17 +282,17 @@ namespace GarageVersion3.Controllers
 
             if (!string.IsNullOrEmpty(firstName))
             {
-                query = query.Where(u => u.User.FirstName.Trim().ToUpper().Equals(firstName.ToUpper().Trim()));
+                query = query.Where(u => u.User.FirstName.Replace(" ", "").Trim().ToUpper().Equals(firstName.Replace(" ", "").ToUpper().Trim()));
             }
 
             if (!string.IsNullOrEmpty(lastName))
             {
-                query = query.Where(u => u.User.LastName.Trim().ToUpper().Equals(lastName.ToUpper().Trim()));
+                query = query.Where(u => u.User.LastName.Replace(" ", "").Trim().ToUpper().Equals(lastName.Replace(" ", "").ToUpper().Trim()));
             }
 
             if (!string.IsNullOrEmpty(vehicleType))
             {
-                query = query.Where(u => u.VehicleType.Type.Trim().ToUpper().Equals(vehicleType.Trim().ToUpper()));
+                query = query.Where(u => u.VehicleType.Type.Replace(" ", "").Trim().ToUpper().Equals(vehicleType.Replace(" ", "").ToUpper().Trim()));
             }
 
 
