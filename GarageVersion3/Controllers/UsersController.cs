@@ -273,17 +273,17 @@ namespace GarageVersion3.Controllers
 
             if (!string.IsNullOrEmpty(firstName))
             {
-                query = query.Where(v => v.FirstName.Trim().ToUpper().Equals(firstName.ToUpper().Trim()));
+                query = query.Where(v => v.FirstName.Replace(" ", "").Trim().ToUpper().Equals(firstName.Replace(" ", "").ToUpper().Trim()));
             }
 
             if (!string.IsNullOrEmpty(lastName))
             {
-                query = query.Where(v => v.LastName.Trim().ToUpper().Equals(lastName.ToUpper().Trim()));
+                query = query.Where(v => v.LastName.Replace(" ", "").Trim().ToUpper().Equals(lastName.Replace(" ", "").ToUpper().Trim()));
             }
 
             if (!string.IsNullOrEmpty(personalIdentifyNumber))
             {
-                query = query.Where(v => v.PersonalIdentifyNumber.Trim().Equals(personalIdentifyNumber.Trim()));
+                query = query.Where(v => v.PersonalIdentifyNumber.Replace(" ", "").Trim().Equals(personalIdentifyNumber.Replace(" ", "").Trim()));
             }
 
             var search = await query
