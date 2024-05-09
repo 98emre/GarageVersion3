@@ -16,11 +16,11 @@ namespace GarageVersion3.Models.ViewModels
         [Display(Name = "Parking Spot")]
         public int ParkingNumber { get; set; }
 
-        [Display(Name = "Checkin Date")]
-        public DateTime Checkin { get; set; }
+        [Display(Name = "Check in Date")]
+        public DateTime CheckIn { get; set; }
 
-        [Display(Name = "Checkout Date")]
-        public DateTime CheckoutDate { get; set; }
+        [Display(Name = "Check out Date")]
+        public DateTime CheckOutDate { get; set; }
 
         [Display(Name = "Total Hours of Parking")]
         public int TotalParkingHours { get; set; }
@@ -31,7 +31,7 @@ namespace GarageVersion3.Models.ViewModels
 
         public void CalculateTotalParkingHours()
         {
-            TimeSpan parkingDuration = CheckoutDate - Checkin;
+            TimeSpan parkingDuration = CheckOutDate - CheckIn;
             TotalParkingHours = (int)parkingDuration.TotalHours;
         }
 

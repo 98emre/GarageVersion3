@@ -29,8 +29,8 @@ namespace GarageVersion3.Helpers
             receiptVM.User = vehicle.User;
             receiptVM.VehicleType = vehicle.VehicleType;
             receiptVM.RegistrationNumber = vehicle.RegistrationNumber;
-            receiptVM.Checkin = parkingSpot.Checkin;
-            receiptVM.CheckoutDate = DateTime.Now;
+            receiptVM.CheckIn = parkingSpot.Checkin;
+            receiptVM.CheckOutDate = DateTime.Now;
             receiptVM.CalculateTotalParkingHours();
             receiptVM.CalculatePrice();
 

@@ -34,8 +34,8 @@ namespace GarageVersion3.Controllers
                     {
                         Id = r.Id,
                         User = r.User,
-                        Checkin = r.CheckIn,
-                        CheckoutDate = r.CheckOut,
+                        CheckIn = r.CheckIn,
+                        CheckOutDate = r.CheckOut,
                         Price = r.Price,
                         ParkingNumber = r.ParkingNumber
                     }).ToListAsync();
@@ -56,8 +56,8 @@ namespace GarageVersion3.Controllers
                 {
                     Id = u.Id,
                     User = u.User,
-                    Checkin = u.CheckIn,
-                    CheckoutDate = u.CheckOut,
+                    CheckIn = u.CheckIn,
+                    CheckOutDate = u.CheckOut,
                     Price = u.Price,
                     ParkingNumber = u.ParkingNumber
                 }).ToListAsync();
@@ -80,8 +80,8 @@ namespace GarageVersion3.Controllers
                 {
                     Id = r.Id,
                     User = r.User,
-                    Checkin = r.CheckIn,
-                    CheckoutDate = r.CheckOut,
+                    CheckIn = r.CheckIn,
+                    CheckOutDate = r.CheckOut,
                     Price = r.Price,
                     ParkingNumber = r.ParkingNumber
                 })
@@ -157,8 +157,8 @@ namespace GarageVersion3.Controllers
                 {
                     Id = r.Id,
                     User = r.User,
-                    Checkin = r.CheckIn,
-                    CheckoutDate = r.CheckOut,
+                    CheckIn = r.CheckIn,
+                    CheckOutDate = r.CheckOut,
                     Price = r.Price,
                     ParkingNumber = r.ParkingNumber
                 }).ToListAsync();

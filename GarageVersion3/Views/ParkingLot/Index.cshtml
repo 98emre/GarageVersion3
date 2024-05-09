@@ -42,7 +42,7 @@
                 <a asp-action="Create" class="btn btn-primary-blue">Check In</a>
             }
 
-            | <a asp-action="ShowAll" asp-route-status="true" class="btn btn-secondary-blue">Show All</a>
+            <a asp-action="ShowAll" asp-route-status="true" class="btn btn-secondary-blue ms-2">Show All Parked Vehicles</a>
         </div>
 
         <form asp-action="FilterIndex" method="get" class="form-inline m-3 d-flex flex-column align-items-center">
@@ -115,9 +115,9 @@
 
                         <td align="right">
 
-                            <a asp-controller="Vehicles" asp-action="Edit" asp-route-id="@item.VehicleId" class="btn btn-primary-blue">Edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary-blue">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Check Out</a>
+                            <a asp-controller="Vehicles" asp-action="Edit" asp-route-id="@item.VehicleId" class="btn btn-primary-blue">Edit</a> 
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary-blue ms-2">Details</a> 
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger ms-2">Check Out</a>
                         </td>
                     </tr>
                 }
