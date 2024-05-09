@@ -339,22 +339,22 @@ namespace GarageVersion3.Controllers
 
             if (!string.IsNullOrEmpty(registrationNumber))
             {
-                query = query.Where(v => v.RegistrationNumber.ToUpper().Trim().Equals(registrationNumber.ToUpper().Trim()));
+                query = query.Where(v => v.RegistrationNumber.Replace(" ", "").ToUpper().Trim().Equals(registrationNumber.Replace(" ", "").ToUpper().Trim()));
             }
 
             if (!string.IsNullOrEmpty(color))
             {
-                query = query.Where(v => v.Color.ToUpper().Trim().Equals(color.ToUpper().Trim()));
+                query = query.Where(v => v.Color.Replace(" ", "").ToUpper().Trim().Equals(color.Replace(" ", "").ToUpper().Trim()));
             }
 
             if (!string.IsNullOrEmpty(brand))
             {
-                query = query.Where(v => v.Brand.ToUpper().Trim().Equals(brand.ToUpper().Trim()));
+                query = query.Where(v => v.Brand.Replace(" ", "").ToUpper().Trim().Equals(brand.Replace(" ", "").ToUpper().Trim()));
             }
 
             if (!string.IsNullOrEmpty(vehicleType))
             {
-                query = query.Where(v => v.VehicleType.Type.Trim().ToUpper().Equals(vehicleType.Trim().ToUpper()));
+                query = query.Where(v => v.VehicleType.Type.Replace(" ", "").Trim().ToUpper().Equals(vehicleType.Replace(" ", "").Trim().ToUpper()));
             }
 
             var search = await query
