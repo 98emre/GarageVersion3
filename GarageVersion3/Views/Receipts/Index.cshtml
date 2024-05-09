@@ -43,7 +43,7 @@
         var userList = (List<User>)TempData["Users"];
     }
 
-    <form asp-controller="Receipts" asp-action="Index" method="post">
+    <form asp-controller="Receipts" asp-action="Index" method="get">
         <label for="userDropdown">Select a Personal Number:</label>
         <select id="userDropdown" name="selectedUserPersonalNr">
             @foreach (var user in userList)
