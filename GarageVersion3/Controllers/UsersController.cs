@@ -75,22 +75,31 @@ namespace GarageVersion3.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(UserViewModel user)
+        public async Task<IActionResult> Create(UserViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                User createUser = new User
+                var firstNameSize = viewModel.FirstName.Trim().Replace(" ", "").Count();
+                var lastNameSize = viewModel.LastName.Trim().Replace(" ", "").Count();
+
+                if (firstNameSize < 2 || lastNameSize < 2)
                 {
-                    PersonalIdentifyNumber = user.PersonalIdentifyNumber.Trim().Replace(" ", ""),
-                    FirstName = user.FirstName.Trim().Replace(" ", ""),
-                    LastName = user.LastName.Trim().Replace(" ","")
+                    ModelState.AddModelError((firstNameSize<2) ? "FirstName" : "LastName", "Must be atleast 2 characters");
+                    return View();
+                }
+
+                User user = new User
+                {
+                    PersonalIdentifyNumber = viewModel.PersonalIdentifyNumber.Trim().Replace(" ", ""),
+                    FirstName = viewModel.FirstName.Trim().Replace(" ", ""),
+                    LastName = viewModel.LastName.Trim().Replace(" ","")
                 };
 
-                _context.Add(createUser);
+                _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+            return View(viewModel);
         }
 
         [HttpGet]
@@ -128,6 +137,15 @@ namespace GarageVersion3.Controllers
             {
                 try
                 {
+                    var firstNameSize = viewModel.FirstName.Trim().Replace(" ", "").Count();
+                    var lastNameSize = viewModel.LastName.Trim().Replace(" ", "").Count();
+
+                    if (firstNameSize < 2 || lastNameSize < 2)
+                    {
+                        ModelState.AddModelError((firstNameSize < 2) ? "FirstName" : "LastName", "Must be atleast 2 characters");
+                        return View(viewModel);
+                    }
+
                     var user = await _context.User.FindAsync(id);
 
                     if (user == null)
