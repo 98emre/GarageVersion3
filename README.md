@@ -11,6 +11,7 @@ In the application to configure to the database, you need to use:
 update-database
 
 ```
+[The ER Diagram as .pdf](https://github.com/98emre/GarageVersion3/blob/master/ER-Diagram.png)
 
 ## Controller
 
