@@ -12,7 +12,7 @@ update-database
 
 ```
 ## ER Diagram
-![ER-diagram](https://github.com/98emre/GarageVersion3/blob/master/ER-Diagram.pdf)
+[ER-diagram as pdf](https://github.com/98emre/GarageVersion3/blob/master/ER-Diagram.pdf)
 
 ## Controller
 
