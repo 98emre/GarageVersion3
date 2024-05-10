@@ -39,11 +39,9 @@ update-database
 | GET | /ParkingLot/Creates | To the parking lot check-in page |
 | GET | /ParkingLot/Details/:id | To the parking lot details page |
 | GET | /ParkingLot/Delete/:id | To the parking lot check out page |
-
 | **Receipts-Controller** | | |
 | GET | /Receipts | To the receipts index page |
 | GET | /ParkingLot/Details/:id | To the receipts details page |
-
 | **VehicleType-Controller** | | |
 | GET | /VehicleType/Create | To the vehicle type create page |
 
