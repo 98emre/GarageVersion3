@@ -11,9 +11,7 @@ namespace GarageVersion3.Validation
             if (value is string input)
             {
                 if (validationContext.ObjectInstance is UserViewModel viewModel)
-                {
-                    // Show me in presentation :)  
-                    /*
+                {                    
                     try
                     {
                         Personnummer.Personnummer personNr = new Personnummer.Personnummer(value.ToString());
@@ -22,12 +20,13 @@ namespace GarageVersion3.Validation
                             return new ValidationResult("People under 18 can not register!");
                         }
                     }
+
                     catch (Exception e)
                     {
                         Console.WriteLine(e);
                         return new ValidationResult("Could not validate Personal Number.");
                     }
-                    */
+                    
                     var dbContext = validationContext.GetRequiredService<GarageVersion3Context>();
                     
                     if (dbContext.User.Any(u => u.Id != viewModel.Id && u.PersonalIdentifyNumber == viewModel.PersonalIdentifyNumber))

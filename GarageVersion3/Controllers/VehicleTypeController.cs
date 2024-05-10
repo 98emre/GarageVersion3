@@ -28,7 +28,7 @@ namespace GarageVersion3.Controllers
 
             if (existingType != null)
             {
-                ModelState.AddModelError(nameof(vehicleType.Type), "A vehicle type with this name already exists");
+                ModelState.AddModelError("Type", "A vehicle type with this name already exists");
             }
 
             vehicleType.Type = vehicleType.Type.Trim().ToUpper();

@@ -24,33 +24,32 @@ namespace GarageVersion3.Controllers
         [HttpGet]
         public async Task<IActionResult> Statistics()
         {
-            var parkedVehicles = await _context.Vehicle
-                .Where(v => _context.ParkingLot.Any(pt => pt.VehicleId == v.Id))
-                .Include(v => v.VehicleType)
+            var parkedVehicles = await _context.ParkingLot
+                .Include(v => v.Vehicle)
+                .ThenInclude(v => v.VehicleType)
                 .ToListAsync();
 
             var vehicleTypeCount = new Dictionary<string, int>();
 
             foreach (var vehicle in parkedVehicles)
             {
-                if (vehicle.VehicleType != null)
+                if (vehicle.Vehicle.VehicleType != null)
                 {
-                    if (!vehicleTypeCount.ContainsKey(vehicle.VehicleType.Type))
+                    if (!vehicleTypeCount.ContainsKey(vehicle.Vehicle.VehicleType.Type))
                     {
-                        vehicleTypeCount[vehicle.VehicleType.Type] = 0;
+                        vehicleTypeCount[vehicle.Vehicle.VehicleType.Type] = 0;
                     }
 
-                    vehicleTypeCount[vehicle.VehicleType.Type]++;
+                    vehicleTypeCount[vehicle.Vehicle.VehicleType.Type]++;
                 };
             }
 
-            var totalWheels = parkedVehicles.Sum(v => v.NrOfWheels);
+            var totalWheels = parkedVehicles.Sum(v => v.Vehicle.NrOfWheels);
             var totalRevenue = _context.Receipt.Sum(r => r.Price);
 
             ViewBag.vehicleTypeCount = vehicleTypeCount;
             ViewBag.TotalWheels = totalWheels;
             ViewBag.TotalRevenue = totalRevenue.ToString("#,##0.00");
-
 
             return View();
         }

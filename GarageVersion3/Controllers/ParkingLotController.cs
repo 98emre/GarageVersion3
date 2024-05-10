@@ -2,11 +2,7 @@
 using GarageVersion3.Models;
 using GarageVersion3.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Drawing.Drawing2D;
-using System.Drawing;
-using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using GarageVersion3.Helpers;
 
 namespace GarageVersion3.Controllers
@@ -213,8 +209,7 @@ namespace GarageVersion3.Controllers
             {
                 TempData["SearchMessage"] = "Please provide input for at least one search criteria";
                 TempData["SearchStatus"] = "alert alert-warning";
-                var empyList = new List<ParkingLotViewModel>();
-                return View("Index", empyList);
+                return View("Index", new List<ParkingLotViewModel>());
             }
 
             if (!string.IsNullOrEmpty(firstName))
@@ -266,8 +261,7 @@ namespace GarageVersion3.Controllers
             {
                 TempData["SearchMessage"] = "Please provide input for at least one search criteria";
                 TempData["SearchStatus"] = "alert alert-warning";
-                var empyList = new List<VehicleViewModel>();
-                return View("Create", empyList);
+                return View("Create", new List<VehicleViewModel>());
             }
 
             if (!string.IsNullOrEmpty(firstName))

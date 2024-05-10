@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GarageVersion3.Data;
 using GarageVersion3.Models;
@@ -46,8 +41,8 @@ namespace GarageVersion3.Controllers
 
             var user = await _context.User
                 .Include(u => u.Vehicles)
-                .ThenInclude(v => v.VehicleType)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .ThenInclude(u => u.VehicleType)
+                .FirstOrDefaultAsync(u => u.Id == id);
 
             if (user == null)
             {
@@ -60,7 +55,7 @@ namespace GarageVersion3.Controllers
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 PersonalIdentifyNumber = user.PersonalIdentifyNumber,
-                NrOfVehicles = user.Vehicles?.Count() ?? 0,
+                NrOfVehicles = user.Vehicles?.Count() ?? 0, 
                 Vehicles = user.Vehicles
             };
 
@@ -185,7 +180,7 @@ namespace GarageVersion3.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User.FirstOrDefaultAsync(m => m.Id == id);
+            var user = await _context.User.FirstOrDefaultAsync(u => u.Id == id);
 
             if (user == null)
             {
@@ -208,12 +203,14 @@ namespace GarageVersion3.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var user = await _context.User.FindAsync(id);
-            if (user != null)
-            {
-                _context.User.Remove(user);
-            }
 
+            if (user == null)
+            {
+                return NotFound();
+            }
+            _context.User.Remove(user);
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -240,7 +237,7 @@ namespace GarageVersion3.Controllers
             {
                 case "FirstName":
                     users = users
-                        .OrderBy(u => u.FirstName.Substring(0, 2))
+                        .OrderBy(u => u.FirstName.Substring(0, 2)) 
                         .ThenBy(u => u.FirstName)
                         .ToList();
                     TempData["Sort"] = "User first name sort was done";
@@ -256,7 +253,7 @@ namespace GarageVersion3.Controllers
 
                 case "PersonalIdentifyNumber":
                     users = users
-                        .OrderBy(u => u.PersonalIdentifyNumber.Substring(0, 5))
+                        .OrderBy(u => u.PersonalIdentifyNumber.Substring(0, 2)) 
                         .ThenBy(u => u.PersonalIdentifyNumber)
                         .ToList();
                     TempData["Sort"] = "Personal identify number with oldest sort was done";
@@ -285,10 +282,9 @@ namespace GarageVersion3.Controllers
             {
                 TempData["SearchMessage"] = "Please provide input for at least one search criteria";
                 TempData["SearchStatus"] = "alert alert-warning";
-                var empyList = new List<UserViewModel>();
-                return View("Index", empyList);
+                return View("Index", new List<UserViewModel>());
             }
-
+            
             if (!string.IsNullOrEmpty(firstName))
             {
                 query = query.Where(v => v.FirstName.Replace(" ", "").Trim().ToUpper().Equals(firstName.Replace(" ", "").ToUpper().Trim()));

@@ -12,7 +12,7 @@ namespace GarageVersion3.Models.ViewModels
         [UniquePersonalNr]
         [StringLength(10, MinimumLength = 10, ErrorMessage = "Birth Date must be 10 numbers")]
         public string PersonalIdentifyNumber { get; set; }
-
+        
         [Display(Name = "First Name")]
         [StringLength(32, MinimumLength = 2, ErrorMessage = "First Name must be between 2 - 32")]
         [FirstNameIsNotLastName]

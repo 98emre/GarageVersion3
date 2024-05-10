@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GarageVersion3.Data;
 using GarageVersion3.Models;
 using GarageVersion3.Models.ViewModels;
-using System.Drawing.Drawing2D;
-using System.Drawing;
-using GarageVersion3.Helpers;
 
 namespace GarageVersion3.Controllers
 {
@@ -89,9 +85,11 @@ namespace GarageVersion3.Controllers
                 bool existingVehicle = _context.Vehicle.Any(v => v.RegistrationNumber.ToUpper().Trim().Replace(" ", "").Equals(viewModel.RegistrationNumber.Trim().ToUpper().Replace(" ", "")));
                 int nrOfCharacters = viewModel.RegistrationNumber.ToUpper().Trim().Replace(" ", "").Count();
 
+                  
                 if (existingVehicle || nrOfCharacters < 6)
                 {
-                    ModelState.AddModelError("RegistrationNumber", existingVehicle ? "A vehicle with this registration number already exists":"Registration number must be between 6 and 10");
+                    ModelState.AddModelError("RegistrationNumber", existingVehicle ? "A vehicle with this registration number already exists":
+                                                                                     "Registration number must be between 6 and 10");
                     DropdownDataLists();
                     return View();
                 }
@@ -182,13 +180,6 @@ namespace GarageVersion3.Controllers
                         return View();
                     }
 
-                    if (existingVehicleWithSameRegNumber != null)
-                    {
-                        ModelState.AddModelError(nameof(viewModel.RegistrationNumber), "The registration number is already in use by another vehicle.");
-                        DropdownDataLists();
-                        return View(viewModel);
-                    }
-
                     vehicle.VehicleTypeId = viewModel.VehicleTypeId;
                     vehicle.UserId = viewModel.UserId;
                     vehicle.RegistrationNumber = viewModel.RegistrationNumber.ToUpper().Trim().Replace(" ", "");
@@ -235,7 +226,6 @@ namespace GarageVersion3.Controllers
             {
                 return NotFound();
             }
-
 
             var viewModel = new VehicleViewModel
             {
@@ -339,8 +329,7 @@ namespace GarageVersion3.Controllers
             {
                 TempData["SearchMessage"] = "Please provide input for at least one search criteria";
                 TempData["SearchStatus"] = "alert alert-warning";
-                var empyList = new List<VehicleViewModel>();
-                return View("Index", empyList);
+                return View("Index", new List<VehicleViewModel>());
             }
 
             var query = _context.Vehicle.AsQueryable();

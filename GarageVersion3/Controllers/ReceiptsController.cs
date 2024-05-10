@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GarageVersion3.Data;
-using GarageVersion3.Models;
 using GarageVersion3.Models.ViewModels;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 
 namespace GarageVersion3.Controllers
 {
@@ -108,39 +101,6 @@ namespace GarageVersion3.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var receipt = await _context.Receipt
-                .Include(r => r.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (receipt == null)
-            {
-                return NotFound();
-            }
-
-            return View(receipt);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var receipt = await _context.Receipt.FindAsync(id);
-            if (receipt != null)
-            {
-                _context.Receipt.Remove(receipt);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        [HttpGet]
         public async Task<IActionResult> Filter(string firstName, string lastName)
         {
             var query = _context.Receipt.AsQueryable();
@@ -150,8 +110,7 @@ namespace GarageVersion3.Controllers
             {
                 TempData["SearchMessage"] = "Please provide input for at least one search criteria";
                 TempData["SearchStatus"] = "alert alert-warning";
-                var empyList = new List<ReceiptViewModel>();
-                return View("Index", empyList);
+                return View("Index", new List<ReceiptViewModel>());
             }
 
             if (!string.IsNullOrEmpty(firstName))
