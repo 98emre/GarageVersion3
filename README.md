@@ -12,7 +12,7 @@ update-database
 
 ```
 ## ER Diagram
-<img width="2265" alt="Angular Assignment" src="https://github.com/98emre/GarageVersion3/blob/master/ER-Diagram.pdf">
+![ER-diagram](https://github.com/98emre/GarageVersion3/blob/master/ER-Diagram.pdf)
 
 ## Controller
 
