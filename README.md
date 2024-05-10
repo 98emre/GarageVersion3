@@ -46,8 +46,11 @@ update-database
 
 ## Authors
 [Emre Demirel](https://github.com/98emre)
+
 [Annica Alexandra Andersson](https://github.com/Annisson)
+
 [Sally Kristina Resch](https://github.com/SallyResch)
+
 [Victor Terje Härström](https://github.com/ViceSyndicate)
 
 
