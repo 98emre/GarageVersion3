@@ -22,13 +22,11 @@ namespace GarageVersion3.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string selectedUserPersonalNr)
+        public async Task<IActionResult> Index()
         {
-            var userList = await _context.User.ToListAsync();
-            TempData["Users"] = userList;
-            if (selectedUserPersonalNr == null || selectedUserPersonalNr == "")
-            {
-                var viewModel = await _context.Receipt
+            TempData["Users"] = await _context.User.ToListAsync();
+
+            var viewModel = await _context.Receipt
                     .Include(r => r.User)
                     .Select(r => new ReceiptViewModel
                     {
@@ -40,19 +38,31 @@ namespace GarageVersion3.Controllers
                         ParkingNumber = r.ParkingNumber
                     }).ToListAsync();
 
-                return View(viewModel);
-            }
-            else
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUserReceiptsByPersonalNumber(string selectedUserPersonalNr)
+        {            
+           TempData["Users"] = await _context.User.ToListAsync();
+
+            if (string.IsNullOrEmpty(selectedUserPersonalNr))
             {
+                TempData["SearchMessage"] = "You did not select a person number";
+                TempData["SearchStatus"] = "alert alert-danger";
+                return View("Index", new List<ReceiptViewModel>());
+            }
 
-                var user = _context.User.FirstOrDefault(u => u.PersonalIdentifyNumber == selectedUserPersonalNr);
-                if (user == null)
-                {
-                    // Handle case where user is not found
-                    return NotFound();
-                }
+            var user = _context.User.FirstOrDefault(u => u.PersonalIdentifyNumber == selectedUserPersonalNr);
+            
+            if (user == null)
+            {
+                return NotFound();
+            }
 
-                var userReceipts = await _context.Receipt.Where(u => u.UserId == user.Id).Select(u => new ReceiptViewModel
+            var userReceipts = await _context.Receipt
+                .Where(u => u.UserId == user.Id)
+                .Select(u => new ReceiptViewModel
                 {
                     Id = u.Id,
                     User = u.User,
@@ -62,8 +72,10 @@ namespace GarageVersion3.Controllers
                     ParkingNumber = u.ParkingNumber
                 }).ToListAsync();
 
-                return View(userReceipts);
-            }
+            TempData["SearchMessage"] = (userReceipts.Count() == 0) ? "User does not have any receipts" : "User receipts successfully showing up";
+            TempData["SearchStatus"] = (userReceipts.Count() == 0) ? "alert alert-warning" : "alert alert-success";
+
+            return View("Index",userReceipts);
         }
 
         [HttpGet]
@@ -132,6 +144,7 @@ namespace GarageVersion3.Controllers
         public async Task<IActionResult> Filter(string firstName, string lastName)
         {
             var query = _context.Receipt.AsQueryable();
+            TempData["Users"] = await _context.User.ToListAsync();
 
             if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName))
             {

@@ -37,22 +37,29 @@
                 </div>
             </div>
         </form>
+
+
+        @{
+            var userList = (List<User>)TempData["Users"];
+        }
+
+        <form asp-controller="Receipts" asp-action="GetUserReceiptsByPersonalNumber" method="get" class="form-inline m-3 d-flex flex-column align-items-let">
+            <div class="d-flex flex-row input-group-sm align-items-center">
+                <button type="submit" class="btn btn-mid-blue">Submit</button>
+
+                <div class="form-group mr-2">
+                    <select id="userDropdown" name="selectedUserPersonalNr" class="form-control ms-2">
+                        <option value="">Select A Personal Number</option>
+                        @foreach (var user in userList)
+                        {
+                            <option value="@user.PersonalIdentifyNumber">@user.PersonalIdentifyNumber</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </form>
     </div>
-
-    @{
-        var userList = (List<User>)TempData["Users"];
-    }
-
-    <form asp-controller="Receipts" asp-action="Index" method="get">
-        <label for="userDropdown">Select a Personal Number:</label>
-        <select id="userDropdown" name="selectedUserPersonalNr">
-            @foreach (var user in userList)
-            {
-                <option value="@user.PersonalIdentifyNumber">@user.PersonalIdentifyNumber</option>
-            }
-        </select>
-        <button type="submit">Submit</button>
-    </form>
+    
 
     <table class="table mt-3">
         <thead>
