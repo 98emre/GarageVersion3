@@ -18,7 +18,6 @@ update-database
 
 | HTTP Verbs | Endpoints | Action |
 | --------- | --------- | --------- |
-
 | **Home-Controller** | | |
 | GET | / | To the home index page |
 | GET | /Home/Statistics | To the statistics page|
