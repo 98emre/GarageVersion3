@@ -11,7 +11,8 @@ In the application to configure to the database, you need to use:
 update-database
 
 ```
-[The ER Diagram as .pdf](https://github.com/98emre/GarageVersion3/blob/master/ER-Diagram.pdf)
+## ER Diagram
+<img width="2265" alt="Angular Assignment" src="https://github.com/98emre/GarageVersion3/blob/master/ER-Diagram.pdf">
 
 ## Controller
 
